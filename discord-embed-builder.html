@@ -963,6 +963,7 @@ We push the boundaries of what's possible in the digital landscape.
       
       updateDiscordPreview();
       updateJSONOutput();
+      updateDiscordTextOutput();
       showNotification('Embed cleared!', 'info');
     }
 
@@ -1125,6 +1126,24 @@ We push the boundaries of what's possible in the digital landscape.
       });
     }
 
+    function copyDiscordText() {
+      const textOutput = document.getElementById('discordTextOutput');
+      const text = textOutput.textContent;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        showNotification('Discord text copied to clipboard!', 'success');
+      }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showNotification('Discord text copied to clipboard!', 'success');
+      });
+    }
+
     function copyDiscordMessage() {
       const content = document.getElementById('discordContent').value;
       const embedText = generateDiscordMessageText();
@@ -1270,6 +1289,7 @@ We push the boundaries of what's possible in the digital landscape.
     document.addEventListener('DOMContentLoaded', function() {
       updateDiscordPreview();
       updateJSONOutput();
+      updateDiscordTextOutput();
       
       // Add real-time updates
       const inputs = document.querySelectorAll('input, textarea');
