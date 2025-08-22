@@ -1,14 +1,17 @@
 {
-  "name": "discord-embed-builder",
+  "name": "ainsiders-website",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Official website for A.Insiders - AI and cybersecurity solutions",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "serve": "npx serve .",
+    "start": "python -m http.server 8000"
   },
   "dependencies": {
     "react": "^18.2.0",
