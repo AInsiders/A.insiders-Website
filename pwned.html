@@ -133,6 +133,93 @@
             color: #0066ff;
         }
 
+        /* Dropdown Menu Styles */
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        @media (max-width: 768px) {
+            .nav-dropdown:hover .dropdown-menu {
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-10px);
+            }
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(30px) saturate(120%);
+            -webkit-backdrop-filter: blur(30px) saturate(120%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            pointer-events: none;
+        }
+
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid rgba(0, 102, 255, 0.2);
+            pointer-events: none;
+        }
+
+        .dropdown-link {
+            display: block;
+            padding: 0.5rem 1.5rem;
+            color: #cccccc;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .dropdown-link:hover {
+            color: #0066ff;
+            background: rgba(0, 102, 255, 0.1);
+            border-left-color: #0066ff;
+            text-shadow: 0 0 5px #0066ff;
+        }
+
+        .nav-link-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dropdown-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-dropdown:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
         /* Hero Section */
         .tool-hero {
             background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(10, 10, 10, 0.9));

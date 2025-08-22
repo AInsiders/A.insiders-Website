@@ -1,14 +1,332 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Discord Embed Builder - Advanced Drag & Drop</title>
-    <meta name="description" content="Build Discord embeds visually with drag-and-drop, snap-to-grid, and live JSON export" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A.Insiders - AI & Cybersecurity Solutions</title>
+  
+  <!-- Favicon Setup -->
+  <link rel="icon" type="image/png" href="ainsiders-logo.png" id="main-favicon">
+  <link rel="apple-touch-icon" href="ainsiders-logo.png">
+  <meta name="description" content="A.Insiders - Leading AI and cybersecurity solutions. Discover our innovative applications, security tools, and cutting-edge technology solutions.">
+  <meta name="keywords" content="A.Insiders, AI, cybersecurity, technology, applications, security, innovation">
+  
+  <!-- Security Headers -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+  
+  <!-- Enhanced Cache Control Headers for Cloudflare -->
+  <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable, stale-while-revalidate=86400">
+  <meta http-equiv="Expires" content="31536000">
+  <meta http-equiv="ETag" content="home-v1.0">
+  <meta http-equiv="Last-Modified" content="2023-12-31T00:00:00Z">
+  
+  <!-- Optimized Asset Caching System with Cloudflare Headers -->
+  <link rel="stylesheet" href="brain-styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Preload critical assets with Cloudflare caching -->
+  <link rel="preload" href="brain-script.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="shared-loader.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="mobile-nav.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="sphere-loader.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="ainsiders-logo.png?v=1.0" as="image" type="image/png">
+  <link rel="preload" href="logo.svg?v=1.0" as="image" type="image/svg+xml">
+  
+  <!-- Cache Manager and Asset Preloader with Cloudflare caching -->
+  <script src="browser-cache-manager.js"></script>
+  <script src="asset-preloader.js"></script>
+  
+  <!-- Optimized Background System -->
+  <script src="brain-script.js"></script>
+  
+  <!-- Font Awesome with CDN and Fallback -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  
+  <!-- Favicon Animation Script -->
+  <script src="favicon-animation.js"></script>
+  
+  <!-- Tawk.to Widget Styles -->
+  <style>
+    /* Make Tawk.to widget half the size */
+    #tawkto-container,
+    .tawkto-container,
+    .tawkto-widget,
+    .tawkto-minimized,
+    .tawkto-maximized,
+    .tawkto-iframe,
+    .tawkto-button,
+    .tawkto-bubble,
+    .tawkto-chat,
+    .tawkto-widget-container,
+    .tawkto-widget-container *,
+    iframe[src*="tawk.to"],
+    div[data-tawk-to],
+    .tawkto,
+    .tawkto * {
+      transform: scale(0.5) !important;
+      transform-origin: bottom right !important;
+    }
+
+    /* Fix hero buttons interaction */
+    .hero-content {
+      pointer-events: none !important; /* Allow canvas interaction over text */
+      z-index: 10 !important;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      pointer-events: auto !important; /* Only buttons are clickable */
+      z-index: 15 !important;
+      position: relative;
+    }
+
+    .hero-buttons .btn {
+      pointer-events: auto !important;
+      cursor: pointer !important;
+      z-index: 20 !important;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 160px;
+      padding: 1rem 2rem;
+      font-weight: 600;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-buttons .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-buttons .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-buttons .btn-primary {
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+      border: 2px solid var(--accent-primary);
+    }
+
+    .hero-buttons .btn-primary:hover {
+      background: var(--accent-secondary);
+      border-color: var(--accent-secondary);
+      box-shadow: 0 8px 25px rgba(0, 102, 255, 0.4);
+    }
+
+    .hero-buttons .btn-secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border: 2px solid var(--border-color);
+    }
+
+    .hero-buttons .btn-secondary:hover {
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+      border-color: var(--accent-primary);
+      box-shadow: 0 8px 25px rgba(0, 102, 255, 0.4);
+    }
+
+    /* Ensure text elements allow canvas interaction */
+    .hero .hero-content .page-title,
+    .hero .hero-content .page-subtitle {
+      pointer-events: none !important;
+      cursor: default;
+    }
+
+    /* Ensure hero content text is not clickable but canvas is interactive */
+    .hero .hero-content *:not(.hero-buttons *) {
+      pointer-events: none !important;
+    }
+
+    /* Ensure canvas is interactive over text */
+    #aiCanvas {
+      pointer-events: auto !important;
+      z-index: 1 !important;
+    }
+
+    /* Mobile responsive buttons */
+    @media (max-width: 768px) {
+      .hero-buttons {
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .hero-buttons .btn {
+        min-width: 200px;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-buttons .btn {
+        min-width: 180px;
+        padding: 0.75rem 1.25rem;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body class="home-page">
+  <div id="website-content" class="website-content">
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="ainsiders-logo.png" alt="A.Insiders Logo" class="logo-image" width="40" height="40">
+        <span class="logo-text">A.I</span>
+        <span class="logo-accent">NSIDERS</span>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link active">Home</a></li>
+        <li><a href="software.html" class="nav-link">Software</a></li>
+        <li class="nav-dropdown">
+          <div class="nav-link-container">
+            <a href="about.html" class="nav-link">About</a>
+            <span class="dropdown-arrow">▼</span>
+          </div>
+          <ul class="dropdown-menu">
+            <li><a href="about.html" class="dropdown-link">About Company</a></li>
+            <li><a href="blake-zimmerman.html" class="dropdown-link">Blake Zimmerman</a></li>
+            <li><a href="babu-narayana.html" class="dropdown-link">Babu Narayana</a></li>
+          </ul>
+        </li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Performance Optimization: Preload critical images -->
+  <link rel="preload" href="blake-zimmerman.jpg" as="image" type="image/jpeg">
+  <link rel="preload" href="ainsiders-logo.png" as="image" type="image/png">
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+  <!-- Hero Section with Interactive Background -->
+  <header class="hero">
+    <canvas id="aiCanvas"></canvas>
+    <div class="hero-content">
+      <h1 class="page-title">WELCOME TO A.I NSIDERS</h1>
+      <p class="page-subtitle">Pioneering the future of AI and cybersecurity with innovative solutions</p>
+      <div class="hero-buttons">
+        <a href="software.html" class="btn btn-primary">Explore Our Software</a>
+        <a href="about.html" class="btn btn-secondary">Learn About Us</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Empty main content - just hero and footer -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="software.html">Software</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Connect With Us</h4>
+          <div class="social-links">
+            <a href="https://www.linkedin.com/in/blake-zimmerman-a59575342/" class="social-link" title="LinkedIn" target="_blank" rel="noopener">
+              <i class="fab fa-linkedin"></i>
+              <span>LinkedIn</span>
+            </a>
+            <a href="https://github.com/AInsiders" class="social-link" title="GitHub" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+              <span>GitHub</span>
+            </a>
+            <a href="https://www.youtube.com/@A.Insiders01" class="social-link" title="YouTube" target="_blank" rel="noopener">
+              <i class="fab fa-youtube"></i>
+              <span>YouTube</span>
+            </a>
+            <a href="https://discord.gg/Y4kCtaBZFM" class="social-link" title="Discord" target="_blank" rel="noopener">
+              <i class="fab fa-discord"></i>
+              <span>Discord</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 A.Insiders Network. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms-of-service.html">Terms of Service</a>
+          <a href="cookie-policy.html">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  </div>
+
+  <!-- Mobile Navigation Script -->
+  <script src="mobile-nav.js"></script>
+  
+  <!-- Shared Loader Script -->
+  <script src="shared-loader.js"></script>
+  
+  <!-- Sphere Loader Script -->
+  <script src="sphere-loader.js"></script>
+  
+  <!-- Tawk.to Widget Script -->
+  <script src="add-chat-widget.js"></script>
+  
+  <!-- Performance Optimizer -->
+  <script src="performance-optimizer.js"></script>
+  
+  <!-- Security Enhancement -->
+  <script src="security-enhancement.js"></script>
+  
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('SW registered: ', registration);
+          })
+          .catch((registrationError) => {
+            console.log('SW registration failed: ', registrationError);
+          });
+      });
+    }
+  </script>
+</body>
 </html> 

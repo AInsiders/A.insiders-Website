@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discord Embed Builder - A.Insiders</title>
+  
+  <!-- Favicon Setup -->
+  <link rel="icon" type="image/png" href="ainsiders-logo.png" id="main-favicon">
+  <link rel="apple-touch-icon" href="ainsiders-logo.png">
+  <meta name="description" content="Advanced Discord embed builder with drag-and-drop functionality, snap-to-grid, and live JSON export. Create professional Discord embeds visually.">
+  <meta name="keywords" content="Discord embed builder, Discord embeds, JSON export, drag and drop, A.Insiders">
+  
+  <!-- Security Headers -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+  
+  <!-- Enhanced Cache Control Headers for Cloudflare -->
+  <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable, stale-while-revalidate=86400">
+  <meta http-equiv="Expires" content="31536000">
+  <meta http-equiv="ETag" content="discord-embed-builder-v1.0">
+  <meta http-equiv="Last-Modified" content="2023-12-31T00:00:00Z">
+  
+  <!-- Optimized Asset Caching System with Cloudflare Headers -->
+  <link rel="stylesheet" href="brain-styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Preload critical assets with Cloudflare caching -->
+  <link rel="preload" href="brain-script.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="shared-loader.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="mobile-nav.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="sphere-loader.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="ainsiders-logo.png?v=1.0" as="image" type="image/png">
+  <link rel="preload" href="logo.svg?v=1.0" as="image" type="image/svg+xml">
+  
+  <!-- Cache Manager and Asset Preloader with Cloudflare caching -->
+  <script src="browser-cache-manager.js"></script>
+  <script src="asset-preloader.js"></script>
+  
+  <!-- Optimized Background System -->
+  <script src="brain-script.js"></script>
+  
+  <!-- Font Awesome with CDN and Fallback -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  
+  <!-- Favicon Animation Script -->
+  <script src="favicon-animation.js"></script>
+  
+  <!-- Discord Embed Builder Styles -->
+  <style>
+    .embed-builder-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .embed-builder-header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 15px;
+      color: white;
+    }
+    
+    .embed-builder-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    
+    .embed-builder-header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    
+    .embed-builder-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .embed-canvas {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      min-height: 400px;
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      position: relative;
+    }
+    
+    .embed-canvas::before {
+      content: "Drag and drop embed elements here";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 1.2rem;
+      text-align: center;
+      pointer-events: none;
+    }
+    
+    .embed-controls {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+    }
+    
+    .control-section {
+      margin-bottom: 25px;
+    }
+    
+    .control-section h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 500;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .json-output {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 30px;
+    }
+    
+    .json-output h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+    
+    .json-code {
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 8px;
+      padding: 15px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #e6e6e6;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .discord-text-output {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 30px;
+    }
+    
+    .discord-text-output h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+    
+    .discord-text-code {
+      background: #2f3136;
+      border-radius: 8px;
+      padding: 15px;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      color: #dcddde;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      line-height: 1.4;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .discord-preview {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 30px;
+    }
+    
+    .discord-preview h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+    
+    .discord-embed-preview {
+      background: #36393f;
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      color: #dcddde;
+      max-width: 500px;
+    }
+    
+    .discord-embed {
+      border-left: 4px solid #667eea;
+      padding-left: 16px;
+      margin-bottom: 8px;
+    }
+    
+    .embed-content {
+      margin-bottom: 8px;
+    }
+    
+    .embed-title {
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 4px;
+      text-decoration: none;
+    }
+    
+    .embed-title:hover {
+      text-decoration: underline;
+    }
+    
+    .embed-description {
+      color: #dcddde;
+      font-size: 14px;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    
+    .embed-author {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    
+    .embed-author-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      margin-right: 8px;
+      background: #7289da;
+    }
+    
+    .embed-author-name {
+      color: #ffffff;
+      font-weight: 500;
+    }
+    
+    .embed-author-name:hover {
+      text-decoration: underline;
+    }
+    
+    .embed-fields {
+      margin-bottom: 8px;
+    }
+    
+    .embed-field {
+      margin-bottom: 8px;
+    }
+    
+    .embed-field-name {
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    
+    .embed-field-value {
+      color: #dcddde;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    
+    .embed-thumbnail {
+      float: right;
+      margin-left: 16px;
+      margin-bottom: 8px;
+      border-radius: 4px;
+      max-width: 80px;
+      max-height: 80px;
+    }
+    
+    .embed-image {
+      border-radius: 4px;
+      max-width: 100%;
+      margin-top: 8px;
+    }
+    
+    .embed-footer {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: #72767d;
+      margin-top: 8px;
+    }
+    
+    .embed-footer-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      margin-right: 8px;
+      background: #7289da;
+    }
+    
+    .embed-timestamp {
+      color: #72767d;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+    
+    /* Discord formatting preview styles */
+    .discord-embed-preview h1,
+    .discord-embed-preview h2,
+    .discord-embed-preview h3 {
+      margin: 8px 0 4px 0;
+      line-height: 1.2;
+    }
+    
+    .discord-embed-preview h1 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    
+    .discord-embed-preview h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    
+    .discord-embed-preview h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    
+    .discord-embed-preview strong {
+      font-weight: 600;
+      color: #ffffff;
+    }
+    
+    .discord-embed-preview em {
+      font-style: italic;
+    }
+    
+    .discord-embed-preview u {
+      text-decoration: underline;
+    }
+    
+    .discord-embed-preview del {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+    
+    .discord-embed-preview code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #ffffff;
+    }
+    
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+    
+    .feature-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .feature-icon {
+      font-size: 2rem;
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+    
+    .feature-card h4 {
+      color: white;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+    
+    .feature-card p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    
+    @media (max-width: 768px) {
+      .embed-builder-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .embed-builder-header h1 {
+        font-size: 2rem;
+      }
+      
+      .btn-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+  
+  <!-- Tawk.to Widget Styles -->
+  <style>
+    /* Make Tawk.to widget half the size */
+    #tawkto-container,
+    .tawkto-container,
+    .tawkto-widget,
+    .tawkto-minimized,
+    .tawkto-maximized,
+    .tawkto-iframe,
+    .tawkto-button,
+    .tawkto-bubble,
+    .tawkto-chat,
+    .tawkto-widget-container,
+    .tawkto-widget-container *,
+    iframe[src*="tawk.to"],
+    div[data-tawk-to],
+    .tawkto,
+    .tawkto * {
+      transform: scale(0.5) !important;
+      transform-origin: bottom right !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="website-content" class="website-content">
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="ainsiders-logo.png" alt="A.Insiders Logo" class="logo-image" width="40" height="40">
+        <span class="logo-text">A.I</span>
+        <span class="logo-accent">NSIDERS</span>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="software.html" class="nav-link active">Software</a></li>
+        <li class="nav-dropdown">
+          <div class="nav-link-container">
+            <a href="about.html" class="nav-link">About</a>
+            <span class="dropdown-arrow">▼</span>
+          </div>
+          <ul class="dropdown-menu">
+            <li><a href="about.html" class="dropdown-link">About Company</a></li>
+            <li><a href="blake-zimmerman.html" class="dropdown-link">Blake Zimmerman</a></li>
+            <li><a href="babu-narayana.html" class="dropdown-link">Babu Narayana</a></li>
+          </ul>
+        </li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Performance Optimization: Preload critical images -->
+  <link rel="preload" href="ainsiders-logo.png" as="image" type="image/png">
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+  <!-- Hero Section -->
+  <header class="page-hero">
+    <canvas id="aiCanvas"></canvas>
+    <div class="hero-content">
+      <h1 class="page-title">Discord Embed Builder</h1>
+      <p class="page-subtitle">Create professional Discord embeds with our advanced drag-and-drop builder</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="embed-builder-container">
+      <div class="embed-builder-header">
+        <h1><i class="fab fa-discord"></i> Discord Embed Builder</h1>
+        <p>Advanced drag-and-drop Discord embed builder with snap-to-grid functionality, live preview, and JSON export</p>
+      </div>
+
+      <!-- Features Overview -->
+      <div class="feature-list">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-mouse-pointer"></i>
+          </div>
+          <h4>Drag & Drop Interface</h4>
+          <p>Intuitive block-based editing with visual feedback and smooth interactions.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-th-large"></i>
+          </div>
+          <h4>Snap-to-Grid</h4>
+          <p>8px grid system with edge snapping for precise layout control.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-eye"></i>
+          </div>
+          <h4>Live Preview</h4>
+          <p>Real-time Discord-like preview as you build your embed.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-code"></i>
+          </div>
+          <h4>JSON Export</h4>
+          <p>Export your embeds as Discord-compatible JSON or webhook payloads.</p>
+        </div>
+      </div>
+
+      <!-- Embed Builder Interface -->
+      <div class="embed-builder-content">
+        <div class="embed-canvas" id="embedCanvas">
+          <!-- Canvas area for drag and drop -->
+        </div>
+        
+        <div class="embed-controls">
+          <div class="control-section">
+            <h3><i class="fas fa-cog"></i> Embed Settings</h3>
+            <div class="form-group">
+              <label for="embedTitle">Title</label>
+              <input type="text" id="embedTitle" placeholder="Enter embed title">
+            </div>
+            <div class="form-group">
+              <label for="embedDescription">Description</label>
+              <textarea id="embedDescription" rows="4" placeholder="Enter embed description"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="embedColor">Color</label>
+              <input type="color" id="embedColor" value="#667eea">
+            </div>
+            <div class="form-group">
+              <label for="embedUrl">URL (optional)</label>
+              <input type="url" id="embedUrl" placeholder="https://example.com">
+            </div>
+          </div>
+
+          <div class="control-section">
+            <h3><i class="fas fa-edit"></i> Discord Formatting</h3>
+            <div class="form-group">
+              <label for="discordContent">Discord Message Content</label>
+              <textarea id="discordContent" rows="3" placeholder="Enter Discord message content with formatting (e.g., # Header, **bold**, *italic*)"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="discordFields">Fields (one per line, format: Name|Value|Inline)</label>
+              <textarea id="discordFields" rows="4" placeholder="Field Name|Field Value|true&#10;Another Field|Another Value|false"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="discordFooter">Footer Text</label>
+              <input type="text" id="discordFooter" placeholder="Enter footer text">
+            </div>
+            <div class="form-group">
+              <label for="discordFooterIcon">Footer Icon URL</label>
+              <input type="url" id="discordFooterIcon" placeholder="https://example.com/footer-icon.png">
+            </div>
+          </div>
+
+          <div class="control-section">
+            <h3><i class="fas fa-user"></i> Author Settings</h3>
+            <div class="form-group">
+              <label for="authorName">Author Name</label>
+              <input type="text" id="authorName" placeholder="Enter author name">
+            </div>
+            <div class="form-group">
+              <label for="authorUrl">Author URL</label>
+              <input type="url" id="authorUrl" placeholder="https://example.com">
+            </div>
+            <div class="form-group">
+              <label for="authorIcon">Author Icon URL</label>
+              <input type="url" id="authorIcon" placeholder="https://example.com/icon.png">
+            </div>
+          </div>
+
+          <div class="control-section">
+            <h3><i class="fas fa-image"></i> Media</h3>
+            <div class="form-group">
+              <label for="thumbnailUrl">Thumbnail URL</label>
+              <input type="url" id="thumbnailUrl" placeholder="https://example.com/thumbnail.png">
+            </div>
+            <div class="form-group">
+              <label for="imageUrl">Image URL</label>
+              <input type="url" id="imageUrl" placeholder="https://example.com/image.png">
+            </div>
+          </div>
+
+          <div class="control-section">
+            <h3><i class="fas fa-tools"></i> Actions</h3>
+            <div class="btn-group">
+              <button class="btn btn-primary" onclick="generateEmbed()">
+                <i class="fas fa-magic"></i> Generate Embed
+              </button>
+              <button class="btn btn-secondary" onclick="clearEmbed()">
+                <i class="fas fa-trash"></i> Clear
+              </button>
+              <button class="btn btn-secondary" onclick="loadPreset()">
+                <i class="fas fa-download"></i> Load Preset
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Discord Text Output -->
+      <div class="discord-text-output">
+        <h3><i class="fab fa-discord"></i> Discord Message Text</h3>
+        <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 15px;">Copy and paste this text directly into Discord:</p>
+        <div class="discord-text-code" id="discordTextOutput">
+# Welcome to A.Insiders!
+
+**A.Insiders** is a pioneering company specializing in:
+
+* AI Development
+* Cybersecurity Solutions
+* Innovative Applications
+
+## Our Mission
+
+We push the boundaries of what's possible in the digital landscape.
+        </div>
+        <div class="btn-group" style="margin-top: 15px;">
+          <button class="btn btn-primary" onclick="copyDiscordText()">
+            <i class="fas fa-copy"></i> Copy Discord Text
+          </button>
+          <button class="btn btn-secondary" onclick="copyDiscordMessage()">
+            <i class="fas fa-message"></i> Copy Full Message
+          </button>
+        </div>
+      </div>
+
+      <!-- Discord Embed Preview -->
+      <div class="discord-preview">
+        <h3><i class="fab fa-discord"></i> Discord Embed Preview</h3>
+        <div class="discord-embed-preview" id="discordPreview">
+          <div class="discord-embed">
+            <div class="embed-content">
+              <div class="embed-title">Example Embed</div>
+              <div class="embed-description">This is an example embed with Discord formatting</div>
+            </div>
+          </div>
+        </div>
+        <div class="btn-group" style="margin-top: 15px;">
+          <button class="btn btn-secondary" onclick="copyWebhookPayload()">
+            <i class="fas fa-link"></i> Copy Webhook Payload
+          </button>
+        </div>
+      </div>
+
+      <!-- JSON Output -->
+      <div class="json-output">
+        <h3><i class="fas fa-code"></i> Generated JSON</h3>
+        <div class="json-code" id="jsonOutput">
+// Your Discord embed JSON will appear here
+{
+  "embeds": [
+    {
+      "title": "Example Embed",
+      "description": "This is an example embed",
+      "color": 0x667eea
+    }
+  ]
+}
+        </div>
+        <div class="btn-group" style="margin-top: 15px;">
+          <button class="btn btn-primary" onclick="copyJSON()">
+            <i class="fas fa-copy"></i> Copy JSON
+          </button>
+          <button class="btn btn-secondary" onclick="downloadJSON()">
+            <i class="fas fa-download"></i> Download
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <div class="footer-logo">
+            <img src="ainsiders-logo.png" alt="A.Insiders Logo" class="logo-image" width="40" height="40">
+            <span class="logo-text">A.I</span>
+            <span class="logo-accent">NSIDERS</span>
+          </div>
+          <p>Pioneering the future of AI and cybersecurity with innovative solutions and cutting-edge applications.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="software.html">Software</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Team</h4>
+          <ul class="footer-links">
+            <li><a href="blake-zimmerman.html">Blake Zimmerman</a></li>
+            <li><a href="babu-narayana.html">Babu Narayana</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Connect</h4>
+          <div class="social-links">
+            <a href="https://www.youtube.com/@A.Insiders01" class="social-link" title="YouTube" target="_blank" rel="noopener">
+              <i class="fab fa-youtube"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 A.Insiders Network. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  </div>
+
+  <!-- Mobile Navigation Script -->
+  <script src="mobile-nav.js"></script>
+  
+  <!-- Shared Loader Script -->
+  <script src="shared-loader.js"></script>
+  
+  <!-- Sphere Loader Script -->
+  <script src="sphere-loader.js"></script>
+  
+  <!-- Tawk.to Widget Script -->
+  <script src="add-chat-widget.js"></script>
+  
+  <!-- Performance Optimizer -->
+  <script src="performance-optimizer.js"></script>
+  
+  <!-- Security Enhancement -->
+  <script src="security-enhancement.js"></script>
+  
+  <!-- Discord Embed Builder Script -->
+  <script>
+    // Discord Embed Builder functionality
+    let currentEmbed = {
+      title: '',
+      description: '',
+      color: 0x667eea,
+      url: '',
+      author: {
+        name: '',
+        url: '',
+        icon_url: ''
+      },
+      thumbnail: {
+        url: ''
+      },
+      image: {
+        url: ''
+      },
+      footer: {
+        text: '',
+        icon_url: ''
+      },
+      fields: [],
+      timestamp: null
+    };
+
+    // Discord formatting functions
+    function parseDiscordFormatting(text) {
+      if (!text) return '';
+      
+      return text
+        // Headers
+        .replace(/^### (.*$)/gim, '<h3 style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 8px 0 4px 0;">$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2 style="color: #ffffff; font-size: 16px; font-weight: 600; margin: 8px 0 4px 0;">$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1 style="color: #ffffff; font-size: 18px; font-weight: 600; margin: 8px 0 4px 0;">$1</h1>')
+        // Bold
+        .replace(/\*\*(.*?)\*\*/g, '<strong style="font-weight: 600;">$1</strong>')
+        // Italic
+        .replace(/\*(.*?)\*/g, '<em style="font-style: italic;">$1</em>')
+        // Underline
+        .replace(/__(.*?)__/g, '<u style="text-decoration: underline;">$1</u>')
+        // Strikethrough
+        .replace(/~~(.*?)~~/g, '<del style="text-decoration: line-through;">$1</del>')
+        // Code blocks
+        .replace(/```([\s\S]*?)```/g, '<code style="background: rgba(0,0,0,0.3); padding: 2px 4px; border-radius: 3px; font-family: monospace;">$1</code>')
+        .replace(/`(.*?)`/g, '<code style="background: rgba(0,0,0,0.3); padding: 2px 4px; border-radius: 3px; font-family: monospace;">$1</code>')
+        // Line breaks
+        .replace(/\n/g, '<br>');
+    }
+
+    function parseFields(fieldsText) {
+      if (!fieldsText) return [];
+      
+      const lines = fieldsText.split('\n').filter(line => line.trim());
+      const fields = [];
+      
+      lines.forEach(line => {
+        const parts = line.split('|');
+        if (parts.length >= 2) {
+          fields.push({
+            name: parts[0].trim(),
+            value: parts[1].trim(),
+            inline: parts.length > 2 ? parts[2].trim().toLowerCase() === 'true' : false
+          });
+        }
+      });
+      
+      return fields;
+    }
+
+    function generateEmbed() {
+      // Get values from form inputs
+      currentEmbed.title = document.getElementById('embedTitle').value;
+      currentEmbed.description = document.getElementById('embedDescription').value;
+      currentEmbed.url = document.getElementById('embedUrl').value;
+      currentEmbed.author.name = document.getElementById('authorName').value;
+      currentEmbed.author.url = document.getElementById('authorUrl').value;
+      currentEmbed.author.icon_url = document.getElementById('authorIcon').value;
+      currentEmbed.thumbnail.url = document.getElementById('thumbnailUrl').value;
+      currentEmbed.image.url = document.getElementById('imageUrl').value;
+      currentEmbed.footer.text = document.getElementById('discordFooter').value;
+      currentEmbed.footer.icon_url = document.getElementById('discordFooterIcon').value;
+      
+      // Parse fields
+      const fieldsText = document.getElementById('discordFields').value;
+      currentEmbed.fields = parseFields(fieldsText);
+      
+      // Convert color hex to decimal
+      const colorHex = document.getElementById('embedColor').value;
+      currentEmbed.color = parseInt(colorHex.replace('#', ''), 16);
+      
+      // Update outputs
+      updateDiscordPreview();
+      updateJSONOutput();
+      updateDiscordTextOutput();
+      
+      // Show success message
+      showNotification('Embed generated successfully!', 'success');
+    }
+
+    function clearEmbed() {
+      // Clear all form inputs
+      document.getElementById('embedTitle').value = '';
+      document.getElementById('embedDescription').value = '';
+      document.getElementById('embedUrl').value = '';
+      document.getElementById('authorName').value = '';
+      document.getElementById('authorUrl').value = '';
+      document.getElementById('authorIcon').value = '';
+      document.getElementById('thumbnailUrl').value = '';
+      document.getElementById('imageUrl').value = '';
+      document.getElementById('embedColor').value = '#667eea';
+      document.getElementById('discordContent').value = '';
+      document.getElementById('discordFields').value = '';
+      document.getElementById('discordFooter').value = '';
+      document.getElementById('discordFooterIcon').value = '';
+      
+      // Reset embed object
+      currentEmbed = {
+        title: '',
+        description: '',
+        color: 0x667eea,
+        url: '',
+        author: { name: '', url: '', icon_url: '' },
+        thumbnail: { url: '' },
+        image: { url: '' },
+        footer: { text: '', icon_url: '' },
+        fields: [],
+        timestamp: null
+      };
+      
+      updateDiscordPreview();
+      updateJSONOutput();
+      showNotification('Embed cleared!', 'info');
+    }
+
+    function loadPreset() {
+      // Load a sample preset with Discord formatting
+      document.getElementById('embedTitle').value = 'Welcome to A.Insiders!';
+      document.getElementById('embedDescription').value = '# About Us\n\n**A.Insiders** is a pioneering company specializing in:\n\n* AI Development\n* Cybersecurity Solutions\n* Innovative Applications\n\n## Our Mission\n\nWe push the boundaries of what\'s possible in the digital landscape.';
+      document.getElementById('embedColor').value = '#667eea';
+      document.getElementById('authorName').value = 'A.Insiders';
+      document.getElementById('authorUrl').value = 'https://ainsiders.com';
+      document.getElementById('authorIcon').value = 'https://ainsiders.com/logo.png';
+      document.getElementById('discordContent').value = 'Check out our latest updates! 🚀';
+      document.getElementById('discordFields').value = 'Founded|2024|true\nTeam Size|50+|true\nSpecialization|AI & Cybersecurity|false\nLocation|Global|true';
+      document.getElementById('discordFooter').value = 'A.Insiders Network';
+      document.getElementById('discordFooterIcon').value = 'https://ainsiders.com/favicon.png';
+      
+      generateEmbed();
+      showNotification('Sample preset loaded!', 'success');
+    }
+
+    function updateDiscordPreview() {
+      const preview = document.getElementById('discordPreview');
+      const content = document.getElementById('discordContent').value;
+      
+      let html = '';
+      
+      // Add message content if provided
+      if (content) {
+        html += `<div style="margin-bottom: 8px; color: #dcddde;">${parseDiscordFormatting(content)}</div>`;
+      }
+      
+      // Create embed
+      html += '<div class="discord-embed" style="border-left-color: #' + currentEmbed.color.toString(16).padStart(6, '0') + ';">';
+      html += '<div class="embed-content">';
+      
+      // Title
+      if (currentEmbed.title) {
+        const titleElement = currentEmbed.url ? 
+          `<a href="${currentEmbed.url}" class="embed-title">${currentEmbed.title}</a>` :
+          `<div class="embed-title">${currentEmbed.title}</div>`;
+        html += titleElement;
+      }
+      
+      // Description
+      if (currentEmbed.description) {
+        html += `<div class="embed-description">${parseDiscordFormatting(currentEmbed.description)}</div>`;
+      }
+      
+      // Author
+      if (currentEmbed.author.name) {
+        html += '<div class="embed-author">';
+        if (currentEmbed.author.icon_url) {
+          html += `<img src="${currentEmbed.author.icon_url}" class="embed-author-icon" alt="Author Icon">`;
+        }
+        const authorElement = currentEmbed.author.url ?
+          `<a href="${currentEmbed.author.url}" class="embed-author-name">${currentEmbed.author.name}</a>` :
+          `<span class="embed-author-name">${currentEmbed.author.name}</span>`;
+        html += authorElement;
+        html += '</div>';
+      }
+      
+      // Fields
+      if (currentEmbed.fields.length > 0) {
+        html += '<div class="embed-fields">';
+        currentEmbed.fields.forEach(field => {
+          html += '<div class="embed-field">';
+          html += `<div class="embed-field-name">${parseDiscordFormatting(field.name)}</div>`;
+          html += `<div class="embed-field-value">${parseDiscordFormatting(field.value)}</div>`;
+          html += '</div>';
+        });
+        html += '</div>';
+      }
+      
+      // Thumbnail
+      if (currentEmbed.thumbnail.url) {
+        html += `<img src="${currentEmbed.thumbnail.url}" class="embed-thumbnail" alt="Thumbnail">`;
+      }
+      
+      // Image
+      if (currentEmbed.image.url) {
+        html += `<img src="${currentEmbed.image.url}" class="embed-image" alt="Embed Image">`;
+      }
+      
+      // Footer
+      if (currentEmbed.footer.text) {
+        html += '<div class="embed-footer">';
+        if (currentEmbed.footer.icon_url) {
+          html += `<img src="${currentEmbed.footer.icon_url}" class="embed-footer-icon" alt="Footer Icon">`;
+        }
+        html += `<span>${currentEmbed.footer.text}</span>`;
+        html += '</div>';
+      }
+      
+      html += '</div></div>';
+      
+      preview.innerHTML = html;
+    }
+
+    function updateDiscordTextOutput() {
+      const textOutput = document.getElementById('discordTextOutput');
+      const content = document.getElementById('discordContent').value;
+      
+      let discordText = '';
+      
+      // Add message content if provided
+      if (content) {
+        discordText += content + '\n\n';
+      }
+      
+      // Add title
+      if (currentEmbed.title) {
+        discordText += `**${currentEmbed.title}**\n`;
+      }
+      
+      // Add description with proper Discord formatting
+      if (currentEmbed.description) {
+        discordText += currentEmbed.description + '\n';
+      }
+      
+      // Add fields
+      if (currentEmbed.fields.length > 0) {
+        discordText += '\n';
+        currentEmbed.fields.forEach(field => {
+          discordText += `**${field.name}**\n${field.value}\n\n`;
+        });
+      }
+      
+      // Add footer
+      if (currentEmbed.footer.text) {
+        discordText += `*${currentEmbed.footer.text}*`;
+      }
+      
+      textOutput.textContent = discordText.trim();
+    }
+
+    function updateJSONOutput() {
+      const jsonOutput = document.getElementById('jsonOutput');
+      const embedJSON = {
+        embeds: [currentEmbed]
+      };
+      
+      jsonOutput.textContent = JSON.stringify(embedJSON, null, 2);
+    }
+
+    function copyJSON() {
+      const jsonOutput = document.getElementById('jsonOutput');
+      const text = jsonOutput.textContent;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        showNotification('JSON copied to clipboard!', 'success');
+      }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showNotification('JSON copied to clipboard!', 'success');
+      });
+    }
+
+    function copyDiscordMessage() {
+      const content = document.getElementById('discordContent').value;
+      const embedText = generateDiscordMessageText();
+      const fullMessage = content ? `${content}\n\n${embedText}` : embedText;
+      
+      navigator.clipboard.writeText(fullMessage).then(() => {
+        showNotification('Discord message copied to clipboard!', 'success');
+      }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = fullMessage;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showNotification('Discord message copied to clipboard!', 'success');
+      });
+    }
+
+    function copyWebhookPayload() {
+      const webhookPayload = {
+        content: document.getElementById('discordContent').value || null,
+        embeds: [currentEmbed]
+      };
+      
+      const payloadText = JSON.stringify(webhookPayload, null, 2);
+      
+      navigator.clipboard.writeText(payloadText).then(() => {
+        showNotification('Webhook payload copied to clipboard!', 'success');
+      }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = payloadText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showNotification('Webhook payload copied to clipboard!', 'success');
+      });
+    }
+
+    function generateDiscordMessageText() {
+      let text = '';
+      
+      if (currentEmbed.title) {
+        text += `**${currentEmbed.title}**\n`;
+      }
+      
+      if (currentEmbed.description) {
+        // Convert HTML formatting back to Discord markdown
+        let description = currentEmbed.description
+          .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1')
+          .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1')
+          .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1')
+          .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
+          .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
+          .replace(/<u[^>]*>(.*?)<\/u>/gi, '__$1__')
+          .replace(/<del[^>]*>(.*?)<\/del>/gi, '~~$1~~')
+          .replace(/<code[^>]*>(.*?)<\/code>/gi, '`$1`')
+          .replace(/<br\s*\/?>/gi, '\n')
+          .replace(/<\/?[^>]+(>|$)/g, ''); // Remove any remaining HTML tags
+        
+        text += `${description}\n`;
+      }
+      
+      if (currentEmbed.fields.length > 0) {
+        text += '\n';
+        currentEmbed.fields.forEach(field => {
+          text += `**${field.name}**\n${field.value}\n\n`;
+        });
+      }
+      
+      if (currentEmbed.footer.text) {
+        text += `*${currentEmbed.footer.text}*`;
+      }
+      
+      return text.trim();
+    }
+
+    function downloadJSON() {
+      const jsonOutput = document.getElementById('jsonOutput');
+      const text = jsonOutput.textContent;
+      const blob = new Blob([text], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'discord-embed.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      showNotification('JSON file downloaded!', 'success');
+    }
+
+    function showNotification(message, type = 'info') {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `notification notification-${type}`;
+      notification.textContent = message;
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        animation: slideIn 0.3s ease-out;
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Remove notification after 3 seconds
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease-in';
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 300);
+      }, 3000);
+    }
+
+    // Add CSS animations for notifications
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Initialize the embed builder
+    document.addEventListener('DOMContentLoaded', function() {
+      updateDiscordPreview();
+      updateJSONOutput();
+      
+      // Add real-time updates
+      const inputs = document.querySelectorAll('input, textarea');
+      inputs.forEach(input => {
+        input.addEventListener('input', generateEmbed);
+      });
+    });
+  </script>
+  
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('SW registered: ', registration);
+          })
+          .catch((registrationError) => {
+            console.log('SW registration failed: ', registrationError);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
