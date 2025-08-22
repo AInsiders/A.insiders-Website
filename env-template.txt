@@ -1,0 +1,26 @@
+# Server Configuration
+PORT=3000
+CORS_ORIGIN=*
+CACHE_TTL_HOURS=12
+RATE_LIMIT_PER_MIN=120
+
+# API Keys for IP Geolocation Services
+# Get your API keys from:
+# IPinfo: https://ipinfo.io/account/token
+# IPStack: https://ipstack.com/
+# IPGeolocation: https://ipgeolocation.io/
+
+# Primary API Key (IPinfo - recommended)
+IPINFO_API_KEY=your_ipinfo_api_key_here
+
+# Secondary API Key (IPStack)
+IPSTACK_API_KEY=your_ipstack_api_key_here
+
+# Tertiary API Key (IPGeolocation.io)
+IPGEO_API_KEY=your_ipgeolocation_api_key_here
+
+# Universal API Key for secure proxy
+API_KEY=2740500f950b4a0eabee07704cae1f36
+
+# Note: If you don't have API keys, the service will fall back to free APIs
+# FreeIPAPI and other free services will be used as fallbacks

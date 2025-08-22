@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test-Only Luhn Card Number Generator - A.Insiders</title>
+  
+  <!-- Favicon Setup -->
+  <link rel="icon" type="image/png" href="ainsiders-logo.png" id="main-favicon">
+  <link rel="apple-touch-icon" href="ainsiders-logo.png">
+  <meta name="description" content="Generate synthetic, test-only card numbers that pass Luhn checksum for development and education purposes. Not for real transactions.">
+  <meta name="keywords" content="luhn, card number, test cards, development, education, checksum">
+  
+  <!-- Security Headers -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+  
+  <!-- Cache Control Headers -->
+  <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable">
+  <meta http-equiv="Expires" content="31536000">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  
+  <style>
+    /* CSS Variables for AI Nexus Theme */
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #0a0a0a;
+      --bg-tertiary: #111111;
+      --accent-primary: #0066ff;
+      --accent-secondary: #0052cc;
+      --accent-blue: #4d94ff;
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+      --text-muted: #888888;
+      --border-color: rgba(0, 102, 255, 0.2);
+      --border-radius: 8px;
+      --shadow-glow: 0 0 20px rgba(0, 102, 255, 0.3);
+      --shadow-dark: 0 10px 30px rgba(0, 0, 0, 0.5);
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-fast: all 0.15s ease;
+    }
+
+    /* Reset and Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(0, 102, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(77, 148, 255, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Ensure proper background and layout */
+    .website-content {
+      min-height: 100vh;
+      background: #000000;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Luhn Generator Specific Styles */
+    .luhn-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .disclaimer-banner {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
+      border-left: 5px solid #c44569;
+    }
+    
+    .disclaimer-banner h2 {
+      margin: 0 0 1rem 0;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .disclaimer-banner ul {
+      margin: 1rem 0;
+      padding-left: 1.5rem;
+    }
+    
+    .disclaimer-banner li {
+      margin: 0.5rem 0;
+    }
+    
+    .disclaimer-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+    }
+    
+    .disclaimer-checkbox input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: #2ecc71;
+    }
+    
+    .disclaimer-checkbox label {
+      font-weight: 500;
+      cursor: pointer;
+    }
+    
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .generator-section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .generator-form {
+      display: grid;
+      gap: 1.5rem;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .form-group label {
+      font-weight: 600;
+      color: #e0e0e0;
+      font-size: 0.9rem;
+    }
+    
+    .form-group input,
+    .form-group select {
+      padding: 0.75rem;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #e0e0e0;
+      font-family: 'JetBrains Mono', monospace;
+      transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+    
+    .form-group input.error {
+      border-color: #e74c3c;
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+    }
+    
+    .error-message {
+      color: #e74c3c;
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+    }
+    
+    .generate-btn {
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+    
+    .generate-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+    }
+    
+    .generate-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .results-section {
+      margin-top: 2rem;
+    }
+    
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .results-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .action-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.05);
+      color: #e0e0e0;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+    
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .card-numbers {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 1rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .card-number {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      color: #2ecc71;
+    }
+    
+    .card-number .copy-btn {
+      background: none;
+      border: none;
+      color: #3498db;
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+    
+    .card-number .copy-btn:hover {
+      background: rgba(52, 152, 219, 0.1);
+      color: #5dade2;
+    }
+    
+    .sidebar {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      height: fit-content;
+    }
+    
+    .sidebar h3 {
+      margin: 0 0 1rem 0;
+      color: #e0e0e0;
+      font-size: 1.2rem;
+    }
+    
+    .doc-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .doc-links li {
+      margin: 0.75rem 0;
+    }
+    
+    .doc-links a {
+      color: #3498db;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+    
+    .doc-links a:hover {
+      background: rgba(52, 152, 219, 0.1);
+      color: #5dade2;
+    }
+    
+    .luhn-info {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: rgba(46, 204, 113, 0.1);
+      border-radius: 8px;
+      border-left: 4px solid #2ecc71;
+    }
+    
+    .luhn-info h4 {
+      margin: 0 0 0.5rem 0;
+      color: #2ecc71;
+    }
+    
+    .luhn-info p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #bdc3c7;
+    }
+    
+    .success-message {
+      background: rgba(46, 204, 113, 0.1);
+      color: #2ecc71;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      border-left: 4px solid #2ecc71;
+      display: none;
+    }
+    
+    .error-message-global {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      border-left: 4px solid #e74c3c;
+      display: none;
+    }
+    
+    /* Navigation and Footer Styles */
+    .navbar {
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .nav-logo img {
+      height: 40px;
+    }
+    
+    .nav-menu {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    
+    .nav-link {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    
+    .nav-link:hover {
+      color: #3498db;
+    }
+    
+    .footer {
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: auto;
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    
+    .footer-section h3,
+    .footer-section h4 {
+      color: #ffffff;
+      margin-bottom: 1rem;
+    }
+    
+    .footer-section ul {
+      list-style: none;
+    }
+    
+    .footer-section ul li {
+      margin: 0.5rem 0;
+    }
+    
+    .footer-section ul li a {
+      color: #cccccc;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-section ul li a:hover {
+      color: #3498db;
+    }
+    
+    .footer-bottom {
+      text-align: center;
+      padding: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #888888;
+    }
+    
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .luhn-container {
+        padding: 1rem;
+      }
+      
+      .generator-section {
+        padding: 1.5rem;
+      }
+      
+      .nav-menu {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="website-content">
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <a href="index.html">
+            <img src="logo.svg" alt="A.Insiders Logo" class="logo">
+          </a>
+        </div>
+        <ul class="nav-menu">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="about.html" class="nav-link">About</a></li>
+          <li><a href="software.html" class="nav-link">Software</a></li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+        <div class="nav-toggle">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="luhn-container">
+      <!-- Disclaimer Banner -->
+      <div class="disclaimer-banner">
+        <h2>
+          <i class="fas fa-exclamation-triangle"></i>
+          Test-Only Luhn Card Number Generator
+        </h2>
+        <p><strong>For development, testing, and education purposes only.</strong></p>
+        <ul>
+          <li>❌ <strong>NOT</strong> valid for real transactions or payments</li>
+          <li>❌ <strong>NOT</strong> for obtaining goods or services</li>
+          <li>❌ <strong>NOT</strong> for bypassing payment systems</li>
+          <li>✅ <strong>ONLY</strong> for software testing and educational purposes</li>
+        </ul>
+        <div class="disclaimer-checkbox">
+          <input type="checkbox" id="disclaimer-accepted">
+          <label for="disclaimer-accepted">
+            I understand and will only use this tool in sandbox environments for legitimate development and testing purposes
+          </label>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <!-- Generator Section -->
+        <div class="generator-section">
+          <h2>Generate Test Card Numbers</h2>
+          
+          <div class="success-message" id="success-message">
+            <i class="fas fa-check-circle"></i>
+            Card numbers generated successfully!
+          </div>
+          
+          <div class="error-message-global" id="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="error-text"></span>
+          </div>
+          
+          <form class="generator-form" id="generator-form">
+            <div class="form-group">
+              <label for="iin-bin">IIN/BIN (6-8 digits)</label>
+              <input type="text" id="iin-bin" name="iin-bin" placeholder="e.g., 424242" maxlength="8" pattern="[0-9]{6,8}" value="424242">
+              <div class="error-message" id="iin-error"></div>
+            </div>
+            
+            <div class="form-group">
+              <label for="pan-length">PAN Length</label>
+              <select id="pan-length" name="pan-length">
+                <option value="13">13 digits</option>
+                <option value="14">14 digits</option>
+                <option value="15">15 digits</option>
+                <option value="16" selected>16 digits</option>
+                <option value="17">17 digits</option>
+                <option value="18">18 digits</option>
+                <option value="19">19 digits</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="quantity">Quantity (1-50)</label>
+              <input type="number" id="quantity" name="quantity" min="1" max="50" value="5">
+              <div class="error-message" id="quantity-error"></div>
+            </div>
+            
+            <button type="submit" class="generate-btn" id="generate-btn" disabled>
+              <i class="fas fa-magic"></i>
+              Generate Card Numbers
+            </button>
+          </form>
+          
+          <div class="results-section" id="results-section" style="display: none;">
+            <div class="results-header">
+              <h3>Generated Card Numbers</h3>
+              <div class="results-actions">
+                <button class="action-btn" id="copy-all-btn">
+                  <i class="fas fa-copy"></i>
+                  Copy All
+                </button>
+                <button class="action-btn" id="export-btn">
+                  <i class="fas fa-download"></i>
+                  Export .txt
+                </button>
+                <button class="action-btn" id="clear-btn">
+                  <i class="fas fa-trash"></i>
+                  Clear
+                </button>
+              </div>
+            </div>
+            <div class="card-numbers" id="card-numbers"></div>
+          </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <h3>Official Test Card Resources</h3>
+          <ul class="doc-links">
+            <li>
+              <a href="https://docs.stripe.com/testing" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-stripe"></i>
+                Stripe Test Cards
+              </a>
+            </li>
+            <li>
+              <a href="https://stripe.com/docs/testing#cards" target="_blank" rel="noopener noreferrer">
+                <i class="fas fa-credit-card"></i>
+                Stripe Card Testing
+              </a>
+            </li>
+            <li>
+              <a href="https://developers.braintreepayments.com/guides/credit-cards/testing-go-live/node" target="_blank" rel="noopener noreferrer">
+                <i class="fas fa-credit-card"></i>
+                Braintree Test Cards
+              </a>
+            </li>
+            <li>
+              <a href="https://developer.paypal.com/docs/api-basics/sandbox/test-cards/" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-paypal"></i>
+                PayPal Test Cards
+              </a>
+            </li>
+            <li>
+              <a href="https://docs.adyen.com/development-resources/test-cards/test-card-numbers" target="_blank" rel="noopener noreferrer">
+                <i class="fas fa-credit-card"></i>
+                Adyen Test Cards
+              </a>
+            </li>
+          </ul>
+          
+          <div class="luhn-info">
+            <h4>About Luhn Algorithm</h4>
+            <p>The Luhn algorithm (mod 10) is used to validate credit card numbers. It's a simple checksum formula used to validate identification numbers.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>A.Insiders</h3>
+          <p>Empowering developers with secure, innovative tools for the digital age.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="software.html">Software</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="terms-of-service.html">Terms of Service</a></li>
+            <li><a href="cookie-policy.html">Cookie Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 A.Insiders. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Luhn Algorithm Implementation
+    class LuhnGenerator {
+      static computeCheckDigit(num) {
+        const digits = num.split('').map(Number).reverse();
+        const sum = digits.reduce((acc, d, i) => {
+          let v = d;
+          if (i % 2 === 0) {
+            v = d * 2;
+            if (v > 9) v -= 9;
+          }
+          return acc + v;
+        }, 0);
+        const mod = sum % 10;
+        return String((10 - mod) % 10);
+      }
+      
+      static passesLuhn(pan) {
+        const body = pan.slice(0, -1);
+        const check = pan.slice(-1);
+        return this.computeCheckDigit(body) === check;
+      }
+      
+      static generatePan(iinOrBin, panLength = 16) {
+        if (!/^\d{6,8}$/.test(iinOrBin)) {
+          throw new Error("IIN/BIN must be 6-8 digits");
+        }
+        if (panLength < 13 || panLength > 19) {
+          throw new Error("PAN length must be 13-19");
+        }
+        
+        const bodyLen = panLength - (iinOrBin.length + 1);
+        if (bodyLen < 1) {
+          throw new Error("Invalid lengths");
+        }
+        
+        const account = Array.from({ length: bodyLen }, () => 
+          Math.floor(Math.random() * 10)
+        ).join('');
+        
+        const body = iinOrBin + account;
+        const check = this.computeCheckDigit(body);
+        return body + check;
+      }
+    }
+    
+    // Rate Limiting (Client-side simulation)
+    class RateLimiter {
+      constructor() {
+        this.requests = 0;
+        this.resetTime = Date.now() + (60 * 60 * 1000); // 1 hour
+      }
+      
+      canMakeRequest() {
+        const now = Date.now();
+        if (now > this.resetTime) {
+          this.requests = 0;
+          this.resetTime = now + (60 * 60 * 1000);
+        }
+        return this.requests < 60;
+      }
+      
+      recordRequest() {
+        this.requests++;
+      }
+    }
+    
+    // Main Application
+    class LuhnApp {
+      constructor() {
+        this.rateLimiter = new RateLimiter();
+        this.generatedCards = [];
+        this.initializeEventListeners();
+      }
+      
+      initializeEventListeners() {
+        console.log('Initializing event listeners...');
+        
+        // Disclaimer checkbox
+        const disclaimerCheckbox = document.getElementById('disclaimer-accepted');
+        const generateBtn = document.getElementById('generate-btn');
+        
+        if (disclaimerCheckbox && generateBtn) {
+          disclaimerCheckbox.addEventListener('change', (e) => {
+            console.log('Disclaimer checkbox changed:', e.target.checked);
+            generateBtn.disabled = !e.target.checked;
+          });
+        } else {
+          console.error('Disclaimer checkbox or generate button not found');
+        }
+        
+        // Form submission
+        const form = document.getElementById('generator-form');
+        if (form) {
+          form.addEventListener('submit', (e) => {
+            console.log('Form submitted');
+            e.preventDefault();
+            this.generateCards();
+          });
+        } else {
+          console.error('Form not found');
+        }
+        
+        // Input validation
+        const iinInput = document.getElementById('iin-bin');
+        if (iinInput) {
+          iinInput.addEventListener('input', () => this.validateIIN());
+        }
+        
+        const quantityInput = document.getElementById('quantity');
+        if (quantityInput) {
+          quantityInput.addEventListener('input', () => this.validateQuantity());
+        }
+        
+        // Action buttons
+        const copyAllBtn = document.getElementById('copy-all-btn');
+        const exportBtn = document.getElementById('export-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        
+        if (copyAllBtn) {
+          copyAllBtn.addEventListener('click', () => this.copyAll());
+        }
+        if (exportBtn) {
+          exportBtn.addEventListener('click', () => this.exportToFile());
+        }
+        if (clearBtn) {
+          clearBtn.addEventListener('click', () => this.clearResults());
+        }
+        
+        console.log('Event listeners initialized');
+      }
+      
+      validateIIN() {
+        const input = document.getElementById('iin-bin');
+        const error = document.getElementById('iin-error');
+        const value = input.value;
+        
+        if (!value) {
+          error.textContent = '';
+          input.classList.remove('error');
+          return true; // Allow empty IIN - will use default
+        }
+        
+        if (!/^\d{6,8}$/.test(value)) {
+          error.textContent = 'IIN/BIN must be 6-8 digits';
+          input.classList.add('error');
+          return false;
+        }
+        
+        error.textContent = '';
+        input.classList.remove('error');
+        return true;
+      }
+      
+      validateQuantity() {
+        const input = document.getElementById('quantity');
+        const error = document.getElementById('quantity-error');
+        const value = parseInt(input.value);
+        
+        if (isNaN(value) || value < 1 || value > 50) {
+          error.textContent = 'Quantity must be between 1 and 50';
+          input.classList.add('error');
+          return false;
+        }
+        
+        error.textContent = '';
+        input.classList.remove('error');
+        return true;
+      }
+      
+      generateCards() {
+        console.log('generateCards() called');
+        
+        if (!this.rateLimiter.canMakeRequest()) {
+          this.showError('Rate limit exceeded. Please wait before generating more cards.');
+          return;
+        }
+        
+        // Validate inputs
+        if (!this.validateIIN() || !this.validateQuantity()) {
+          console.log('Validation failed');
+          return;
+        }
+        
+        const iinBin = document.getElementById('iin-bin').value || '424242'; // Default IIN if empty
+        const panLength = parseInt(document.getElementById('pan-length').value);
+        const quantity = parseInt(document.getElementById('quantity').value);
+        
+        console.log('Generating cards with:', { iinBin, panLength, quantity });
+        
+        try {
+          this.generatedCards = [];
+          for (let i = 0; i < quantity; i++) {
+            const cardNumber = LuhnGenerator.generatePan(iinBin, panLength);
+            this.generatedCards.push(cardNumber);
+          }
+          
+          this.rateLimiter.recordRequest();
+          this.displayResults();
+          this.showSuccess(`Generated ${quantity} card number(s) successfully!`);
+          console.log('Cards generated:', this.generatedCards);
+        } catch (error) {
+          console.error('Error generating cards:', error);
+          this.showError(error.message);
+        }
+      }
+      
+      displayResults() {
+        const resultsSection = document.getElementById('results-section');
+        const cardNumbersContainer = document.getElementById('card-numbers');
+        
+        cardNumbersContainer.innerHTML = '';
+        
+        this.generatedCards.forEach((cardNumber, index) => {
+          const cardElement = document.createElement('div');
+          cardElement.className = 'card-number';
+          cardElement.innerHTML = `
+            <span>${this.formatCardNumber(cardNumber)}</span>
+            <button class="copy-btn" onclick="luhnApp.copySingle('${cardNumber}')" title="Copy to clipboard">
+              <i class="fas fa-copy"></i>
+            </button>
+          `;
+          cardNumbersContainer.appendChild(cardElement);
+        });
+        
+        resultsSection.style.display = 'block';
+      }
+      
+      formatCardNumber(cardNumber) {
+        // Format as XXXX XXXX XXXX XXXX
+        return cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ');
+      }
+      
+      copySingle(cardNumber) {
+        navigator.clipboard.writeText(cardNumber).then(() => {
+          this.showSuccess('Card number copied to clipboard!');
+        }).catch(() => {
+          this.showError('Failed to copy to clipboard');
+        });
+      }
+      
+      copyAll() {
+        if (this.generatedCards.length === 0) return;
+        
+        const text = this.generatedCards.join('\n');
+        navigator.clipboard.writeText(text).then(() => {
+          this.showSuccess('All card numbers copied to clipboard!');
+        }).catch(() => {
+          this.showError('Failed to copy to clipboard');
+        });
+      }
+      
+      exportToFile() {
+        if (this.generatedCards.length === 0) return;
+        
+        const text = this.generatedCards.join('\n');
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'test-card-numbers.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        this.showSuccess('Card numbers exported to file!');
+      }
+      
+      clearResults() {
+        this.generatedCards = [];
+        document.getElementById('results-section').style.display = 'none';
+        this.hideMessages();
+      }
+      
+      showSuccess(message = 'Operation completed successfully!') {
+        const successElement = document.getElementById('success-message');
+        successElement.textContent = message;
+        successElement.style.display = 'block';
+        document.getElementById('error-message').style.display = 'none';
+        
+        setTimeout(() => {
+          successElement.style.display = 'none';
+        }, 5000);
+      }
+      
+      showError(message) {
+        const errorElement = document.getElementById('error-message');
+        document.getElementById('error-text').textContent = message;
+        errorElement.style.display = 'block';
+        document.getElementById('success-message').style.display = 'none';
+        
+        setTimeout(() => {
+          errorElement.style.display = 'none';
+        }, 5000);
+      }
+      
+      hideMessages() {
+        document.getElementById('success-message').style.display = 'none';
+        document.getElementById('error-message').style.display = 'none';
+      }
+    }
+    
+    // Initialize the application
+    let luhnApp;
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Luhn Card Generator initializing...');
+      try {
+        luhnApp = new LuhnApp();
+        console.log('Luhn Card Generator initialized successfully');
+        
+        // Add some debugging
+        console.log('Disclaimer checkbox:', document.getElementById('disclaimer-accepted'));
+        console.log('Generate button:', document.getElementById('generate-btn'));
+        console.log('Form:', document.getElementById('generator-form'));
+        
+        // Test if elements are found
+        const disclaimerCheckbox = document.getElementById('disclaimer-accepted');
+        const generateBtn = document.getElementById('generate-btn');
+        const form = document.getElementById('generator-form');
+        
+        if (!disclaimerCheckbox) console.error('Disclaimer checkbox not found');
+        if (!generateBtn) console.error('Generate button not found');
+        if (!form) console.error('Form not found');
+        
+        // Add a test function to window for debugging
+        window.testLuhnGenerator = () => {
+          console.log('Testing Luhn Generator...');
+          if (luhnApp) {
+            console.log('LuhnApp instance found');
+            console.log('Generated cards:', luhnApp.generatedCards);
+            console.log('Rate limiter:', luhnApp.rateLimiter);
+          } else {
+            console.error('LuhnApp not initialized');
+          }
+        };
+        
+      } catch (error) {
+        console.error('Error initializing Luhn Card Generator:', error);
+      }
+    });
+    
+    // Add fallback initialization
+    window.addEventListener('load', () => {
+      if (!luhnApp) {
+        console.log('Fallback initialization...');
+        try {
+          luhnApp = new LuhnApp();
+          console.log('Luhn Card Generator initialized via fallback');
+        } catch (error) {
+          console.error('Fallback initialization failed:', error);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

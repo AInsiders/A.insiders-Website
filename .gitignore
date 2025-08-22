@@ -1,0 +1,146 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+.vuepress/dist/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Temporary folders
+tmp/
+temp/
+
+# Large files that shouldn't be in git
+*.zip
+*.tar.gz
+*.rar
+*.7z
+*.iso
+*.dmg
+
+# Specific large files to exclude
+blocklist-ipsets-master.zip
+LLM---Detect-AI-Generated-Text-main.zip
+
+# Large media files
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+*.mkv
+*.mp3
+*.wav
+*.flac
+*.aac
+*.ogg
+
+# Large images (if not needed in repo)
+*.psd
+*.ai
+*.eps
+*.tiff
+*.bmp
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Cache files
+.cache/
+*.cache
+
+# Large data files (uncomment if you have large JSON data files)
+# *.json
+
+# Specific to your project - large files that might be causing issues
+# Uncomment these if they're causing problems:
+# brain-styles.css
+# ip-checker.html
+# password-checker.html
