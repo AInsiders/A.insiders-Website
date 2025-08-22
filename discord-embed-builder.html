@@ -84,31 +84,478 @@
     }
     
     .embed-builder-content {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      flex-direction: row;
       gap: 30px;
       margin-bottom: 30px;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    
+    .canvas-container {
+      flex: 1;
+      min-height: 600px;
+    }
+    
+    .component-library-desktop {
+      flex: 1;
+      min-height: 600px;
+      overflow-y: auto;
+    }
+    
+    .component-library {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .component-library h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+    
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    
+    .component-item {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(102, 126, 234, 0.08));
+      border: 2px solid rgba(102, 126, 234, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -webkit-touch-callout: none;
+      position: relative;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .component-item::before {
+      content: '⚡';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 14px;
+      color: rgba(0, 191, 255, 0.7);
+      pointer-events: none;
+      z-index: 2;
+    }
+    
+    .component-item::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 191, 255, 0.3), transparent);
+      transition: left 0.6s ease;
+      z-index: 1;
+    }
+    
+    .component-item:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(102, 126, 234, 0.15));
+      border-color: rgba(102, 126, 234, 0.6);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+    
+    .component-item:hover::after {
+      left: 100%;
+    }
+    
+    .component-item:hover::before {
+      color: rgba(102, 126, 234, 1);
+      transform: scale(1.2);
+    }
+    
+    .component-item:active {
+      cursor: pointer;
+      transform: translateY(-1px) scale(1.01);
+    }
+    
+    .component-icon {
+      font-size: 1.6rem;
+      color: #667eea;
+      filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3));
+      width: 40px;
+      text-align: center;
+    }
+    
+    .component-info {
+      flex: 1;
+      z-index: 2;
+      position: relative;
+    }
+    
+    .component-info h4 {
+      margin: 0 0 6px 0;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+    
+    .component-info p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.85rem;
+      line-height: 1.3;
+    }
+    
+    /* Mobile Component Dropdown */
+    .mobile-component-dropdown {
+      display: none; /* Hidden by default */
+      width: 100%;
+      margin-top: 20px;
+    }
+    
+    .mobile-dropdown-toggle {
+      width: 100%;
+      background: linear-gradient(135deg, #00BFFF 0%, #1E90FF 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 16px 20px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    .mobile-dropdown-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 191, 255, 0.4);
+    }
+    
+    .dropdown-arrow {
+      transition: transform 0.3s ease;
+    }
+    
+    .mobile-component-dropdown.open .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+    
+    .mobile-dropdown-content {
+      display: none;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .mobile-component-dropdown.open .mobile-dropdown-content {
+      display: block;
+    }
+    
+    .mobile-component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+    
+    .mobile-component-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .mobile-component-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #667eea;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+    
+    .mobile-component-item:active {
+      cursor: pointer;
+      transform: translateY(-1px);
+    }
+    
+    .mobile-toggle-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 50px;
+      padding: 12px 20px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      min-width: 120px;
+      justify-content: center;
+    }
+    
+    .mobile-toggle-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    /* Component Sidebar (Mobile) */
+    .component-sidebar {
+      display: none;
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 1001;
+      transition: right 0.3s ease;
+      overflow-y: auto;
+    }
+    
+    .component-sidebar.open {
+      right: 0;
+    }
+    
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-header h3 {
+      margin: 0;
+      color: white;
+      font-size: 18px;
+    }
+    
+    .sidebar-close {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    .sidebar-close:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-content {
+      padding: 20px;
+    }
+    
+    .sidebar-component-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .sidebar-component-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .sidebar-component-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #667eea;
+      transform: translateX(5px);
+    }
+    
+    .sidebar-component-item .component-icon {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 16px;
+    }
+    
+    .sidebar-component-item .component-info h4 {
+      margin: 0 0 5px 0;
+      color: white;
+      font-size: 14px;
+    }
+    
+    .sidebar-component-item .component-info p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+    }
+    
+    /* Component Library (Desktop/Tablet) */
+    .component-library-desktop {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(0, 191, 255, 0.2);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 8px 32px rgba(0, 191, 255, 0.1);
+    }
+    
+    .library-header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(0, 191, 255, 0.3);
+    }
+    
+    .library-header h3 {
+      color: #00BFFF;
+      font-size: 1.4em;
+      margin: 0 0 8px 0;
+      font-weight: 600;
+    }
+    
+    .library-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      margin: 0;
+      font-size: 0.9em;
+      font-style: italic;
+    }
+    
+    /* Canvas Container */
+    .canvas-container {
+      flex: 1;
+      min-height: 600px;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .component-library-desktop {
+        display: none;
+      }
+      
+      .mobile-component-dropdown {
+        display: block !important;
+      }
+      
+      .embed-builder-content {
+        flex-direction: column;
+        justify-content: flex-start;
+      }
+      
+      .canvas-container {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+      
+      .component-library-desktop {
+        width: 100%;
+      }
+    }
+    
+    @media (min-width: 769px) {
+      .mobile-component-dropdown {
+        display: none !important;
+      }
+      
+      .component-library-desktop {
+        display: block;
+      }
     }
     
     .embed-canvas {
       background: rgba(0, 0, 0, 0.3);
       border-radius: 15px;
       padding: 20px;
-      min-height: 400px;
+      min-height: 600px;
+      height: 100%;
       border: 2px dashed rgba(255, 255, 255, 0.2);
       position: relative;
+      transition: all 0.3s ease;
+      overflow-y: auto;
     }
     
     .embed-canvas::before {
-      content: "Drag and drop embed elements here";
+      content: 'Click components to add them here';
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 1.2rem;
-      text-align: center;
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 14px;
       pointer-events: none;
+      z-index: 1;
+    }
+    
+    .embed-canvas:has(.canvas-component)::before {
+      display: none;
+    }
+    
+    .embed-canvas.drag-over {
+      border-color: #667eea;
+      background: rgba(102, 126, 234, 0.1);
+      transform: scale(1.02);
+      box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .canvas-placeholder {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: rgba(255, 255, 255, 0.5);
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    .canvas-placeholder.hidden {
+      opacity: 0;
+    }
+    
+    .canvas-placeholder i {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      display: block;
+    }
+    
+    .canvas-placeholder p {
+      font-size: 1.2rem;
+      margin: 0;
     }
     
     .embed-controls {
@@ -302,6 +749,59 @@
       margin-bottom: 8px;
     }
     
+    .embed-header {
+      color: #fff;
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    
+    .embed-subheader {
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+    
+    .embed-code {
+      background: rgba(0, 0, 0, 0.3);
+      color: #dcddde;
+      font-family: monospace;
+      font-size: 13px;
+      padding: 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    
+    .embed-list {
+      margin-bottom: 8px;
+    }
+    
+    .embed-list .list-title {
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    
+    .embed-list .list-items {
+      color: #dcddde;
+      font-size: 14px;
+      margin: 0;
+      padding-left: 20px;
+    }
+    
+    .embed-list .list-items li {
+      margin-bottom: 2px;
+    }
+    
+    .embed-divider {
+      color: #72767d;
+      text-align: center;
+      margin: 8px 0;
+      font-size: 12px;
+    }
+    
     .embed-author {
       display: flex;
       align-items: center;
@@ -382,6 +882,261 @@
       color: #72767d;
       font-size: 12px;
       margin-top: 8px;
+    }
+    
+    /* Canvas Component Styles */
+    .canvas-component {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 10px;
+      position: relative;
+      transition: all 0.3s ease;
+      cursor: default;
+      user-select: none;
+      pointer-events: auto;
+    }
+    
+    .canvas-component:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #667eea;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+    }
+    
+
+    
+    .canvas-component-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .canvas-component-title {
+      color: #667eea;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .canvas-component-actions {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .component-action-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 4px;
+      padding: 4px 8px;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+    }
+    
+    .component-action-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+    
+    .component-action-btn.delete:hover {
+      background: #f44336;
+      color: white;
+    }
+    
+    .canvas-component-content {
+      margin-bottom: 10px;
+    }
+    
+    .canvas-component input,
+    .canvas-component textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    
+    .canvas-component input:focus,
+    .canvas-component textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+    }
+    
+
+    
+    /* List Component Styles */
+    .list-items-container {
+      margin-bottom: 10px;
+    }
+    
+    .list-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .list-item .rich-text-toolbar {
+      margin-bottom: 4px;
+    }
+    
+    .list-item .rich-text-editor {
+      min-height: 40px;
+      max-height: 80px;
+      margin-bottom: 4px;
+    }
+    
+    .list-item input {
+      flex: 1;
+      margin: 0;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .list-item input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+    }
+    
+    .list-item-remove {
+      background: rgba(244, 67, 54, 0.2);
+      border: 1px solid rgba(244, 67, 54, 0.3);
+      color: #f44336;
+      border-radius: 4px;
+      padding: 6px 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 12px;
+      align-self: flex-end;
+      margin-top: 4px;
+    }
+    
+    .list-item-remove:hover {
+      background: rgba(244, 67, 54, 0.3);
+      border-color: #f44336;
+    }
+    
+    .list-item-remove:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    /* Rich Text Editor Styles */
+    .rich-text-toolbar {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 6px;
+      padding: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      flex-wrap: wrap;
+    }
+    
+    .format-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.8);
+      border-radius: 3px;
+      padding: 4px 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 11px;
+      min-width: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .format-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border-color: #667eea;
+    }
+    
+    .format-btn.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+    
+    .rich-text-editor {
+      min-height: 60px;
+      max-height: 150px;
+      overflow-y: auto;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      color: white;
+      font-size: 14px;
+      line-height: 1.4;
+      outline: none;
+      transition: all 0.3s ease;
+      cursor: text;
+      position: relative;
+      z-index: 1;
+      pointer-events: auto;
+      user-select: text;
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+    }
+    
+    .rich-text-editor:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+      background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .rich-text-editor:empty:before {
+      content: attr(placeholder);
+      color: rgba(255, 255, 255, 0.5);
+      pointer-events: none;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+    
+    .rich-text-editor[data-bold="true"] {
+      font-weight: bold;
+    }
+    
+    .rich-text-editor[data-italic="true"] {
+      font-style: italic;
+    }
+    
+    .rich-text-editor[data-underline="true"] {
+      text-decoration: underline;
+    }
+    
+    .rich-text-editor[data-strikethrough="true"] {
+      text-decoration: line-through;
+    }
+    
+    .rich-text-editor code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-family: monospace;
+      font-size: 12px;
     }
     
     /* Discord formatting preview styles */
@@ -568,7 +1323,7 @@
     <div class="embed-builder-container">
       <div class="embed-builder-header">
         <h1><i class="fab fa-discord"></i> Discord Embed Builder</h1>
-        <p>Advanced drag-and-drop Discord embed builder with snap-to-grid functionality, live preview, and JSON export</p>
+        <p>Advanced click-to-add Discord embed builder with live preview and JSON export</p>
       </div>
 
       <!-- Features Overview -->
@@ -577,15 +1332,15 @@
           <div class="feature-icon">
             <i class="fas fa-mouse-pointer"></i>
           </div>
-          <h4>Drag & Drop Interface</h4>
-          <p>Intuitive block-based editing with visual feedback and smooth interactions.</p>
+          <h4>Click to Add Interface</h4>
+          <p>Simple and intuitive component selection with instant addition to your embed.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">
-            <i class="fas fa-th-large"></i>
+            <i class="fas fa-edit"></i>
           </div>
-          <h4>Snap-to-Grid</h4>
-          <p>8px grid system with edge snapping for precise layout control.</p>
+          <h4>Rich Text Editing</h4>
+          <p>Advanced text formatting with bold, italic, underline, and code support.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">
@@ -603,93 +1358,183 @@
         </div>
       </div>
 
+      <!-- Mobile Component Library (Dropdown) -->
+      <div class="mobile-component-dropdown" id="mobileComponentDropdown">
+        <button class="mobile-dropdown-toggle" onclick="toggleMobileComponentDropdown()">
+          <i class="fas fa-puzzle-piece"></i>
+          <span>Components</span>
+          <i class="fas fa-chevron-down dropdown-arrow"></i>
+        </button>
+        
+        <div class="mobile-dropdown-content" id="mobileDropdownContent">
+          <div class="mobile-component-grid">
+            <div class="mobile-component-item" data-type="title" data-component="title">
+              <div class="component-icon">
+                <i class="fas fa-heading"></i>
+              </div>
+              <div class="component-info">
+                <h4>Title</h4>
+                <p>Main embed title</p>
+              </div>
+            </div>
+            
+            <div class="mobile-component-item" data-type="header" data-component="header">
+              <div class="component-icon">
+                <i class="fas fa-h-square"></i>
+              </div>
+              <div class="component-info">
+                <h4>Header</h4>
+                <p>Section header (##)</p>
+              </div>
+            </div>
+            
+            <div class="mobile-component-item" data-type="subheader" data-component="subheader">
+              <div class="component-icon">
+                <i class="fas fa-h-square"></i>
+              </div>
+              <div class="component-info">
+                <h4>Sub-header</h4>
+                <p>Subsection header (###)</p>
+              </div>
+            </div>
+            
+            <div class="mobile-component-item" data-type="text" data-component="text">
+              <div class="component-icon">
+                <i class="fas fa-align-left"></i>
+              </div>
+              <div class="component-info">
+                <h4>Text Block</h4>
+                <p>Rich text editor</p>
+              </div>
+            </div>
+            
+            <div class="mobile-component-item" data-type="code" data-component="code">
+              <div class="component-icon">
+                <i class="fas fa-code"></i>
+              </div>
+              <div class="component-info">
+                <h4>Code Block</h4>
+                <p>Code formatting</p>
+              </div>
+            </div>
+            
+            <div class="mobile-component-item" data-type="list" data-component="list">
+              <div class="component-icon">
+                <i class="fas fa-list"></i>
+              </div>
+              <div class="component-info">
+                <h4>List</h4>
+                <p>Bullet points</p>
+              </div>
+            </div>
+            
+
+            
+            <div class="mobile-component-item" data-type="divider" data-component="divider">
+              <div class="component-icon">
+                <i class="fas fa-minus"></i>
+              </div>
+              <div class="component-info">
+                <h4>Divider</h4>
+                <p>Separator line</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Embed Builder Interface -->
       <div class="embed-builder-content">
+        <!-- Canvas Area -->
+        <div class="canvas-container">
         <div class="embed-canvas" id="embedCanvas">
           <!-- Canvas area for drag and drop -->
+            <div class="canvas-placeholder">
+              <i class="fas fa-mouse-pointer"></i>
+              <p>Click components to build your embed</p>
+            </div>
         </div>
         
-        <div class="embed-controls">
-          <div class="control-section">
-            <h3><i class="fas fa-cog"></i> Embed Settings</h3>
-            <div class="form-group">
-              <label for="embedTitle">Title</label>
-              <input type="text" id="embedTitle" placeholder="Enter embed title">
             </div>
-            <div class="form-group">
-              <label for="embedDescription">Description</label>
-              <textarea id="embedDescription" rows="4" placeholder="Enter embed description"></textarea>
+        
+        <!-- Component Library (Desktop/Tablet) -->
+        <div class="component-library-desktop">
+          <div class="library-header">
+            <h3><i class="fas fa-cube"></i> Click to Add Components</h3>
+            <p class="library-subtitle">Click components to add them to your embed</p>
+          </div>
+          
+          <div class="component-grid">
+            <div class="component-item" data-type="title" data-component="title" style="cursor: pointer; user-select: none;">
+              <div class="component-icon" style="pointer-events: none;">
+                <i class="fas fa-heading"></i>
             </div>
-            <div class="form-group">
-              <label for="embedColor">Color</label>
-              <input type="color" id="embedColor" value="#667eea">
+              <div class="component-info" style="pointer-events: none;">
+                <h4>Title</h4>
+                <p>Main embed title</p>
             </div>
-            <div class="form-group">
-              <label for="embedUrl">URL (optional)</label>
-              <input type="url" id="embedUrl" placeholder="https://example.com">
+            </div>
+            
+            <div class="component-item" data-type="header" data-component="header" style="cursor: pointer; user-select: none;">
+              <div class="component-icon" style="pointer-events: none;">
+                <i class="fas fa-h-square"></i>
+              </div>
+              <div class="component-info" style="pointer-events: none;">
+                <h4>Header</h4>
+                <p>Section header (##)</p>
             </div>
           </div>
 
-          <div class="control-section">
-            <h3><i class="fas fa-edit"></i> Discord Formatting</h3>
-            <div class="form-group">
-              <label for="discordContent">Discord Message Content</label>
-              <textarea id="discordContent" rows="3" placeholder="Enter Discord message content with formatting (e.g., # Header, **bold**, *italic*)"></textarea>
+            <div class="component-item" data-type="subheader" data-component="subheader" style="cursor: pointer; user-select: none;">
+              <div class="component-icon" style="pointer-events: none;">
+                <i class="fas fa-h-square"></i>
             </div>
-            <div class="form-group">
-              <label for="discordFields">Fields (one per line, format: Name|Value|Inline)</label>
-              <textarea id="discordFields" rows="4" placeholder="Field Name|Field Value|true&#10;Another Field|Another Value|false"></textarea>
+              <div class="component-info" style="pointer-events: none;">
+                <h4>Sub-header</h4>
+                <p>Subsection header (###)</p>
             </div>
-            <div class="form-group">
-              <label for="discordFooter">Footer Text</label>
-              <input type="text" id="discordFooter" placeholder="Enter footer text">
             </div>
-            <div class="form-group">
-              <label for="discordFooterIcon">Footer Icon URL</label>
-              <input type="url" id="discordFooterIcon" placeholder="https://example.com/footer-icon.png">
-            </div>
-          </div>
-
-          <div class="control-section">
-            <h3><i class="fas fa-user"></i> Author Settings</h3>
-            <div class="form-group">
-              <label for="authorName">Author Name</label>
-              <input type="text" id="authorName" placeholder="Enter author name">
-            </div>
-            <div class="form-group">
-              <label for="authorUrl">Author URL</label>
-              <input type="url" id="authorUrl" placeholder="https://example.com">
-            </div>
-            <div class="form-group">
-              <label for="authorIcon">Author Icon URL</label>
-              <input type="url" id="authorIcon" placeholder="https://example.com/icon.png">
+            
+            <div class="component-item" data-type="text" data-component="text" style="cursor: pointer; user-select: none;">
+              <div class="component-icon" style="pointer-events: none;">
+                <i class="fas fa-align-left"></i>
+              </div>
+              <div class="component-info" style="pointer-events: none;">
+                <h4>Text Block</h4>
+                <p>Rich text editor</p>
             </div>
           </div>
 
-          <div class="control-section">
-            <h3><i class="fas fa-image"></i> Media</h3>
-            <div class="form-group">
-              <label for="thumbnailUrl">Thumbnail URL</label>
-              <input type="url" id="thumbnailUrl" placeholder="https://example.com/thumbnail.png">
+            <div class="component-item" data-type="code" data-component="code" style="cursor: pointer; user-select: none;">
+              <div class="component-icon" style="pointer-events: none;">
+                <i class="fas fa-code"></i>
             </div>
-            <div class="form-group">
-              <label for="imageUrl">Image URL</label>
-              <input type="url" id="imageUrl" placeholder="https://example.com/image.png">
+              <div class="component-info" style="pointer-events: none;">
+                <h4>Code Block</h4>
+                <p>Code formatting</p>
             </div>
           </div>
 
-          <div class="control-section">
-            <h3><i class="fas fa-tools"></i> Actions</h3>
-            <div class="btn-group">
-              <button class="btn btn-primary" onclick="generateEmbed()">
-                <i class="fas fa-magic"></i> Generate Embed
-              </button>
-              <button class="btn btn-secondary" onclick="clearEmbed()">
-                <i class="fas fa-trash"></i> Clear
-              </button>
-              <button class="btn btn-secondary" onclick="loadPreset()">
-                <i class="fas fa-download"></i> Load Preset
-              </button>
+            <div class="component-item" data-type="list" data-component="list" style="cursor: pointer; user-select: none;">
+              <div class="component-icon" style="pointer-events: none;">
+                <i class="fas fa-list"></i>
+              </div>
+              <div class="component-info" style="pointer-events: none;">
+                <h4>List</h4>
+                <p>Bullet points</p>
+              </div>
+            </div>
+            
+
+            
+            <div class="component-item" data-type="divider" data-component="divider" style="cursor: pointer; user-select: none;">
+              <div class="component-icon" style="pointer-events: none;">
+                <i class="fas fa-minus"></i>
+              </div>
+              <div class="component-info" style="pointer-events: none;">
+                <h4>Divider</h4>
+                <p>Separator line</p>
+              </div>
             </div>
           </div>
         </div>
@@ -700,38 +1545,24 @@
         <h3><i class="fab fa-discord"></i> Discord Message Text</h3>
         <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 15px;">Copy and paste this text directly into Discord:</p>
         <div class="discord-text-code" id="discordTextOutput">
-# Welcome to A.Insiders!
-
-**A.Insiders** is a pioneering company specializing in:
-
-* AI Development
-* Cybersecurity Solutions
-* Innovative Applications
-
-## Our Mission
-
-We push the boundaries of what's possible in the digital landscape.
         </div>
         <div class="btn-group" style="margin-top: 15px;">
           <button class="btn btn-primary" onclick="copyDiscordText()">
             <i class="fas fa-copy"></i> Copy Discord Text
-          </button>
+              </button>
           <button class="btn btn-secondary" onclick="copyDiscordMessage()">
             <i class="fas fa-message"></i> Copy Full Message
-          </button>
-        </div>
-      </div>
+              </button>
+          <button class="btn btn-secondary" onclick="testEditorInput()" style="background: #ff9800;">
+            <i class="fas fa-bug"></i> Test Editors
+              </button>
+            </div>
+          </div>
 
       <!-- Discord Embed Preview -->
       <div class="discord-preview">
         <h3><i class="fab fa-discord"></i> Discord Embed Preview</h3>
         <div class="discord-embed-preview" id="discordPreview">
-          <div class="discord-embed">
-            <div class="embed-content">
-              <div class="embed-title">Example Embed</div>
-              <div class="embed-description">This is an example embed with Discord formatting</div>
-            </div>
-          </div>
         </div>
         <div class="btn-group" style="margin-top: 15px;">
           <button class="btn btn-secondary" onclick="copyWebhookPayload()">
@@ -829,6 +1660,1066 @@ We push the boundaries of what's possible in the digital landscape.
   
   <!-- Security Enhancement -->
   <script src="security-enhancement.js"></script>
+  
+  <!-- Drag and Drop Component System -->
+  <script>
+    // Component system for click to add
+    let canvasComponents = [];
+    let componentCounter = 0;
+    
+    // Component templates
+    const componentTemplates = {
+      title: {
+        title: 'Title',
+        icon: 'fas fa-heading',
+        template: `
+          <div class="canvas-component-header">
+            <div class="canvas-component-title">
+              <i class="fas fa-heading"></i> Title
+            </div>
+            <div class="canvas-component-actions">
+              <button class="component-action-btn" onclick="moveComponent(this, 'up')" title="Move Up">
+                <i class="fas fa-arrow-up"></i>
+              </button>
+              <button class="component-action-btn" onclick="moveComponent(this, 'down')" title="Move Down">
+                <i class="fas fa-arrow-down"></i>
+              </button>
+              <button class="component-action-btn delete" onclick="removeComponent(this)" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="canvas-component-content">
+            <div class="rich-text-toolbar">
+              <button class="format-btn" onclick="formatText(this, 'bold')" title="Bold">
+                <i class="fas fa-bold"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'italic')" title="Italic">
+                <i class="fas fa-italic"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'underline')" title="Underline">
+                <i class="fas fa-underline"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'strikethrough')" title="Strikethrough">
+                <i class="fas fa-strikethrough"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'code')" title="Code">
+                <i class="fas fa-code"></i>
+              </button>
+            </div>
+            <div class="rich-text-editor" contenteditable="true" placeholder="Enter title text..." data-field="title"></div>
+          </div>
+        `
+      },
+      header: {
+        title: 'Header',
+        icon: 'fas fa-h-square',
+        template: `
+          <div class="canvas-component-header">
+            <div class="canvas-component-title">
+              <i class="fas fa-h-square"></i> Header (##)
+            </div>
+            <div class="canvas-component-actions">
+              <button class="component-action-btn" onclick="moveComponent(this, 'up')" title="Move Up">
+                <i class="fas fa-arrow-up"></i>
+              </button>
+              <button class="component-action-btn" onclick="moveComponent(this, 'down')" title="Move Down">
+                <i class="fas fa-arrow-down"></i>
+              </button>
+              <button class="component-action-btn delete" onclick="removeComponent(this)" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="canvas-component-content">
+            <div class="rich-text-toolbar">
+              <button class="format-btn" onclick="formatText(this, 'bold')" title="Bold">
+                <i class="fas fa-bold"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'italic')" title="Italic">
+                <i class="fas fa-italic"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'underline')" title="Underline">
+                <i class="fas fa-underline"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'strikethrough')" title="Strikethrough">
+                <i class="fas fa-strikethrough"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'code')" title="Code">
+                <i class="fas fa-code"></i>
+              </button>
+            </div>
+            <div class="rich-text-editor" contenteditable="true" placeholder="Enter header text..." data-field="header"></div>
+          </div>
+        `
+      },
+      subheader: {
+        title: 'Sub-header',
+        icon: 'fas fa-h-square',
+        template: `
+          <div class="canvas-component-header">
+            <div class="canvas-component-title">
+              <i class="fas fa-h-square"></i> Sub-header (###)
+            </div>
+            <div class="canvas-component-actions">
+              <button class="component-action-btn" onclick="moveComponent(this, 'up')" title="Move Up">
+                <i class="fas fa-arrow-up"></i>
+              </button>
+              <button class="component-action-btn" onclick="moveComponent(this, 'down')" title="Move Down">
+                <i class="fas fa-arrow-down"></i>
+              </button>
+              <button class="component-action-btn delete" onclick="removeComponent(this)" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="canvas-component-content">
+            <div class="rich-text-toolbar">
+              <button class="format-btn" onclick="formatText(this, 'bold')" title="Bold">
+                <i class="fas fa-bold"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'italic')" title="Italic">
+                <i class="fas fa-italic"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'underline')" title="Underline">
+                <i class="fas fa-underline"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'strikethrough')" title="Strikethrough">
+                <i class="fas fa-strikethrough"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'code')" title="Code">
+                <i class="fas fa-code"></i>
+              </button>
+            </div>
+            <div class="rich-text-editor" contenteditable="true" placeholder="Enter sub-header text..." data-field="subheader"></div>
+          </div>
+        `
+      },
+      text: {
+        title: 'Text Block',
+        icon: 'fas fa-align-left',
+        template: `
+          <div class="canvas-component-header">
+            <div class="canvas-component-title">
+              <i class="fas fa-align-left"></i> Text Block
+            </div>
+            <div class="canvas-component-actions">
+              <button class="component-action-btn" onclick="moveComponent(this, 'up')" title="Move Up">
+                <i class="fas fa-arrow-up"></i>
+              </button>
+              <button class="component-action-btn" onclick="moveComponent(this, 'down')" title="Move Down">
+                <i class="fas fa-arrow-down"></i>
+              </button>
+              <button class="component-action-btn delete" onclick="removeComponent(this)" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="canvas-component-content">
+            <div class="rich-text-toolbar">
+              <button class="format-btn" onclick="formatText(this, 'bold')" title="Bold">
+                <i class="fas fa-bold"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'italic')" title="Italic">
+                <i class="fas fa-italic"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'underline')" title="Underline">
+                <i class="fas fa-underline"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'strikethrough')" title="Strikethrough">
+                <i class="fas fa-strikethrough"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'code')" title="Code">
+                <i class="fas fa-code"></i>
+              </button>
+            </div>
+            <div class="rich-text-editor" contenteditable="true" placeholder="Enter text content..." data-field="text"></div>
+          </div>
+        `
+      },
+
+      code: {
+        title: 'Code Block',
+        icon: 'fas fa-code',
+        template: `
+          <div class="canvas-component-header">
+            <div class="canvas-component-title">
+              <i class="fas fa-code"></i> Code Block
+            </div>
+            <div class="canvas-component-actions">
+              <button class="component-action-btn" onclick="moveComponent(this, 'up')" title="Move Up">
+                <i class="fas fa-arrow-up"></i>
+              </button>
+              <button class="component-action-btn" onclick="moveComponent(this, 'down')" title="Move Down">
+                <i class="fas fa-arrow-down"></i>
+              </button>
+              <button class="component-action-btn delete" onclick="removeComponent(this)" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="canvas-component-content">
+            <div class="rich-text-toolbar">
+              <button class="format-btn" onclick="formatText(this, 'bold')" title="Bold">
+                <i class="fas fa-bold"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'italic')" title="Italic">
+                <i class="fas fa-italic"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'underline')" title="Underline">
+                <i class="fas fa-underline"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'strikethrough')" title="Strikethrough">
+                <i class="fas fa-strikethrough"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'code')" title="Code">
+                <i class="fas fa-code"></i>
+              </button>
+            </div>
+            <div class="rich-text-editor" contenteditable="true" placeholder="Enter code content..." data-field="code"></div>
+          </div>
+        `
+      },
+      list: {
+        title: 'List',
+        icon: 'fas fa-list',
+        template: `
+          <div class="canvas-component-header">
+            <div class="canvas-component-title">
+              <i class="fas fa-list"></i> List
+            </div>
+            <div class="canvas-component-actions">
+              <button class="component-action-btn" onclick="moveComponent(this, 'up')" title="Move Up">
+                <i class="fas fa-arrow-up"></i>
+              </button>
+              <button class="component-action-btn" onclick="moveComponent(this, 'down')" title="Move Down">
+                <i class="fas fa-arrow-down"></i>
+              </button>
+              <button class="component-action-btn delete" onclick="removeComponent(this)" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="canvas-component-content">
+            <div class="rich-text-toolbar">
+              <button class="format-btn" onclick="formatText(this, 'bold')" title="Bold">
+                <i class="fas fa-bold"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'italic')" title="Italic">
+                <i class="fas fa-italic"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'underline')" title="Underline">
+                <i class="fas fa-underline"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'strikethrough')" title="Strikethrough">
+                <i class="fas fa-strikethrough"></i>
+              </button>
+              <button class="format-btn" onclick="formatText(this, 'code')" title="Code">
+                <i class="fas fa-code"></i>
+              </button>
+            </div>
+            <div class="rich-text-editor" contenteditable="true" placeholder="List title (optional)..." data-field="listTitle" style="margin-bottom: 10px;"></div>
+            <div class="list-items-container">
+              <div class="list-item" data-index="0">
+                <div class="rich-text-toolbar">
+                  <button class="format-btn" onclick="formatText(this, 'bold')" title="Bold">
+                    <i class="fas fa-bold"></i>
+                  </button>
+                  <button class="format-btn" onclick="formatText(this, 'italic')" title="Italic">
+                    <i class="fas fa-italic"></i>
+                  </button>
+                  <button class="format-btn" onclick="formatText(this, 'underline')" title="Underline">
+                    <i class="fas fa-underline"></i>
+                  </button>
+                  <button class="format-btn" onclick="formatText(this, 'strikethrough')" title="Strikethrough">
+                    <i class="fas fa-strikethrough"></i>
+                  </button>
+                  <button class="format-btn" onclick="formatText(this, 'code')" title="Code">
+                    <i class="fas fa-code"></i>
+                  </button>
+                </div>
+                <div class="rich-text-editor" contenteditable="true" placeholder="List item 1..." data-field="listItem" data-index="0"></div>
+                <button class="list-item-remove" onclick="removeListItem(this)" title="Remove item">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <button class="btn btn-secondary" onclick="addListItem(this)" style="margin-top: 10px; width: 100%;">
+              <i class="fas fa-plus"></i> Add List Item
+            </button>
+          </div>
+        `
+      },
+
+      divider: {
+        title: 'Divider',
+        icon: 'fas fa-minus',
+        template: `
+          <div class="canvas-component-header">
+            <div class="canvas-component-title">
+              <i class="fas fa-minus"></i> Divider
+            </div>
+            <div class="canvas-component-actions">
+              <button class="component-action-btn" onclick="moveComponent(this, 'up')" title="Move Up">
+                <i class="fas fa-arrow-up"></i>
+              </button>
+              <button class="component-action-btn" onclick="moveComponent(this, 'down')" title="Move Down">
+                <i class="fas fa-arrow-down"></i>
+              </button>
+              <button class="component-action-btn delete" onclick="removeComponent(this)" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <div class="canvas-component-content">
+            <div style="text-align: center; color: rgba(255, 255, 255, 0.5);">
+              <i class="fas fa-minus"></i> Divider Line <i class="fas fa-minus"></i>
+            </div>
+          </div>
+        `
+      }
+    };
+
+    // Simple click to add functionality
+    
+    function addComponentToCanvas(componentType) {
+      const canvas = document.getElementById('embedCanvas');
+      const placeholder = canvas.querySelector('.canvas-placeholder');
+      
+      if (placeholder) {
+        placeholder.classList.add('hidden');
+      }
+      
+      const componentId = `component-${componentCounter++}`;
+      const template = componentTemplates[componentType];
+      
+      if (template) {
+        const componentElement = document.createElement('div');
+        componentElement.className = 'canvas-component';
+        componentElement.id = componentId;
+        componentElement.dataset.type = componentType;
+        componentElement.innerHTML = template.template;
+        
+        // Append to end of canvas
+        canvas.appendChild(componentElement);
+        
+        // Set up all rich text editors in this component
+        const richTextEditors = componentElement.querySelectorAll('.rich-text-editor');
+        richTextEditors.forEach(editor => {
+          setupRichTextEditor(editor);
+        });
+        
+        // Set up list item editors if this is a list component
+        if (componentType === 'list') {
+          const listItemEditors = componentElement.querySelectorAll('.list-item .rich-text-editor');
+          listItemEditors.forEach(editor => {
+            setupRichTextEditor(editor);
+          });
+        }
+        
+        // Add component to array
+        canvasComponents.push({
+          id: componentId,
+          type: componentType,
+          data: {}
+        });
+        
+        updateDiscordTextFromCanvas();
+      } else {
+        console.error('Template not found for component type:', componentType);
+      }
+    }
+    
+    function updateComponent(input) {
+      const component = input.closest('.canvas-component');
+      const componentId = component.id;
+      const field = input.dataset.field;
+      const value = input.value;
+      
+      // Find component in array
+      const componentIndex = canvasComponents.findIndex(c => c.id === componentId);
+      if (componentIndex !== -1) {
+        canvasComponents[componentIndex].data[field] = value;
+        updateDiscordTextFromCanvas();
+      }
+    }
+    
+    function updateRichTextComponent(editor) {
+      const component = editor.closest('.canvas-component');
+      const componentId = component.id;
+      const field = editor.dataset.field;
+      const value = editor.innerHTML;
+      
+      // Find component in array
+      const componentIndex = canvasComponents.findIndex(c => c.id === componentId);
+      if (componentIndex !== -1) {
+        canvasComponents[componentIndex].data[field] = value;
+        updateDiscordTextFromCanvas();
+        updateDiscordPreview(); // Update preview immediately for rich text changes
+      }
+    }
+    
+    // Enhanced function to set up rich text editors with proper event listeners
+    function setupRichTextEditor(editor) {
+      // Remove existing listeners to prevent duplicates
+      editor.removeEventListener('input', handleRichTextInput);
+      editor.removeEventListener('keyup', handleRichTextInput);
+      editor.removeEventListener('paste', handleRichTextInput);
+      editor.removeEventListener('blur', handleRichTextInput);
+      editor.removeEventListener('focus', handleRichTextFocus);
+      editor.removeEventListener('input', handleListRichTextInput);
+      editor.removeEventListener('keyup', handleListRichTextInput);
+      editor.removeEventListener('paste', handleListRichTextInput);
+      editor.removeEventListener('blur', handleListRichTextInput);
+      editor.removeEventListener('focus', handleListRichTextFocus);
+      editor.removeEventListener('click', handleEditorClick);
+      editor.removeEventListener('mouseup', handleSelectionChange);
+      editor.removeEventListener('keyup', handleSelectionChange);
+      
+      // Determine if this is a list item editor
+      const isListItem = editor.closest('.list-item') !== null;
+      
+      if (isListItem) {
+        // Add list item specific event listeners
+        editor.addEventListener('input', handleListRichTextInput);
+        editor.addEventListener('keyup', handleListRichTextInput);
+        editor.addEventListener('paste', handleListRichTextInput);
+        editor.addEventListener('blur', handleListRichTextInput);
+        editor.addEventListener('focus', handleListRichTextFocus);
+      } else {
+        // Add regular rich text event listeners
+        editor.addEventListener('input', handleRichTextInput);
+        editor.addEventListener('keyup', handleRichTextInput);
+        editor.addEventListener('paste', handleRichTextInput);
+        editor.addEventListener('blur', handleRichTextInput);
+        editor.addEventListener('focus', handleRichTextFocus);
+      }
+      
+      // Add selection change listeners
+      editor.addEventListener('mouseup', handleSelectionChange);
+      editor.addEventListener('keyup', handleSelectionChange);
+      
+      // Add click handler to ensure focus
+      editor.addEventListener('click', handleEditorClick);
+      
+      // Ensure the editor is properly focusable and editable
+      editor.contentEditable = 'true';
+      editor.tabIndex = 0;
+      editor.style.outline = 'none';
+      editor.style.cursor = 'text';
+      editor.style.userSelect = 'text';
+      editor.style.webkitUserSelect = 'text';
+      editor.style.mozUserSelect = 'text';
+      editor.style.msUserSelect = 'text';
+      
+      // Test if the editor is working
+      console.log('Setting up editor:', editor);
+      console.log('Editor contentEditable:', editor.contentEditable);
+      console.log('Editor tabIndex:', editor.tabIndex);
+    }
+    
+    function handleEditorClick(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      console.log('Editor clicked, focusing...');
+      this.focus();
+      // Place cursor at the end
+      const range = document.createRange();
+      const selection = window.getSelection();
+      range.selectNodeContents(this);
+      range.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+    
+    function handleSelectionChange(e) {
+      // Update button states when selection changes
+      const editor = e.target;
+      const component = editor.closest('.canvas-component');
+      if (component) {
+        const toolbar = component.querySelector('.rich-text-toolbar');
+        if (toolbar) {
+          const buttons = toolbar.querySelectorAll('.format-btn');
+          buttons.forEach(button => {
+            const format = button.getAttribute('onclick').match(/formatText\(this,\s*'([^']+)'\)/)[1];
+            updateButtonState(button, format, editor);
+          });
+        }
+      }
+    }
+    
+    function handleRichTextFocus(e) {
+      // Ensure the editor is focused and ready for input
+      e.target.focus();
+    }
+    
+    function handleListRichTextFocus(e) {
+      // Ensure the list item editor is focused and ready for input
+      e.target.focus();
+    }
+    
+    // Test function to check if editors are working
+    function testEditorInput() {
+      const editors = document.querySelectorAll('.rich-text-editor');
+      console.log('Found editors:', editors.length);
+      editors.forEach((editor, index) => {
+        console.log(`Editor ${index}:`, {
+          contentEditable: editor.contentEditable,
+          tabIndex: editor.tabIndex,
+          style: editor.style,
+          className: editor.className,
+          id: editor.id
+        });
+        
+        // Try to focus the editor
+        editor.focus();
+        console.log(`Editor ${index} focused:`, document.activeElement === editor);
+        
+        // Add a simple test - try to add text programmatically
+        if (index === 0) {
+          editor.innerHTML = 'Test text added programmatically';
+          console.log('Added test text to first editor');
+        }
+      });
+      
+      // Also test if we can create a simple input field
+      const testInput = document.createElement('input');
+      testInput.type = 'text';
+      testInput.value = 'Test input field';
+      testInput.style.cssText = 'position: fixed; top: 10px; left: 10px; z-index: 10000; background: white; color: black; padding: 10px;';
+      document.body.appendChild(testInput);
+      testInput.focus();
+      console.log('Created test input field');
+    }
+    
+    function handleRichTextInput(e) {
+      updateRichTextComponent(e.target);
+    }
+    
+    function formatText(button, format) {
+      const component = button.closest('.canvas-component');
+      const toolbar = button.closest('.rich-text-toolbar');
+      const editor = toolbar.nextElementSibling;
+      
+      // Ensure the editor is focused
+      if (editor && editor.classList.contains('rich-text-editor')) {
+        editor.focus();
+        
+        // Check if there's a text selection
+        const selection = window.getSelection();
+        const hasSelection = selection.toString().length > 0;
+        
+        // If no text is selected, select all text in the editor
+        if (!hasSelection && editor.textContent.trim()) {
+          const range = document.createRange();
+          range.selectNodeContents(editor);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+        
+        // Apply the formatting command
+        let command = format;
+        let value = null;
+        
+        switch (format) {
+          case 'bold':
+            command = 'bold';
+            break;
+          case 'italic':
+            command = 'italic';
+            break;
+          case 'underline':
+            command = 'underline';
+            break;
+          case 'strikethrough':
+            command = 'strikethrough';
+            break;
+          case 'code':
+            // For code, we'll wrap the selection in <code> tags
+            if (selection.toString().length > 0) {
+              const selectedText = selection.toString();
+              const codeElement = document.createElement('code');
+              codeElement.textContent = selectedText;
+              selection.deleteFromDocument();
+              selection.getRangeAt(0).insertNode(codeElement);
+            }
+            break;
+        }
+        
+        // Execute the command
+        if (command !== 'code') {
+          document.execCommand(command, false, value);
+        }
+        
+        // Toggle button active state based on current formatting
+        updateButtonState(button, format, editor);
+        
+        // Update the component
+        updateRichTextComponent(editor);
+      }
+    }
+    
+    function updateButtonState(button, format, editor) {
+      // Check if the current selection has the specified format
+      let hasFormat = false;
+      
+      switch (format) {
+        case 'bold':
+          hasFormat = document.queryCommandState('bold');
+          break;
+        case 'italic':
+          hasFormat = document.queryCommandState('italic');
+          break;
+        case 'underline':
+          hasFormat = document.queryCommandState('underline');
+          break;
+        case 'strikethrough':
+          hasFormat = document.queryCommandState('strikethrough');
+          break;
+        case 'code':
+          // Check if selection is within a code element
+          const selection = window.getSelection();
+          if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            const codeElement = range.commonAncestorContainer.closest('code');
+            hasFormat = codeElement !== null;
+          }
+          break;
+      }
+      
+      // Update button state
+      if (hasFormat) {
+        button.classList.add('active');
+      } else {
+        button.classList.remove('active');
+      }
+    }
+    
+    // Simple click initialization
+    function initializeClickToAdd() {
+      // Get all component items from both desktop and mobile libraries
+      const desktopItems = document.querySelectorAll('.component-library-desktop .component-item');
+      const mobileItems = document.querySelectorAll('.mobile-component-item');
+      const allItems = [...desktopItems, ...mobileItems];
+      
+      // Set up component items with click event handling
+      allItems.forEach((item) => {
+        // Remove any existing event listeners to prevent conflicts
+        item.removeEventListener('click', handleComponentClick);
+        
+        // Add click event listener
+        item.addEventListener('click', handleComponentClick);
+        
+        // Add visual indicator
+        item.style.cursor = 'pointer';
+        item.style.borderColor = '#667eea';
+        item.style.boxShadow = '0 0 10px rgba(102, 126, 234, 0.3)';
+      });
+    }
+    
+    // Simple click handler
+    function handleComponentClick(e) {
+      const componentType = e.currentTarget.dataset.component;
+      addComponentToCanvas(componentType);
+    }
+    
+    // Canvas component reordering (simplified)
+    function updateCanvasComponentsOrder() {
+      const canvas = document.getElementById('embedCanvas');
+      const componentElements = canvas.querySelectorAll('.canvas-component');
+      
+      // Create new array with correct order
+      const newOrder = [];
+      componentElements.forEach(element => {
+        const existingComponent = canvasComponents.find(c => c.id === element.id);
+        if (existingComponent) {
+          newOrder.push(existingComponent);
+        }
+      });
+      
+      // Update the array
+      canvasComponents = newOrder;
+      
+      // Update the Discord text output
+      updateDiscordTextFromCanvas();
+    }
+    
+    // Add keyboard shortcuts for rich text editor
+    function initializeRichTextShortcuts() {
+      document.addEventListener('keydown', function(e) {
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.classList.contains('rich-text-editor')) {
+          // Check if Ctrl/Cmd is pressed
+          if (e.ctrlKey || e.metaKey) {
+            switch (e.key.toLowerCase()) {
+              case 'b':
+                e.preventDefault();
+                document.execCommand('bold', false, null);
+                updateRichTextComponent(activeElement);
+                break;
+              case 'i':
+                e.preventDefault();
+                document.execCommand('italic', false, null);
+                updateRichTextComponent(activeElement);
+                break;
+              case 'u':
+                e.preventDefault();
+                document.execCommand('underline', false, null);
+                updateRichTextComponent(activeElement);
+                break;
+            }
+          }
+        }
+      });
+    }
+    
+    function updateListComponent(input) {
+      const component = input.closest('.canvas-component');
+      const componentId = component.id;
+      const field = input.dataset.field;
+      const index = input.dataset.index;
+      const value = input.value;
+      
+      // Find component in array
+      const componentIndex = canvasComponents.findIndex(c => c.id === componentId);
+      if (componentIndex !== -1) {
+        if (!canvasComponents[componentIndex].data.listItems) {
+          canvasComponents[componentIndex].data.listItems = [];
+        }
+        canvasComponents[componentIndex].data.listItems[index] = value;
+        updateDiscordTextFromCanvas();
+      }
+    }
+    
+    function updateListRichTextComponent(editor) {
+      const component = editor.closest('.canvas-component');
+      const componentId = component.id;
+      const field = editor.dataset.field;
+      const index = editor.dataset.index;
+      const value = editor.innerHTML;
+      
+      // Find component in array
+      const componentIndex = canvasComponents.findIndex(c => c.id === componentId);
+      if (componentIndex !== -1) {
+        if (!canvasComponents[componentIndex].data.listItems) {
+          canvasComponents[componentIndex].data.listItems = [];
+        }
+        canvasComponents[componentIndex].data.listItems[index] = value;
+        updateDiscordTextFromCanvas();
+        updateDiscordPreview(); // Update preview immediately for rich text changes
+      }
+    }
+    
+    // Enhanced function to handle list item rich text input
+    function handleListRichTextInput(e) {
+      updateListRichTextComponent(e.target);
+    }
+    
+    function addListItem(button) {
+      const component = button.closest('.canvas-component');
+      const container = component.querySelector('.list-items-container');
+      const currentItems = container.querySelectorAll('.list-item');
+      const newIndex = currentItems.length;
+      
+      const newItem = document.createElement('div');
+      newItem.className = 'list-item';
+      newItem.dataset.index = newIndex;
+      newItem.innerHTML = `
+        <div class="rich-text-toolbar">
+          <button class="format-btn" onclick="formatText(this, 'bold')" title="Bold">
+            <i class="fas fa-bold"></i>
+          </button>
+          <button class="format-btn" onclick="formatText(this, 'italic')" title="Italic">
+            <i class="fas fa-italic"></i>
+          </button>
+          <button class="format-btn" onclick="formatText(this, 'underline')" title="Underline">
+            <i class="fas fa-underline"></i>
+          </button>
+          <button class="format-btn" onclick="formatText(this, 'strikethrough')" title="Strikethrough">
+            <i class="fas fa-strikethrough"></i>
+          </button>
+          <button class="format-btn" onclick="formatText(this, 'code')" title="Code">
+            <i class="fas fa-code"></i>
+          </button>
+        </div>
+        <div class="rich-text-editor" contenteditable="true" placeholder="List item ${newIndex + 1}..." data-field="listItem" data-index="${newIndex}"></div>
+        <button class="list-item-remove" onclick="removeListItem(this)" title="Remove item">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+      
+      container.appendChild(newItem);
+      
+      // Set up the new rich text editor
+      const newEditor = newItem.querySelector('.rich-text-editor');
+      setupRichTextEditor(newEditor);
+      
+      // Update remove buttons - disable if only one item
+      updateRemoveButtons(container);
+    }
+    
+    function removeListItem(button) {
+      const item = button.closest('.list-item');
+      const container = item.closest('.list-items-container');
+      const component = container.closest('.canvas-component');
+      const componentId = component.id;
+      
+      // Remove from DOM
+      item.remove();
+      
+      // Reindex remaining items
+      const remainingItems = container.querySelectorAll('.list-item');
+      remainingItems.forEach((item, index) => {
+        item.dataset.index = index;
+        const editor = item.querySelector('.rich-text-editor');
+        if (editor) {
+          editor.dataset.index = index;
+          editor.setAttribute('placeholder', `List item ${index + 1}...`);
+        }
+      });
+      
+      // Update component data
+      const componentIndex = canvasComponents.findIndex(c => c.id === componentId);
+      if (componentIndex !== -1) {
+        const newListItems = [];
+        remainingItems.forEach((item, index) => {
+          const editor = item.querySelector('.rich-text-editor');
+          if (editor) {
+            newListItems[index] = editor.innerHTML;
+          }
+        });
+        canvasComponents[componentIndex].data.listItems = newListItems;
+        updateDiscordTextFromCanvas();
+      }
+      
+      // Update remove buttons
+      updateRemoveButtons(container);
+    }
+    
+    function updateRemoveButtons(container) {
+      const items = container.querySelectorAll('.list-item');
+      const removeButtons = container.querySelectorAll('.list-item-remove');
+      
+      // Disable remove button if only one item remains
+      if (items.length === 1) {
+        removeButtons[0].disabled = true;
+      } else {
+        removeButtons.forEach(button => {
+          button.disabled = false;
+        });
+      }
+    }
+    
+    function removeComponent(button) {
+      const component = button.closest('.canvas-component');
+      const componentId = component.id;
+      
+      // Remove from DOM
+      component.remove();
+      
+      // Remove from array
+      canvasComponents = canvasComponents.filter(c => c.id !== componentId);
+      
+      // Show placeholder if no components
+      const canvas = document.getElementById('embedCanvas');
+      if (canvasComponents.length === 0) {
+        const placeholder = canvas.querySelector('.canvas-placeholder');
+        if (placeholder) {
+          placeholder.classList.remove('hidden');
+        }
+      }
+      
+      updateDiscordTextFromCanvas();
+    }
+    
+    function moveComponent(button, direction) {
+      const component = button.closest('.canvas-component');
+      const canvas = document.getElementById('embedCanvas');
+      
+      if (direction === 'up' && component.previousElementSibling) {
+        canvas.insertBefore(component, component.previousElementSibling);
+      } else if (direction === 'down' && component.nextElementSibling) {
+        canvas.insertBefore(component.nextElementSibling, component);
+      }
+      
+      updateDiscordTextFromCanvas();
+    }
+    
+        function updateDiscordTextFromCanvas() {
+      const textOutput = document.getElementById('discordTextOutput');
+      
+      if (canvasComponents.length === 0) {
+        textOutput.textContent = 'No components added yet. Drag or click components to build your embed.';
+        updateDiscordPreview();
+        return;
+      }
+      
+      let discordText = '';
+      
+      // Helper function to convert HTML to Discord markdown
+      function convertHtmlToDiscordMarkdown(html) {
+        if (!html) return '';
+        return html
+          .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
+          .replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**')
+          .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
+          .replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*')
+          .replace(/<u[^>]*>(.*?)<\/u>/gi, '__$1__')
+          .replace(/<del[^>]*>(.*?)<\/del>/gi, '~~$1~~')
+          .replace(/<s[^>]*>(.*?)<\/s>/gi, '~~$1~~')
+          .replace(/<code[^>]*>(.*?)<\/code>/gi, '`$1`')
+          .replace(/<br\s*\/?>/gi, '\n')
+          .replace(/<\/?[^>]+(>|$)/g, ''); // Remove any remaining HTML tags
+      }
+      
+      canvasComponents.forEach(component => {
+        switch (component.type) {
+          case 'title':
+            if (component.data.title) {
+              const formattedTitle = convertHtmlToDiscordMarkdown(component.data.title);
+              discordText += `# ${formattedTitle}\n\n`;
+            }
+            break;
+            
+          case 'header':
+            if (component.data.header) {
+              const formattedHeader = convertHtmlToDiscordMarkdown(component.data.header);
+              discordText += `## ${formattedHeader}\n\n`;
+            }
+            break;
+            
+          case 'subheader':
+            if (component.data.subheader) {
+              const formattedSubheader = convertHtmlToDiscordMarkdown(component.data.subheader);
+              discordText += `### ${formattedSubheader}\n\n`;
+            }
+            break;
+            
+          case 'text':
+            if (component.data.text) {
+              const formattedText = convertHtmlToDiscordMarkdown(component.data.text);
+              discordText += `${formattedText}\n\n`;
+            }
+            break;
+            
+          case 'code':
+            if (component.data.code) {
+              const formattedCode = convertHtmlToDiscordMarkdown(component.data.code);
+              discordText += `\`${formattedCode}\`\n\n`;
+            }
+            break;
+            
+          case 'list':
+            if (component.data.listTitle || (component.data.listItems && component.data.listItems.length > 0)) {
+              if (component.data.listTitle) {
+                const formattedTitle = convertHtmlToDiscordMarkdown(component.data.listTitle);
+                discordText += `**${formattedTitle}**\n`;
+              }
+              if (component.data.listItems && component.data.listItems.length > 0) {
+                component.data.listItems.forEach(item => {
+                  if (item && item.trim()) {
+                    const formattedItem = convertHtmlToDiscordMarkdown(item);
+                    discordText += `• ${formattedItem.trim()}\n`;
+                  }
+                });
+              }
+              discordText += '\n';
+            }
+            break;
+            
+
+            
+          case 'divider':
+            discordText += '---\n\n';
+            break;
+        }
+      });
+      
+      // Update the Discord text output
+      if (textOutput) {
+        textOutput.textContent = discordText.trim();
+      }
+      
+      // Update the Discord preview as well
+      updateDiscordPreview();
+    }
+     
+
+    
+    function toggleMobileComponentDropdown() {
+      // console.log('Mobile component dropdown toggle clicked');
+      const dropdown = document.getElementById('mobileComponentDropdown');
+      
+      if (dropdown) {
+        dropdown.classList.toggle('open');
+        // console.log('Dropdown toggled, open state:', dropdown.classList.contains('open'));
+      } else {
+        console.error('Mobile dropdown not found');
+      }
+    }
+    
+
+    
+    function checkScreenSize() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const dropdown = document.getElementById('mobileComponentDropdown');
+      const content = document.getElementById('mobileDropdownContent');
+      
+      // console.log('=== SCREEN SIZE CHECK ===');
+      // console.log('Window width:', width, 'px');
+      // console.log('Window height:', height, 'px');
+      // console.log('Mobile breakpoint (≤768px):', width <= 768);
+      // console.log('Desktop breakpoint (≥769px):', width >= 769);
+      // console.log('Mobile dropdown display:', dropdown ? getComputedStyle(dropdown).display : 'not found');
+      // console.log('Dropdown content display:', content ? getComputedStyle(content).display : 'not found');
+      
+      // Show alert with screen info
+      alert(`Screen Size: ${width}×${height}px\nMobile: ${width <= 768}\nDropdown Visible: ${dropdown ? getComputedStyle(dropdown).display !== 'none' : 'not found'}`);
+    }
+    
+    function testMobileToggle() {
+      // console.log('Testing mobile dropdown functionality...');
+      const dropdown = document.getElementById('mobileComponentDropdown');
+      const content = document.getElementById('mobileDropdownContent');
+      
+      // console.log('Mobile dropdown found:', !!dropdown);
+      // console.log('Dropdown content found:', !!content);
+      // console.log('Dropdown display style:', dropdown ? getComputedStyle(dropdown).display : 'not found');
+      // console.log('Content display style:', content ? getComputedStyle(content).display : 'not found');
+      // console.log('Window width:', window.innerWidth);
+      // console.log('Is mobile breakpoint:', window.innerWidth <= 768);
+      
+      // Only force display if we're on mobile
+      if (window.innerWidth <= 768) {
+        if (dropdown) {
+          dropdown.style.display = 'block';
+          dropdown.classList.add('open');
+          // console.log('Forced dropdown to display: block and open (mobile)');
+        }
+      } else {
+        // console.log('Not on mobile - dropdown should be hidden');
+        if (dropdown) {
+          dropdown.style.display = 'none';
+          dropdown.classList.remove('open');
+        }
+      }
+    }
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+   </script>
   
   <!-- Discord Embed Builder Script -->
   <script>
@@ -969,96 +2860,106 @@ We push the boundaries of what's possible in the digital landscape.
 
     function loadPreset() {
       // Load a sample preset with Discord formatting
-      document.getElementById('embedTitle').value = 'Welcome to A.Insiders!';
-      document.getElementById('embedDescription').value = '# About Us\n\n**A.Insiders** is a pioneering company specializing in:\n\n* AI Development\n* Cybersecurity Solutions\n* Innovative Applications\n\n## Our Mission\n\nWe push the boundaries of what\'s possible in the digital landscape.';
+      document.getElementById('embedTitle').value = 'Discord Formatting Guide';
+      document.getElementById('embedDescription').value = '## **Part 1: Basic Formatting**\n\n### **1. Titles 📌**\nUse `#` at the beginning to create titles. More `#` symbols make the title smaller.\n\n**Example:**\n```\n# Main Title (Largest)\n## Subtitle (Medium)\n### Smaller Title (Smallest)\n```\n- `#` = Largest title\n- `##` = Medium title\n- `###` = Small title\n\n---\n\n### **2. Bold, Italics, and Underline 🔹**\nAdd emphasis to your text using these formats:\n\n- **Bold:**\n  ```\n  **Bold Text**\n  ```\n  → **Bold Text**\n\n- *Italic:*\n  ```\n  *Italic Text*\n  ```\n  → *Italic Text*\n\n- __Underline__:\n  ```\n  __Underlined Text__\n  ```\n  → __Underlined Text__\n\n- ***Bold & Italic:***\n  ```\n  ***Bold Italic Text***\n  ```\n  → ***Bold Italic Text***\n\n- **__Bold & Underlined__:**\n  ```\n  **__Bold Underlined__**\n  ```\n  → **__Bold Underlined__**\n\n---\n\n### **3. Strikethrough ❌**\nCross out text by wrapping it with `~~`.\n\n```\n~~Strikethrough Text~~\n```\n→ ~~Strikethrough Text~~\n\n---\n\n## **Part 2: Code and Quote Formatting**\n\n### **4. Code Blocks & Inline Code 💻**\n- **Inline Code:** Use a single backtick for inline code.\n  ```\n  `Inline Code`\n  ```\n  → `Inline Code`\n\n- **Multiline Code Block:** Use triple backticks. Specify the language for highlighting.\n  ```\n  ```python\n  print("Hello, World!")\n  ```\n  ```\n  →\n  ```python\n  print("Hello, World!")\n  ```\n\n---\n\n### **5. Block Quotes 💬**\nHighlight text or quotes by starting the line with `>`. For nested quotes, use `>>`.\n\n```\n> This is a block quote.\n>> This is a nested quote inside the first quote.\n```\n→\n> This is a block quote.\n>> This is a nested quote inside the first quote.\n\n---\n\n## **Part 3: Lists**\n\n### **6. Unordered Lists 🔸**\nUse `-`, `*`, or `+` for bullet points. Indent with spaces or tabs for sub-items.\n\n```\n- Item 1\n- Item 2\n  - Sub-item 1\n  - Sub-item 2\n```\n→\n- Item 1\n- Item 2\n  - Sub-item 1\n  - Sub-item 2\n\n### **7. Ordered Lists 🔢**\nUse numbers followed by a period.\n\n```\n1. First item\n2. Second item\n   1. Sub-item\n   2. Another sub-item\n```\n→\n1. First item\n2. Second item\n   1. Sub-item\n   2. Another sub-item';
       document.getElementById('embedColor').value = '#667eea';
-      document.getElementById('authorName').value = 'A.Insiders';
-      document.getElementById('authorUrl').value = 'https://ainsiders.com';
-      document.getElementById('authorIcon').value = 'https://ainsiders.com/logo.png';
-      document.getElementById('discordContent').value = 'Check out our latest updates! 🚀';
-      document.getElementById('discordFields').value = 'Founded|2024|true\nTeam Size|50+|true\nSpecialization|AI & Cybersecurity|false\nLocation|Global|true';
-      document.getElementById('discordFooter').value = 'A.Insiders Network';
-      document.getElementById('discordFooterIcon').value = 'https://ainsiders.com/favicon.png';
+      document.getElementById('authorName').value = 'Discord Guide';
+      document.getElementById('authorUrl').value = 'https://discord.com';
+      document.getElementById('authorIcon').value = 'https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico';
+      document.getElementById('discordContent').value = '📚 **Complete Discord Formatting Guide** - Learn all the formatting tricks!';
+      document.getElementById('discordFields').value = 'Headers|# ## ###|true\nBold|**text**|true\nItalic|*text*|true\nCode|`code`|true\nLists|- or 1.|false\nLinks|[text](url)|true\nSpoilers|||hidden text|||true\nMentions|<@USER_ID>|true';
+      document.getElementById('discordFooter').value = 'Discord Formatting Guide v2.0';
+      document.getElementById('discordFooterIcon').value = 'https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico';
       
       generateEmbed();
-      showNotification('Sample preset loaded!', 'success');
+      showNotification('Discord formatting guide preset loaded!', 'success');
     }
 
     function updateDiscordPreview() {
       const preview = document.getElementById('discordPreview');
-      const content = document.getElementById('discordContent').value;
       
-      let html = '';
-      
-      // Add message content if provided
-      if (content) {
-        html += `<div style="margin-bottom: 8px; color: #dcddde;">${parseDiscordFormatting(content)}</div>`;
+      if (canvasComponents.length === 0) {
+        preview.innerHTML = '<div class="discord-embed"><div class="embed-description">No components added yet. Drag or click components to build your embed.</div></div>';
+        return;
       }
       
-      // Create embed
-      html += '<div class="discord-embed" style="border-left-color: #' + currentEmbed.color.toString(16).padStart(6, '0') + ';">';
+      let html = '<div class="discord-embed">';
       html += '<div class="embed-content">';
       
-      // Title
-      if (currentEmbed.title) {
-        const titleElement = currentEmbed.url ? 
-          `<a href="${currentEmbed.url}" class="embed-title">${currentEmbed.title}</a>` :
-          `<div class="embed-title">${currentEmbed.title}</div>`;
-        html += titleElement;
-      }
-      
-      // Description
-      if (currentEmbed.description) {
-        html += `<div class="embed-description">${parseDiscordFormatting(currentEmbed.description)}</div>`;
-      }
-      
-      // Author
-      if (currentEmbed.author.name) {
-        html += '<div class="embed-author">';
-        if (currentEmbed.author.icon_url) {
-          html += `<img src="${currentEmbed.author.icon_url}" class="embed-author-icon" alt="Author Icon">`;
+      canvasComponents.forEach(component => {
+        switch (component.type) {
+          case 'title':
+            if (component.data.title) {
+              html += `<div class="embed-title">${parseDiscordFormatting(component.data.title)}</div>`;
+            }
+            break;
+            
+          case 'header':
+            if (component.data.header) {
+              html += `<div class="embed-header">${parseDiscordFormatting(component.data.header)}</div>`;
+            }
+            break;
+            
+          case 'subheader':
+            if (component.data.subheader) {
+              html += `<div class="embed-subheader">${parseDiscordFormatting(component.data.subheader)}</div>`;
+            }
+            break;
+            
+          case 'text':
+            if (component.data.text) {
+              // Convert HTML formatting to Discord markdown for preview
+              let formattedText = component.data.text
+                .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
+                .replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**')
+                .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
+                .replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*')
+                .replace(/<u[^>]*>(.*?)<\/u>/gi, '__$1__')
+                .replace(/<del[^>]*>(.*?)<\/del>/gi, '~~$1~~')
+                .replace(/<s[^>]*>(.*?)<\/s>/gi, '~~$1~~')
+                .replace(/<code[^>]*>(.*?)<\/code>/gi, '`$1`')
+                .replace(/<br\s*\/?>/gi, '\n')
+                .replace(/<\/?[^>]+(>|$)/g, ''); // Remove any remaining HTML tags
+              
+              html += `<div class="embed-description">${parseDiscordFormatting(formattedText)}</div>`;
+            }
+            break;
+            
+          case 'code':
+            if (component.data.code) {
+              html += `<div class="embed-code">${parseDiscordFormatting(component.data.code)}</div>`;
+            }
+            break;
+            
+          case 'list':
+            if (component.data.listTitle || (component.data.listItems && component.data.listItems.length > 0)) {
+              let listHTML = '<div class="embed-list">';
+              if (component.data.listTitle) {
+                listHTML += `<div class="list-title">${parseDiscordFormatting(component.data.listTitle)}</div>`;
+              }
+              if (component.data.listItems && component.data.listItems.length > 0) {
+                listHTML += '<ul class="list-items">';
+                component.data.listItems.forEach(item => {
+                  if (item.trim()) {
+                    listHTML += `<li>${parseDiscordFormatting(item)}</li>`;
+                  }
+                });
+                listHTML += '</ul>';
+              }
+              listHTML += '</div>';
+              html += listHTML;
+            }
+            break;
+            
+
+            
+          case 'divider':
+            html += '<div class="embed-divider">---</div>';
+            break;
         }
-        const authorElement = currentEmbed.author.url ?
-          `<a href="${currentEmbed.author.url}" class="embed-author-name">${currentEmbed.author.name}</a>` :
-          `<span class="embed-author-name">${currentEmbed.author.name}</span>`;
-        html += authorElement;
-        html += '</div>';
-      }
-      
-      // Fields
-      if (currentEmbed.fields.length > 0) {
-        html += '<div class="embed-fields">';
-        currentEmbed.fields.forEach(field => {
-          html += '<div class="embed-field">';
-          html += `<div class="embed-field-name">${parseDiscordFormatting(field.name)}</div>`;
-          html += `<div class="embed-field-value">${parseDiscordFormatting(field.value)}</div>`;
-          html += '</div>';
-        });
-        html += '</div>';
-      }
-      
-      // Thumbnail
-      if (currentEmbed.thumbnail.url) {
-        html += `<img src="${currentEmbed.thumbnail.url}" class="embed-thumbnail" alt="Thumbnail">`;
-      }
-      
-      // Image
-      if (currentEmbed.image.url) {
-        html += `<img src="${currentEmbed.image.url}" class="embed-image" alt="Embed Image">`;
-      }
-      
-      // Footer
-      if (currentEmbed.footer.text) {
-        html += '<div class="embed-footer">';
-        if (currentEmbed.footer.icon_url) {
-          html += `<img src="${currentEmbed.footer.icon_url}" class="embed-footer-icon" alt="Footer Icon">`;
-        }
-        html += `<span>${currentEmbed.footer.text}</span>`;
-        html += '</div>';
-      }
+      });
       
       html += '</div></div>';
-      
       preview.innerHTML = html;
     }
 
@@ -1073,9 +2974,9 @@ We push the boundaries of what's possible in the digital landscape.
         discordText += content + '\n\n';
       }
       
-      // Add title
+      // Add title as main header (#)
       if (currentEmbed.title) {
-        discordText += `**${currentEmbed.title}**\n`;
+        discordText += `# ${currentEmbed.title}\n\n`;
       }
       
       // Add description with proper Discord formatting
@@ -1087,7 +2988,10 @@ We push the boundaries of what's possible in the digital landscape.
       if (currentEmbed.fields.length > 0) {
         discordText += '\n';
         currentEmbed.fields.forEach(field => {
-          discordText += `**${field.name}**\n${field.value}\n\n`;
+          // Format field name and value with proper Discord markdown
+          const formattedName = formatDiscordMarkdown(field.name);
+          const formattedValue = formatDiscordMarkdown(field.value);
+          discordText += `**${formattedName}**\n${formattedValue}\n\n`;
         });
       }
       
@@ -1097,6 +3001,29 @@ We push the boundaries of what's possible in the digital landscape.
       }
       
       textOutput.textContent = discordText.trim();
+    }
+
+    function formatDiscordMarkdown(text) {
+      if (!text) return '';
+      
+      return text
+        // Headers - preserve the original markdown structure
+        .replace(/^### (.*$)/gim, '### $1')
+        .replace(/^## (.*$)/gim, '## $1')
+        .replace(/^# (.*$)/gim, '# $1')
+        // Bold
+        .replace(/\*\*(.*?)\*\*/g, '**$1**')
+        // Italic
+        .replace(/\*(.*?)\*/g, '*$1*')
+        // Underline
+        .replace(/__(.*?)__/g, '__$1__')
+        // Strikethrough
+        .replace(/~~(.*?)~~/g, '~~$1~~')
+        // Code blocks
+        .replace(/```([\s\S]*?)```/g, '```\n$1\n```')
+        .replace(/`(.*?)`/g, '`$1`')
+        // Line breaks
+        .replace(/\n/g, '\n');
     }
 
     function updateJSONOutput() {
@@ -1291,6 +3218,40 @@ We push the boundaries of what's possible in the digital landscape.
       updateJSONOutput();
       updateDiscordTextOutput();
       
+      // Initialize click to add functionality
+      function attemptClickInit() {
+        const desktopItems = document.querySelectorAll('.component-library-desktop .component-item');
+        const mobileItems = document.querySelectorAll('.mobile-component-item');
+        
+        if (desktopItems.length > 0 || mobileItems.length > 0) {
+          initializeClickToAdd();
+          return true;
+        } else {
+          return false;
+        }
+      }
+      
+      // Try immediately
+      if (!attemptClickInit()) {
+        // Try after 100ms
+        setTimeout(() => {
+          if (!attemptClickInit()) {
+            // Try after 500ms
+            setTimeout(() => {
+              if (!attemptClickInit()) {
+                // Final attempt after 1 second
+                setTimeout(() => {
+                  initializeClickToAdd();
+                }, 1000);
+              }
+            }, 500);
+          }
+        }, 100);
+      }
+      
+      // Initialize rich text shortcuts
+      initializeRichTextShortcuts();
+      
       // Add real-time updates
       const inputs = document.querySelectorAll('input, textarea');
       inputs.forEach(input => {
@@ -1305,13 +3266,34 @@ We push the boundaries of what's possible in the digital landscape.
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
           .then((registration) => {
-            console.log('SW registered: ', registration);
+            // console.log('SW registered: ', registration);
           })
           .catch((registrationError) => {
-            console.log('SW registration failed: ', registrationError);
+            // console.log('SW registration failed: ', registrationError);
           });
       });
     }
+    
+    // Backup initialization on window load
+    window.addEventListener('load', function() {
+      // Force make all components interactive
+      const desktopItems = document.querySelectorAll('.component-library-desktop .component-item');
+      const mobileItems = document.querySelectorAll('.mobile-component-item');
+      const allItems = [...desktopItems, ...mobileItems];
+      
+      allItems.forEach((item) => {
+        // Remove existing event listeners to prevent conflicts
+        item.removeEventListener('click', handleComponentClick);
+        
+        // Add click event listener
+        item.addEventListener('click', handleComponentClick);
+        
+        // Add visual feedback
+        item.style.cursor = 'pointer';
+        item.style.borderColor = '#667eea';
+        item.style.boxShadow = '0 0 10px rgba(102, 126, 234, 0.3)';
+      });
+    });
   </script>
 </body>
 </html>
