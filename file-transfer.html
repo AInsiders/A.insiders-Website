@@ -940,10 +940,67 @@
       background: rgba(220, 53, 69, 0.1);
     }
     
-    .notification-info {
-      border-color: rgba(0, 123, 255, 0.3);
-      background: rgba(0, 123, 255, 0.1);
-    }
+         .notification-info {
+       border-color: rgba(0, 123, 255, 0.3);
+       background: rgba(0, 123, 255, 0.1);
+     }
+     
+     /* Connection Data Sharing Styles */
+     .connection-data {
+       margin-top: 2rem;
+       padding-top: 2rem;
+       border-top: 1px solid rgba(255, 255, 255, 0.2);
+     }
+     
+     .connection-data h3 {
+       margin: 0 0 1rem 0;
+       font-size: 1.3rem;
+       font-weight: 600;
+       color: #ffffff;
+       display: flex;
+       align-items: center;
+       gap: 0.75rem;
+     }
+     
+     .data-section {
+       margin-bottom: 1.5rem;
+     }
+     
+     .data-section label {
+       display: block;
+       margin-bottom: 0.5rem;
+       font-weight: 600;
+       color: rgba(255, 255, 255, 0.9);
+     }
+     
+     .data-section textarea {
+       width: 100%;
+       min-height: 120px;
+       background: rgba(255, 255, 255, 0.1);
+       border: 2px solid rgba(255, 255, 255, 0.2);
+       border-radius: 8px;
+       padding: 1rem;
+       color: #ffffff;
+       font-family: 'Courier New', monospace;
+       font-size: 0.9rem;
+       resize: vertical;
+       backdrop-filter: blur(10px);
+       transition: all 0.3s ease;
+     }
+     
+     .data-section textarea:focus {
+       outline: none;
+       border-color: rgba(255, 255, 255, 0.5);
+       background: rgba(255, 255, 255, 0.15);
+     }
+     
+     .data-section textarea::placeholder {
+       color: rgba(255, 255, 255, 0.5);
+     }
+     
+     .data-section button {
+       margin-top: 0.5rem;
+     }
   </style>
 </head>
 <body class="file-transfer-page">
@@ -1031,44 +1088,58 @@
       </div>
     </div>
 
-    <!-- Server Status -->
-    <div class="transfer-card">
-      <h2><i class="fas fa-server"></i> Server Status</h2>
-      <p>
-        The file transfer tool requires a signaling server to establish P2P connections. 
-        Make sure the server is running on port 8080.
-      </p>
-      <div class="status-indicator" id="serverStatus">
-        <i class="fas fa-circle"></i>
-        <span>Checking server status...</span>
-      </div>
-      <div style="margin-top: 1rem;">
-        <button class="action-btn secondary" id="checkServerBtn">
-          <i class="fas fa-sync-alt"></i> Check Server
-        </button>
-        <button class="action-btn secondary" id="startServerBtn" onclick="window.open('start-file-transfer-server.bat', '_blank')">
-          <i class="fas fa-play"></i> Start Server
-        </button>
-      </div>
-    </div>
+         <!-- Connection Info -->
+     <div class="transfer-card">
+       <h2><i class="fas fa-wifi"></i> Direct P2P Connection</h2>
+       <p>
+         This tool uses WebRTC for direct peer-to-peer file transfer. No server setup required! 
+         Files are transferred directly between browsers using public STUN/TURN servers.
+       </p>
+       <div class="status-indicator" id="connectionInfo">
+         <i class="fas fa-info-circle"></i>
+         <span>Ready for direct connection</span>
+       </div>
+     </div>
 
-    <!-- Room Connection -->
-    <div class="transfer-card" id="connectionCard">
-      <h2><i class="fas fa-link"></i> Connect to Room</h2>
-      <div class="room-input-section">
-        <input type="text" class="room-input" id="roomCode" placeholder="Enter room code (e.g., ABC123)" maxlength="6">
-        <button class="action-btn secondary" id="generateRoomBtn" style="display: none;">
-          <i class="fas fa-refresh"></i> New Code
-        </button>
-        <button class="connect-btn" id="connectBtn">
-          <i class="fas fa-plug"></i> Connect
-        </button>
-      </div>
-      <div class="status-indicator" id="connectionStatus">
-        <i class="fas fa-circle"></i>
-        <span>Not connected</span>
-      </div>
-    </div>
+         <!-- Room Connection -->
+     <div class="transfer-card" id="connectionCard">
+       <h2><i class="fas fa-link"></i> Direct Connection</h2>
+       <div class="room-input-section">
+         <input type="text" class="room-input" id="roomCode" placeholder="Enter room code (e.g., ABC123)" maxlength="6">
+         <button class="action-btn secondary" id="generateRoomBtn" style="display: none;">
+           <i class="fas fa-refresh"></i> New Code
+         </button>
+         <button class="connect-btn" id="connectBtn">
+           <i class="fas fa-plug"></i> Start Connection
+         </button>
+       </div>
+       <div class="status-indicator" id="connectionStatus">
+         <i class="fas fa-circle"></i>
+         <span>Not connected</span>
+       </div>
+       
+       <!-- Connection Data Sharing -->
+       <div class="connection-data hidden" id="connectionData">
+         <h3><i class="fas fa-share-alt"></i> Share Connection Data</h3>
+         <p>Share this data with the other user to establish the P2P connection:</p>
+         
+         <div class="data-section">
+           <label>Connection Data:</label>
+           <textarea id="connectionDataText" readonly placeholder="Connection data will appear here..."></textarea>
+           <button class="action-btn secondary" id="copyDataBtn">
+             <i class="fas fa-copy"></i> Copy Data
+           </button>
+         </div>
+         
+         <div class="data-section">
+           <label>Receive Connection Data:</label>
+           <textarea id="receivedDataText" placeholder="Paste connection data from the other user here..."></textarea>
+           <button class="action-btn primary" id="processDataBtn">
+             <i class="fas fa-arrow-right"></i> Process Data
+           </button>
+         </div>
+       </div>
+     </div>
 
     <!-- Sender UI -->
     <div class="transfer-card transfer-ui" id="senderUI">
@@ -1200,17 +1271,36 @@
   
   <!-- File Transfer Logic -->
   <script>
-    // Configuration
-    const WS_URL = (location.protocol === 'https:' ? 'wss://' : 'ws://') + 'localhost:8080';
+    // Configuration - Pure P2P with public STUN/TURN servers
     const ICE_SERVERS = [
       { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:stun1.l.google.com:19302' },
+      { urls: 'stun:stun2.l.google.com:19302' },
+      { urls: 'stun:stun3.l.google.com:19302' },
+      { urls: 'stun:stun4.l.google.com:19302' },
+      // Add TURN servers for NAT traversal
+      {
+        urls: 'turn:openrelay.metered.ca:80',
+        username: 'openrelayproject',
+        credential: 'openrelayproject'
+      },
+      {
+        urls: 'turn:openrelay.metered.ca:443',
+        username: 'openrelayproject',
+        credential: 'openrelayproject'
+      },
+      {
+        urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+        username: 'openrelayproject',
+        credential: 'openrelayproject'
+      }
     ];
     const CHUNK_SIZE = 256 * 1024; // 256 KiB
     const DC_BUF_HIGH = 8 * 1024 * 1024;  // 8 MB
     const DC_BUF_LOW  = 2 * 1024 * 1024;  // 2 MB
 
-    // State variables
-    let ws, pc, dc;
+    // State variables for pure P2P
+    let pc, dc;
     let isSender = null;
     let roomCode = '';
     let sessionKey = null;
@@ -1229,6 +1319,12 @@
     let keyExpiration = null;
     let keyExpirationTimer = null;
     let transferStartTime = null;
+    
+    // P2P Connection state
+    let connectionState = 'disconnected';
+    let offerData = null;
+    let answerData = null;
+    let iceCandidates = [];
 
     // UI Elements
     const $ = sel => document.querySelector(sel);
@@ -1326,56 +1422,197 @@
         $('#rejectBtn').addEventListener('click', rejectFile);
         $('#saveAsBtn').addEventListener('click', saveFile);
         
-        // Server status checking
-        $('#checkServerBtn').addEventListener('click', checkServerStatus);
-        
-        // Check server status on load
-        setTimeout(checkServerStatus, 1000);
+                 // Connection data handling
+         $('#copyDataBtn').addEventListener('click', copyConnectionData);
+         $('#processDataBtn').addEventListener('click', processReceivedData);
         
         console.log('File transfer initialized');
     }
     
-    async function checkServerStatus() {
-        const serverStatus = $('#serverStatus');
-        const checkBtn = $('#checkServerBtn');
-        
-        serverStatus.className = 'status-indicator connecting';
-        serverStatus.innerHTML = '<div class="loading-spinner"></div><span>Checking server...</span>';
-        checkBtn.disabled = true;
-        checkBtn.innerHTML = '<div class="loading-spinner"></div> Checking...';
-        
-        try {
-            const testWs = new WebSocket(WS_URL);
-            
-            await new Promise((resolve, reject) => {
-                const timeout = setTimeout(() => {
-                    reject(new Error('Connection timeout'));
-                }, 5000);
-                
-                testWs.onopen = () => {
-                    clearTimeout(timeout);
-                    testWs.close();
-                    resolve();
-                };
-                
-                testWs.onerror = () => {
-                    clearTimeout(timeout);
-                    reject(new Error('Server not available'));
-                };
-            });
-            
-            serverStatus.className = 'status-indicator connected';
-            serverStatus.innerHTML = '<div class="success-checkmark"></div><span>Server is running</span>';
-            checkBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Check Server';
-        } catch (error) {
-            console.error('Server check failed:', error);
-            serverStatus.className = 'status-indicator error';
-            serverStatus.innerHTML = '<div class="error-x"></div><span>Server not available - Start the server first</span>';
-            checkBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Check Server';
-        } finally {
-            checkBtn.disabled = false;
-        }
-    }
+         // Pure P2P Connection Functions
+     async function startP2PConnection() {
+         try {
+             updateConnectionStatus('Creating P2P connection...', 'connecting');
+             
+             // Create peer connection
+             pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+             
+             // Set up event handlers
+             pc.onicecandidate = handleIceCandidate;
+             pc.onconnectionstatechange = handleConnectionStateChange;
+             pc.oniceconnectionstatechange = handleIceConnectionStateChange;
+             
+             if (isSender) {
+                 // Create data channel for sender
+                 dc = pc.createDataChannel('file', { ordered: true });
+                 setupDataChannel();
+                 
+                 // Create and set local description
+                 const offer = await pc.createOffer();
+                 await pc.setLocalDescription(offer);
+                 
+                 // Wait for ICE gathering to complete
+                 await waitForIceGathering();
+                 
+                 // Generate connection data
+                 offerData = {
+                     type: 'offer',
+                     sdp: pc.localDescription.sdp,
+                     iceCandidates: iceCandidates
+                 };
+                 
+                 // Display connection data
+                 displayConnectionData(offerData);
+                 
+             } else {
+                 // Set up data channel handler for receiver
+                 pc.ondatachannel = (event) => {
+                     dc = event.channel;
+                     setupDataChannel();
+                 };
+             }
+             
+         } catch (error) {
+             console.error('Failed to start P2P connection:', error);
+             updateConnectionStatus('Failed to create connection', 'error');
+             handleError(error, 'P2P Connection');
+         }
+     }
+     
+     function handleIceCandidate(event) {
+         if (event.candidate) {
+             iceCandidates.push(event.candidate);
+         }
+     }
+     
+     function handleConnectionStateChange() {
+         console.log('Connection state:', pc.connectionState);
+         if (pc.connectionState === 'connected') {
+             updateConnectionStatus('P2P connection established!', 'connected');
+             showNotification('Direct P2P connection established!', 'success');
+         } else if (pc.connectionState === 'failed') {
+             updateConnectionStatus('Connection failed', 'error');
+         }
+     }
+     
+     function handleIceConnectionStateChange() {
+         console.log('ICE connection state:', pc.iceConnectionState);
+     }
+     
+     async function waitForIceGathering() {
+         return new Promise((resolve) => {
+             if (pc.iceGatheringState === 'complete') {
+                 resolve();
+             } else {
+                 pc.onicecandidate = (event) => {
+                     if (event.candidate) {
+                         iceCandidates.push(event.candidate);
+                     } else {
+                         // ICE gathering complete
+                         resolve();
+                     }
+                 };
+             }
+         });
+     }
+     
+     function displayConnectionData(data) {
+         const connectionDataText = JSON.stringify(data, null, 2);
+         $('#connectionDataText').value = connectionDataText;
+         $('#connectionData').classList.remove('hidden');
+         updateConnectionStatus('Connection data ready - share with other user', 'connecting');
+     }
+     
+     async function copyConnectionData() {
+         const dataText = $('#connectionDataText').value;
+         try {
+             await navigator.clipboard.writeText(dataText);
+             showNotification('Connection data copied to clipboard!', 'success');
+         } catch (error) {
+             showNotification('Failed to copy data', 'error');
+         }
+     }
+     
+     async function processReceivedData() {
+         try {
+             const receivedText = $('#receivedDataText').value.trim();
+             if (!receivedText) {
+                 showNotification('Please paste connection data first', 'error');
+                 return;
+             }
+             
+             const receivedData = JSON.parse(receivedText);
+             
+             if (receivedData.type === 'offer') {
+                 // Process offer from sender
+                 await processOffer(receivedData);
+             } else if (receivedData.type === 'answer') {
+                 // Process answer from receiver
+                 await processAnswer(receivedData);
+             } else {
+                 throw new Error('Invalid connection data format');
+             }
+             
+         } catch (error) {
+             console.error('Failed to process received data:', error);
+             showNotification('Invalid connection data', 'error');
+         }
+     }
+     
+     async function processOffer(offerData) {
+         try {
+             // Set remote description
+             await pc.setRemoteDescription({
+                 type: 'offer',
+                 sdp: offerData.sdp
+             });
+             
+             // Add ICE candidates
+             for (const candidate of offerData.iceCandidates || []) {
+                 await pc.addIceCandidate(candidate);
+             }
+             
+             // Create answer
+             const answer = await pc.createAnswer();
+             await pc.setLocalDescription(answer);
+             
+             // Wait for ICE gathering
+             await waitForIceGathering();
+             
+             // Generate answer data
+             answerData = {
+                 type: 'answer',
+                 sdp: pc.localDescription.sdp,
+                 iceCandidates: iceCandidates
+             };
+             
+             // Display answer data
+             displayConnectionData(answerData);
+             
+         } catch (error) {
+             console.error('Failed to process offer:', error);
+             throw error;
+         }
+     }
+     
+     async function processAnswer(answerData) {
+         try {
+             // Set remote description
+             await pc.setRemoteDescription({
+                 type: 'answer',
+                 sdp: answerData.sdp
+             });
+             
+             // Add ICE candidates
+             for (const candidate of answerData.iceCandidates || []) {
+                 await pc.addIceCandidate(candidate);
+             }
+             
+         } catch (error) {
+             console.error('Failed to process answer:', error);
+             throw error;
+         }
+     }
 
     function selectRole(sender) {
         console.log('selectRole called with:', sender);
@@ -1448,31 +1685,25 @@
         return result;
     }
 
-    async function connectToRoom() {
-        roomCode = $('#roomCode').value.trim();
-        if (!roomCode) {
-            alert('Please enter a room code');
-            return;
-        }
-        
-        if (isSender === null) {
-            alert('Please select your role first');
-            return;
-        }
+         async function connectToRoom() {
+         roomCode = $('#roomCode').value.trim();
+         if (!roomCode) {
+             showNotification('Please enter a room code', 'error');
+             return;
+         }
+         
+         if (isSender === null) {
+             showNotification('Please select your role first', 'error');
+             return;
+         }
 
-        updateConnectionStatus('Connecting...', 'connecting');
-        
-        try {
-            await openWebSocket();
-            // Send room join message
-            ws.send(JSON.stringify({ type: 'join', room: roomCode }));
-            await setupPeerConnection();
-            updateConnectionStatus('Connected to room: ' + roomCode, 'connected');
-        } catch (error) {
-            console.error('Connection failed:', error);
-            updateConnectionStatus('Connection failed', 'error');
-        }
-    }
+         // Reset connection state
+         connectionState = 'connecting';
+         iceCandidates = [];
+         
+         // Start P2P connection
+         await startP2PConnection();
+     }
 
     function updateConnectionStatus(message, type) {
         const status = $('#connectionStatus');
@@ -1490,67 +1721,50 @@
         status.innerHTML = `${icon}<span>${message}</span>`;
     }
 
-    async function openWebSocket() {
-        return new Promise((resolve, reject) => {
-            console.log('Attempting to connect to WebSocket server at:', WS_URL);
-            ws = new WebSocket(WS_URL);
-            
-            ws.onopen = () => {
-                console.log('WebSocket connection established');
-                resolve();
-            };
-            
-            ws.onerror = (error) => {
-                console.error('WebSocket connection error:', error);
-                reject(new Error('Failed to connect to signaling server. Make sure the server is running on port 8080.'));
-            };
-            
-            ws.onclose = (event) => {
-                console.log('WebSocket connection closed:', event.code, event.reason);
-                updateConnectionStatus('Connection lost', 'error');
-            };
-            
-            ws.onmessage = handleWebSocketMessage;
-        });
-    }
+         async function setupPeerConnection() {
+         // This function is now handled by startP2PConnection()
+         console.log('setupPeerConnection called - using new P2P system');
+     }
 
-    async function setupPeerConnection() {
-        pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
-        pc.onicecandidate = e => e.candidate && ws.send(JSON.stringify({ type:'ice', cand:e.candidate }));
-        
-        if (isSender) {
-            dc = pc.createDataChannel('file', { ordered: true });
-            setupDataChannel();
-            const offer = await pc.createOffer();
-            await pc.setLocalDescription(offer);
-            ws.send(JSON.stringify({ type:'offer', sdp: pc.localDescription }));
-        } else {
-            pc.ondatachannel = (ev) => {
-                dc = ev.channel;
-                setupDataChannel();
-            };
-        }
-    }
-
-    function setupDataChannel() {
-        dc.binaryType = 'arraybuffer';
-        dc.bufferedAmountLowThreshold = DC_BUF_LOW;
-        
-        dc.onopen = async () => {
-            updateConnectionStatus('Data channel open', 'connected');
-            await deriveSessionKey();
-            updateSAS();
-            if (isSender) {
-                showSenderUI();
-            } else {
-                showReceiverUI();
-            }
-        };
-        
-        dc.onbufferedamountlow = () => sendPump();
-        dc.onmessage = handleDataChannelMessage;
-        dc.onclose = () => updateConnectionStatus('Data channel closed', 'error');
-    }
+         function setupDataChannel() {
+         dc.binaryType = 'arraybuffer';
+         dc.bufferedAmountLowThreshold = DC_BUF_LOW;
+         
+         dc.onopen = async () => {
+             console.log('Data channel opened');
+             updateConnectionStatus('Data channel open - establishing secure connection', 'connecting');
+             
+             try {
+                 await deriveSessionKey();
+                 updateSAS();
+                 
+                 if (isSender) {
+                     showSenderUI();
+                     updateConnectionStatus('Ready to send files', 'connected');
+                 } else {
+                     showReceiverUI();
+                     updateConnectionStatus('Ready to receive files', 'connected');
+                 }
+                 
+                 showNotification('Secure P2P connection established!', 'success');
+             } catch (error) {
+                 console.error('Failed to setup secure connection:', error);
+                 updateConnectionStatus('Failed to establish secure connection', 'error');
+             }
+         };
+         
+         dc.onbufferedamountlow = () => sendPump();
+         dc.onmessage = handleDataChannelMessage;
+         dc.onclose = () => {
+             updateConnectionStatus('Data channel closed', 'error');
+             showNotification('Connection lost', 'error');
+         };
+         
+         dc.onerror = (error) => {
+             console.error('Data channel error:', error);
+             updateConnectionStatus('Data channel error', 'error');
+         };
+     }
 
     // Send pump function for handling backpressure
     function sendPump() {
@@ -1872,32 +2086,10 @@
         $('#sendSent').textContent = formatBytes(sent) + ' sent';
     }
 
-    function handleWebSocketMessage(ev) {
-        try {
-            const msg = JSON.parse(ev.data);
-            if (msg.type === 'joined') return;
-            if (msg.type === 'offer') {
-                pc.setRemoteDescription(msg.sdp).then(() => {
-                    return pc.createAnswer();
-                }).then(answer => {
-                    return pc.setLocalDescription(answer);
-                }).then(() => {
-                    ws.send(JSON.stringify({ type: 'answer', sdp: pc.localDescription }));
-                });
-                return;
-            }
-            if (msg.type === 'answer') {
-                pc.setRemoteDescription(msg.sdp);
-                return;
-            }
-            if (msg.type === 'ice') {
-                pc.addIceCandidate(msg.cand).catch(() => {});
-                return;
-            }
-        } catch (e) {
-            // Handle binary data or other messages
-        }
-    }
+         // WebSocket message handling is no longer needed for pure P2P
+     function handleWebSocketMessage(ev) {
+         console.log('WebSocket message handling disabled - using pure P2P');
+     }
 
     function handleDataChannelMessage(ev) {
         if (typeof ev.data === 'string') {

@@ -90,12 +90,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.mobileTouchShown = true;
             }
             
-            // Get touch coordinates for orb interaction
+            // Get touch coordinates for orb interaction with 1:1 mobile tracking
             const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            const touchX = (touch.clientX - rect.left) * scaleX;
-            const touchY = (touch.clientY - rect.top) * scaleY;
+            
+            // Use 1:1 ratio for mobile - direct touch position without scaling
+            const touchX = touch.clientX - rect.left;
+            const touchY = touch.clientY - rect.top;
             
             // Check if touch is over interactive elements
             const navbar = document.querySelector('.navbar');
@@ -134,12 +134,12 @@ document.addEventListener('DOMContentLoaded', function() {
             mobileTouchDeltaY = touch.clientY - mobileTouchStartY;
             mobileTouchDeltaX = touch.clientX - mobileTouchStartX;
             
-            // Get touch coordinates for orb interaction
+            // Get touch coordinates for orb interaction with 1:1 mobile tracking
             const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            const touchX = (touch.clientX - rect.left) * scaleX;
-            const touchY = (touch.clientY - rect.top) * scaleY;
+            
+            // Use 1:1 ratio for mobile - direct touch position without scaling
+            const touchX = touch.clientX - rect.left;
+            const touchY = touch.clientY - rect.top;
             
             // Check if touch is over interactive elements
             const navbar = document.querySelector('.navbar');
@@ -1213,6 +1213,35 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Visibility change support for performance
         document.addEventListener('visibilitychange', handleVisibilityChange);
+        
+        // Listen for custom neural refresh events
+        window.addEventListener('forceNeuralRefresh', (event) => {
+            console.log('🔄 Force neural refresh triggered for:', event.detail?.screenType);
+            
+            // Stop current animation
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            
+            // Clear all nodes and connections
+            nodes.length = 0;
+            connections.length = 0;
+            
+            // Recalculate responsive settings
+            nodeCount = getResponsiveNodeCount();
+            maxConnectionDistance = getResponsiveConnectionDistance();
+            
+            // Force canvas resize
+            resizeCanvas();
+            
+            // Reinitialize everything
+            initNodes();
+            
+            // Restart animation
+            animate();
+            
+            console.log('🎯 Neural network completely reinitialized:', nodeCount, 'nodes,', maxConnectionDistance, 'px connections');
+        });
         
         animate();
     }

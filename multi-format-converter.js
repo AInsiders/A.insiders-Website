@@ -836,14 +836,18 @@ class MultiFormatConverter {
         } else if (this.formatMappings[inputFormat].category === 'image' && 
                    outputFormat === 'pdf') {
             return await this.convertImageToPdf(file, inputFormat, options);
-        } else if (inputFormat === 'pdf' && outputFormat === 'png') {
-            return await this.convertPdfToImage(file, options);
+        } else if (inputFormat === 'pdf' && (outputFormat === 'png' || outputFormat === 'jpg')) {
+            return await this.convertPdfToImage(file, outputFormat, options);
         } else if (inputFormat === 'txt' && outputFormat === 'pdf') {
             return await this.convertTextToPdf(file, options);
         } else if ((inputFormat === 'doc' || inputFormat === 'docx') && outputFormat === 'pdf') {
             return await this.convertDocumentToPdf(file, inputFormat, options);
-        } else if ((inputFormat === 'doc' || inputFormat === 'docx') && outputFormat === 'txt') {
+        } else if ((inputFormat === 'doc' || inputFormat === 'docx' || inputFormat === 'rtf' || inputFormat === 'odt') && outputFormat === 'pdf') {
+            return await this.convertDocumentToPdf(file, inputFormat, options);
+        } else if ((inputFormat === 'doc' || inputFormat === 'docx' || inputFormat === 'rtf' || inputFormat === 'odt') && outputFormat === 'txt') {
             return await this.convertDocumentToText(file, inputFormat, options);
+        } else if ((inputFormat === 'rtf' || inputFormat === 'odt') && outputFormat === 'docx') {
+            return await this.convertDocumentToDocx(file, inputFormat, options);
         } else if (this.formatMappings[inputFormat].category === 'audio') {
             return await this.convertAudio(file, inputFormat, outputFormat, options);
         } else if (this.formatMappings[inputFormat].category === 'video' && 
@@ -892,6 +896,9 @@ class MultiFormatConverter {
                             break;
                         case 'gif':
                             mimeType = 'image/gif';
+                            break;
+                        case 'bmp':
+                            mimeType = 'image/bmp';
                             break;
                         default:
                             mimeType = 'image/png';
@@ -964,10 +971,13 @@ class MultiFormatConverter {
         });
     }
 
-    async convertPdfToImage(file, options) {
+    async convertPdfToImage(file, outputFormat, options) {
         // This would require PDF.js library for PDF rendering
-        // For now, return a placeholder
-        throw new Error('PDF to image conversion requires additional libraries. Coming soon!');
+        // For now, return a placeholder with format-specific information
+        const dpi = options.dpi || 150;
+        const page = options.page || 1;
+        
+        throw new Error(`PDF to ${outputFormat.toUpperCase()} conversion (${dpi} DPI, page ${page}) requires PDF.js library. Coming soon!`);
     }
 
     async convertTextToPdf(file, options) {
@@ -1011,13 +1021,142 @@ class MultiFormatConverter {
     }
 
     async convertAudio(file, inputFormat, outputFormat, options) {
-        // This would require Web Audio API or similar library
-        // For now, return a placeholder with detailed information
-        const bitrate = options.bitrate || '192k';
-        const sampleRate = options.sampleRate || '44100';
-        const channels = options.channels || 'stereo';
+        return new Promise((resolve, reject) => {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const reader = new FileReader();
+            
+            reader.onload = async (e) => {
+                try {
+                    // Decode the audio file
+                    const arrayBuffer = e.target.result;
+                    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                    
+                    // Get conversion options
+                    const sampleRate = parseInt(options.sampleRate) || 44100;
+                    const channels = options.channels === 'mono' ? 1 : 2;
+                    const bitrate = options.bitrate || '192k';
+                    
+                    // Create offline audio context for processing
+                    const offlineContext = new OfflineAudioContext(
+                        channels,
+                        audioBuffer.length,
+                        sampleRate
+                    );
+                    
+                    // Create buffer source
+                    const source = offlineContext.createBufferSource();
+                    source.buffer = audioBuffer;
+                    source.connect(offlineContext.destination);
+                    source.start();
+                    
+                    // Render the audio
+                    const renderedBuffer = await offlineContext.startRendering();
+                    
+                    // Convert to desired format
+                    let blob;
+                    const fileName = file.name.replace(/\.[^/.]+$/, '') + '.' + outputFormat;
+                    
+                                         switch (outputFormat) {
+                         case 'wav':
+                             blob = this.audioBufferToWav(renderedBuffer, sampleRate);
+                             break;
+                         case 'mp3':
+                             // MP3 encoding requires additional libraries
+                             throw new Error(`MP3 encoding (${bitrate}, ${sampleRate}Hz, ${channels}) requires additional libraries like lame.js. Coming soon!`);
+                         case 'ogg':
+                             // OGG encoding requires additional libraries
+                             throw new Error(`OGG encoding (${bitrate}, ${sampleRate}Hz, ${channels}) requires additional libraries like ogg.js. Coming soon!`);
+                         case 'aac':
+                             // AAC encoding requires additional libraries
+                             throw new Error(`AAC encoding (${bitrate}, ${sampleRate}Hz, ${channels}) requires additional libraries. Coming soon!`);
+                         case 'm4a':
+                             // M4A encoding requires additional libraries
+                             throw new Error(`M4A encoding (${bitrate}, ${sampleRate}Hz, ${channels}) requires additional libraries. Coming soon!`);
+                         case 'flac':
+                             // FLAC encoding requires additional libraries
+                             throw new Error(`FLAC encoding (${sampleRate}Hz, ${channels}) requires additional libraries. Coming soon!`);
+                         case 'wma':
+                             // WMA encoding requires additional libraries
+                             throw new Error(`WMA encoding (${bitrate}, ${sampleRate}Hz, ${channels}) requires additional libraries. Coming soon!`);
+                         default:
+                             blob = this.audioBufferToWav(renderedBuffer, sampleRate);
+                     }
+                    
+                    resolve({
+                        blob: blob,
+                        fileName: fileName,
+                        size: blob.size
+                    });
+                    
+                } catch (error) {
+                    reject(new Error(`Audio conversion failed: ${error.message}`));
+                } finally {
+                    audioContext.close();
+                }
+            };
+            
+            reader.onerror = () => {
+                reject(new Error('Failed to read audio file'));
+            };
+            
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    audioBufferToWav(buffer, sampleRate) {
+        const length = buffer.length;
+        const numberOfChannels = buffer.numberOfChannels;
+        const sampleRateInt = Math.round(sampleRate);
         
-        throw new Error(`Audio conversion from ${inputFormat} to ${outputFormat} (${bitrate}, ${sampleRate}Hz, ${channels}) requires Web Audio API library. Coming soon!`);
+        // Create WAV header
+        const arrayBuffer = new ArrayBuffer(44 + length * numberOfChannels * 2);
+        const view = new DataView(arrayBuffer);
+        
+        // WAV file header
+        const writeString = (offset, string) => {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        };
+        
+        const writeUint32 = (offset, value) => {
+            view.setUint32(offset, value, true);
+        };
+        
+        const writeUint16 = (offset, value) => {
+            view.setUint16(offset, value, true);
+        };
+        
+        // RIFF chunk descriptor
+        writeString(0, 'RIFF');
+        writeUint32(4, 36 + length * numberOfChannels * 2);
+        writeString(8, 'WAVE');
+        
+        // fmt sub-chunk
+        writeString(12, 'fmt ');
+        writeUint32(16, 16);
+        writeUint16(20, 1);
+        writeUint16(22, numberOfChannels);
+        writeUint32(24, sampleRateInt);
+        writeUint32(28, sampleRateInt * numberOfChannels * 2);
+        writeUint16(32, numberOfChannels * 2);
+        writeUint16(34, 16);
+        
+        // data sub-chunk
+        writeString(36, 'data');
+        writeUint32(40, length * numberOfChannels * 2);
+        
+        // Write audio data
+        let offset = 44;
+        for (let i = 0; i < length; i++) {
+            for (let channel = 0; channel < numberOfChannels; channel++) {
+                const sample = Math.max(-1, Math.min(1, buffer.getChannelData(channel)[i]));
+                view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+                offset += 2;
+            }
+        }
+        
+        return new Blob([arrayBuffer], { type: 'audio/wav' });
     }
 
     async extractAudioFromVideo(file, inputFormat, outputFormat, options) {
@@ -1042,14 +1181,26 @@ class MultiFormatConverter {
 
     async convertDocumentToPdf(file, inputFormat, options) {
         // This would require a library like mammoth.js for DOCX or similar for DOC
-        // For now, return a placeholder
-        throw new Error(`${inputFormat.toUpperCase()} to PDF conversion requires additional libraries. Coming soon!`);
+        // For now, return a placeholder with more helpful information
+        const pageSize = options.pageSize || 'a4';
+        const orientation = options.orientation || 'portrait';
+        
+        throw new Error(`${inputFormat.toUpperCase()} to PDF conversion (${pageSize}, ${orientation}) requires additional libraries like mammoth.js. Coming soon!`);
     }
 
     async convertDocumentToText(file, inputFormat, options) {
         // This would require a library like mammoth.js for DOCX or similar for DOC
-        // For now, return a placeholder
-        throw new Error(`${inputFormat.toUpperCase()} to TXT conversion requires additional libraries. Coming soon!`);
+        // For now, return a placeholder with more helpful information
+        throw new Error(`${inputFormat.toUpperCase()} to TXT conversion requires additional libraries like mammoth.js. Coming soon!`);
+    }
+
+    async convertDocumentToDocx(file, inputFormat, options) {
+        // This would require a library like mammoth.js for DOCX conversion
+        // For now, return a placeholder with more helpful information
+        const pageSize = options.pageSize || 'a4';
+        const orientation = options.orientation || 'portrait';
+        
+        throw new Error(`${inputFormat.toUpperCase()} to DOCX conversion (${pageSize}, ${orientation}) requires additional libraries like mammoth.js. Coming soon!`);
     }
 
     showDownloadSection(results) {

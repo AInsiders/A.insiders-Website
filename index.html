@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>A.Insiders - AI & Cybersecurity Solutions</title>
   
   <!-- Favicon Setup -->
@@ -77,26 +77,36 @@
     
     /* Mobile Navigation */
     .nav-menu {
-      position: fixed;
-      top: 0;
-      right: -100%;
-      width: 100%;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.95);
-      backdrop-filter: blur(20px);
-      z-index: 1000;
-      transition: right 0.3s ease;
-      overflow-y: auto;
-      padding: 80px 20px 20px 20px;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
+      position: fixed !important;
+      top: 0 !important;
+      right: -100% !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: 100vw !important;
+      max-height: 100vh !important;
+      background: rgba(0, 0, 0, 0.95) !important;
+      backdrop-filter: blur(20px) !important;
+      z-index: 1000 !important;
+      transition: right 0.3s ease !important;
+      overflow-y: auto !important;
+      padding: 80px 20px 20px 20px !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: flex-start !important;
+      align-items: flex-start !important;
+      transform: translateZ(0) !important;
+      -webkit-transform: translateZ(0) !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
     }
 
     .nav-menu.active {
-      right: 0;
+      right: 0 !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
     }
 
     .nav-menu li {
@@ -146,6 +156,7 @@
       padding: 20px;
       position: relative;
       overflow: hidden;
+      z-index: 10;
     }
 
     .hero-content {
@@ -212,15 +223,44 @@
       border: 2px solid var(--border-color);
     }
 
-    /* Mobile Canvas */
+    /* Responsive Canvas for all screen sizes */
     #aiCanvas {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       z-index: 1;
       pointer-events: auto;
+      transition: all 0.3s ease;
+    }
+
+    /* Mobile-specific canvas adjustments */
+    @media (max-width: 768px) {
+      #aiCanvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1;
+        object-fit: cover;
+        object-position: center;
+      }
+    }
+
+    /* Desktop canvas adjustments */
+    @media (min-width: 769px) {
+      #aiCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        object-fit: contain;
+        object-position: center;
+      }
     }
 
     /* Mobile Footer */
@@ -256,6 +296,19 @@
       max-width: 100%;
     }
 
+    /* Prevent horizontal overflow on mobile */
+    body {
+      overflow-x: hidden;
+      width: 100vw;
+      max-width: 100vw;
+    }
+
+    .website-content {
+      overflow-x: hidden;
+      width: 100vw;
+      max-width: 100vw;
+    }
+
     /* Ensure text elements allow canvas interaction */
     .hero .hero-content .page-title,
     .hero .hero-content .page-subtitle {
@@ -273,6 +326,16 @@
       .nav-menu {
         width: 320px;
         right: -320px;
+      }
+
+      /* Add spacing between logo and menu on tablet */
+      .nav-container {
+        justify-content: space-between;
+        gap: 2rem;
+      }
+
+      .nav-logo {
+        margin-right: 2rem;
       }
 
       .page-title {
@@ -326,44 +389,76 @@
       }
 
       .nav-toggle {
-        display: none;
+        display: none !important;
       }
 
       .nav-menu {
-        position: static;
-        width: auto;
-        height: auto;
-        background: transparent;
-        backdrop-filter: none;
-        z-index: auto;
-        transition: none;
-        overflow: visible;
-        padding: 0;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 2rem;
+        position: static !important;
+        width: auto !important;
+        height: auto !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        z-index: auto !important;
+        transition: none !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        gap: 2rem !important;
+        right: auto !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
       }
 
       .nav-menu li {
-        width: auto;
-        margin: 0;
-        padding: 0;
-        border-bottom: none;
+        width: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-bottom: none !important;
       }
 
       .nav-menu .nav-link {
-        color: var(--text-primary);
-        font-size: 1rem;
-        padding: 0.5rem 1rem;
-        border-radius: 0.25rem;
-        transition: all 0.3s ease;
+        color: var(--text-primary) !important;
+        font-size: 1rem !important;
+        padding: 0.5rem 1rem !important;
+        border-radius: 0.25rem !important;
+        transition: all 0.3s ease !important;
+        display: inline-block !important;
+        width: auto !important;
       }
 
       .nav-menu .nav-link:hover {
-        background: rgba(0, 102, 255, 0.1);
-        color: var(--accent-primary);
+        background: rgba(0, 102, 255, 0.1) !important;
+        color: var(--accent-primary) !important;
+      }
+
+      /* Ensure navbar is visible on desktop */
+      .navbar {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative !important;
+        z-index: 100 !important;
+      }
+
+      .nav-container {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        justify-content: space-between !important;
+        gap: 4rem !important;
+        padding: 0 2rem !important;
+      }
+
+      .nav-logo {
+        margin-right: 3rem !important;
+        flex-shrink: 0 !important;
       }
     }
 
@@ -382,6 +477,170 @@
         min-height: 44px;
         display: flex;
         align-items: center;
+      }
+    }
+
+    /* A.I Color Transition Effect */
+    .page-title.final-title .ai-part {
+      background: linear-gradient(135deg, #00ccff, #0080ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 8px rgba(0, 204, 255, 0.8), 0 0 15px rgba(0, 128, 255, 0.6);
+      animation: aiColorShift 5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+      filter: drop-shadow(0 0 10px rgba(0, 204, 255, 0.5));
+      font-weight: 900;
+    }
+
+    /* Special styling for the final title */
+    .page-title.final-title {
+      position: relative;
+    }
+
+    @keyframes aiColorShift {
+      0% {
+        background: linear-gradient(135deg, #ffffff, #ffffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: none;
+        filter: none;
+      }
+      2% {
+        background: linear-gradient(135deg, #ffffff, #fefeff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 0.5px rgba(0, 204, 255, 0.05);
+        filter: drop-shadow(0 0 0.5px rgba(0, 204, 255, 0.05));
+      }
+      5% {
+        background: linear-gradient(135deg, #ffffff, #f8fcff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 1px rgba(0, 204, 255, 0.1);
+        filter: drop-shadow(0 0 1px rgba(0, 204, 255, 0.1));
+      }
+      8% {
+        background: linear-gradient(135deg, #f8fcff, #f0f9ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 1.5px rgba(0, 204, 255, 0.12);
+        filter: drop-shadow(0 0 1.5px rgba(0, 204, 255, 0.12));
+      }
+      12% {
+        background: linear-gradient(135deg, #f0f9ff, #e6f7ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 2px rgba(0, 204, 255, 0.15);
+        filter: drop-shadow(0 0 2px rgba(0, 204, 255, 0.15));
+      }
+      18% {
+        background: linear-gradient(135deg, #e6f7ff, #dbeafe);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 2.5px rgba(0, 204, 255, 0.2);
+        filter: drop-shadow(0 0 2.5px rgba(0, 204, 255, 0.18));
+      }
+      25% {
+        background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 3px rgba(0, 204, 255, 0.25);
+        filter: drop-shadow(0 0 3px rgba(0, 204, 255, 0.2));
+      }
+      32% {
+        background: linear-gradient(135deg, #bfdbfe, #a5b4fc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 3.5px rgba(0, 204, 255, 0.3);
+        filter: drop-shadow(0 0 3.5px rgba(0, 204, 255, 0.22));
+      }
+      40% {
+        background: linear-gradient(135deg, #a5b4fc, #93c5fd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 4px rgba(0, 204, 255, 0.35);
+        filter: drop-shadow(0 0 4px rgba(0, 204, 255, 0.25));
+      }
+      48% {
+        background: linear-gradient(135deg, #93c5fd, #7dd3fc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 4.5px rgba(0, 204, 255, 0.4);
+        filter: drop-shadow(0 0 4.5px rgba(0, 204, 255, 0.28));
+      }
+      55% {
+        background: linear-gradient(135deg, #7dd3fc, #60a5fa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 5px rgba(0, 204, 255, 0.45);
+        filter: drop-shadow(0 0 5px rgba(0, 204, 255, 0.3));
+      }
+      62% {
+        background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 5.5px rgba(0, 204, 255, 0.5);
+        filter: drop-shadow(0 0 5.5px rgba(0, 204, 255, 0.32));
+      }
+      70% {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 6px rgba(0, 204, 255, 0.55);
+        filter: drop-shadow(0 0 6px rgba(0, 204, 255, 0.35));
+      }
+      78% {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 6.5px rgba(0, 204, 255, 0.6), 0 0 8px rgba(0, 128, 255, 0.35);
+        filter: drop-shadow(0 0 6.5px rgba(0, 204, 255, 0.38));
+      }
+      85% {
+        background: linear-gradient(135deg, #1d4ed8, #1e40af);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 7px rgba(0, 204, 255, 0.65), 0 0 10px rgba(0, 128, 255, 0.4);
+        filter: drop-shadow(0 0 7px rgba(0, 204, 255, 0.4));
+      }
+      92% {
+        background: linear-gradient(135deg, #1e40af, #0099cc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 7.5px rgba(0, 204, 255, 0.7), 0 0 12px rgba(0, 128, 255, 0.45);
+        filter: drop-shadow(0 0 7.5px rgba(0, 204, 255, 0.42));
+      }
+      96% {
+        background: linear-gradient(135deg, #0099cc, #00aaff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 7.8px rgba(0, 204, 255, 0.75), 0 0 13px rgba(0, 128, 255, 0.5);
+        filter: drop-shadow(0 0 8px rgba(0, 204, 255, 0.45));
+      }
+      100% {
+        background: linear-gradient(135deg, #00ccff, #0080ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 8px rgba(0, 204, 255, 0.8), 0 0 15px rgba(0, 128, 255, 0.6);
+        filter: drop-shadow(0 0 10px rgba(0, 204, 255, 0.5));
       }
     }
   </style>
@@ -413,7 +672,7 @@
         </li>
         <li><a href="contact.html" class="nav-link">Contact</a></li>
       </ul>
-      <div class="nav-toggle">
+      <div class="nav-toggle" onclick="toggleMobileMenu()">
         <span></span>
         <span></span>
         <span></span>
@@ -432,7 +691,7 @@
   <header class="hero">
     <canvas id="aiCanvas"></canvas>
     <div class="hero-content">
-      <h1 class="page-title" id="dynamic-title">Welcome To A</h1>
+              <h1 class="page-title" id="dynamic-title">Welcome To <span class="ai-part">A.I</span></h1>
       <p class="page-subtitle">Pioneering the future of AI and cybersecurity with innovative solutions</p>
       <div class="hero-buttons">
         <a href="software.html" class="btn btn-primary">Explore Our Software</a>
@@ -560,7 +819,8 @@
         if (this.isDeleting) {
           // Deleting characters back to base text
           this.currentCharIndex--;
-          this.element.textContent = this.baseText + currentText.substring(12, this.currentCharIndex);
+          const suffix = currentText.substring(12, this.currentCharIndex);
+          this.element.innerHTML = `Welcome To <span class="ai-part">A</span>${suffix}`;
           
           // Stop deleting when we reach the base text
           if (this.currentCharIndex === 12) {
@@ -574,12 +834,31 @@
         } else {
           // Typing characters after base text
           this.currentCharIndex++;
-          this.element.textContent = this.baseText + currentText.substring(12, this.currentCharIndex);
+          const suffix = currentText.substring(12, this.currentCharIndex);
+          
+          if (this.currentTextIndex === this.texts.length - 1) {
+            // For the final text "Welcome To A.Insiders Network", type it out character by character
+            const finalText = "Welcome To A.Insiders Network";
+            const currentDisplay = finalText.substring(0, this.currentCharIndex);
+            
+            // Find where "A.I" starts and ends in the final text
+            const aiStart = currentDisplay.indexOf("A.I");
+            if (aiStart !== -1) {
+              const beforeAI = currentDisplay.substring(0, aiStart);
+              const afterAI = currentDisplay.substring(aiStart + 3);
+              this.element.innerHTML = `${beforeAI}<span class="ai-part">A</span>.<span class="ai-part">I</span>${afterAI}`;
+            } else {
+              this.element.innerHTML = currentDisplay;
+            }
+          } else {
+            this.element.innerHTML = `Welcome To <span class="ai-part">A</span>${suffix}`;
+          }
           
           if (this.currentCharIndex === currentText.length) {
             // Finished typing current text
             if (this.currentTextIndex === this.texts.length - 1) {
-              // This is the final text, keep it
+              // This is the final text, add color transition effect
+              this.element.classList.add('final-title');
               return;
             }
             
@@ -600,16 +879,10 @@
       
       if (titleElement) {
         const texts = [
-          "Welcome To A Support Team",
-          "Welcome To A News Netwo",
-          "Welcome To A Tech Insid",
-          "Welcome To A Mobile Solutions Co",
-          "Welcome To A Cyber Secur",
-          "Welcome To A AI Develop",
-          "Welcome To A Software Sol",
-          "Welcome To A Digital Inno",
-          "Welcome To A Future Tech",
-          "Welcome To A .Insiders Network"
+          "Welcome To A Trusted Partner",
+          "Welcome To A Expert Research",
+          "Welcome To A Deep Learning",
+          "Welcome To A.Insiders Network"
         ];
         
         new TypeWriter(titleElement, texts, {
@@ -619,6 +892,265 @@
           pauseTime: 200    // Brief pause between transitions
         });
       }
+    });
+
+    // Mobile menu toggle function
+    function toggleMobileMenu() {
+      const navToggle = document.querySelector('.nav-toggle');
+      const navMenu = document.querySelector('.nav-menu');
+      
+      console.log('Toggle function called');
+      console.log('Nav toggle:', navToggle);
+      console.log('Nav menu:', navMenu);
+      
+      if (navToggle && navMenu) {
+        navToggle.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        
+        console.log('Toggle active:', navToggle.classList.contains('active'));
+        console.log('Menu active:', navMenu.classList.contains('active'));
+        console.log('Menu right position:', getComputedStyle(navMenu).right);
+      }
+    }
+
+    // Comprehensive screen reset function
+    function resetScreenLayout() {
+      const canvas = document.getElementById('aiCanvas');
+      const navToggle = document.querySelector('.nav-toggle');
+      const navMenu = document.querySelector('.nav-menu');
+      const hero = document.querySelector('.hero');
+      const body = document.body;
+      const websiteContent = document.querySelector('.website-content');
+      
+      console.log('Resetting screen layout for desktop/mobile transition');
+
+      // Reset all navigation states and styles
+      if (navToggle && navMenu) {
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        
+        // Clear all inline styles that might be stuck from mobile
+        navMenu.removeAttribute('style');
+        navToggle.removeAttribute('style');
+        
+        // Force desktop navigation to be visible if on desktop
+        const currentScreenType = window.innerWidth <= 768 ? 'mobile' : 'desktop';
+        if (currentScreenType === 'desktop') {
+          // Force desktop navigation styles
+          navToggle.style.display = 'none';
+          navMenu.style.position = 'static';
+          navMenu.style.width = 'auto';
+          navMenu.style.height = 'auto';
+          navMenu.style.background = 'transparent';
+          navMenu.style.backdropFilter = 'none';
+          navMenu.style.zIndex = 'auto';
+          navMenu.style.transition = 'none';
+          navMenu.style.overflow = 'visible';
+          navMenu.style.padding = '0';
+          navMenu.style.display = 'flex';
+          navMenu.style.flexDirection = 'row';
+          navMenu.style.justifyContent = 'flex-end';
+          navMenu.style.alignItems = 'center';
+          navMenu.style.gap = '2rem';
+          navMenu.style.right = 'auto';
+          navMenu.style.top = 'auto';
+          navMenu.style.left = 'auto';
+          navMenu.style.transform = 'none';
+          navMenu.style.visibility = 'visible';
+          navMenu.style.opacity = '1';
+          navMenu.style.pointerEvents = 'auto';
+        }
+      }
+
+      // Reset body and container styles
+      if (body) {
+        body.removeAttribute('style');
+        // Force body to recalculate
+        body.style.width = '';
+        body.style.maxWidth = '';
+        body.style.overflowX = '';
+      }
+
+      if (websiteContent) {
+        websiteContent.removeAttribute('style');
+        // Force website content to recalculate
+        websiteContent.style.width = '';
+        websiteContent.style.maxWidth = '';
+        websiteContent.style.overflowX = '';
+      }
+
+      // Reset hero section
+      if (hero) {
+        hero.removeAttribute('style');
+        hero.style.height = '';
+        hero.style.minHeight = '';
+      }
+
+      // Reset canvas completely and force repositioning
+      if (canvas) {
+        // Clear all styles first
+        canvas.removeAttribute('style');
+        canvas.style.cssText = '';
+        
+        // Force canvas to reset to default state
+        const currentScreenType = window.innerWidth <= 768 ? 'mobile' : 'desktop';
+        
+        if (currentScreenType === 'desktop') {
+          // Force desktop canvas positioning
+          canvas.style.position = 'absolute';
+          canvas.style.top = '0';
+          canvas.style.left = '0';
+          canvas.style.width = '100%';
+          canvas.style.height = '100%';
+          canvas.style.objectFit = 'contain';
+          canvas.style.objectPosition = 'center';
+        } else {
+          // Force mobile canvas positioning
+          canvas.style.position = 'fixed';
+          canvas.style.top = '0';
+          canvas.style.left = '0';
+          canvas.style.width = '100vw';
+          canvas.style.height = '100vh';
+          canvas.style.objectFit = 'cover';
+          canvas.style.objectPosition = 'center';
+        }
+        
+        // Force canvas to recalculate dimensions
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          setTimeout(() => {
+            if (currentScreenType === 'desktop') {
+              const hero = document.querySelector('.hero');
+              if (hero) {
+                canvas.width = hero.offsetWidth;
+                canvas.height = hero.offsetHeight;
+              } else {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+              }
+            } else {
+              canvas.width = window.innerWidth;
+              canvas.height = window.innerHeight;
+            }
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            console.log('Canvas dimensions reset:', canvas.width, 'x', canvas.height);
+          }, 50);
+        }
+      }
+
+      // Force page reflow
+      document.body.style.display = 'none';
+      document.body.offsetHeight; // Trigger reflow
+      document.body.style.display = '';
+
+      console.log('Screen layout reset complete');
+    }
+
+    // Enhanced canvas resize handler for screen transitions
+    function handleCanvasResize() {
+      resetScreenLayout();
+      
+      // Force neural network complete refresh
+      refreshNeuralBackground();
+      
+      // Force multiple resize events with delays
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+        console.log('First resize event triggered');
+      }, 100);
+      
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+        console.log('Second resize event triggered');
+      }, 300);
+      
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+        console.log('Final resize event triggered');
+      }, 500);
+    }
+
+    // Force complete neural background refresh
+    function refreshNeuralBackground() {
+      const canvas = document.getElementById('aiCanvas');
+      if (!canvas) return;
+      
+      console.log('Forcing complete neural background refresh');
+      
+      // Get current screen type
+      const currentScreenType = window.innerWidth <= 768 ? 'mobile' : 'desktop';
+      
+      // Stop any existing animation
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        // Clear the entire canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Reset canvas size based on screen type
+        if (currentScreenType === 'desktop') {
+          const hero = document.querySelector('.hero');
+          if (hero) {
+            canvas.width = hero.offsetWidth;
+            canvas.height = hero.offsetHeight;
+          }
+        } else {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+        
+        // Clear again with new dimensions
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      
+      // Force brain-script to reinitialize nodes and connections
+      // This will trigger the responsive node count and connection distance recalculation
+      setTimeout(() => {
+        // Dispatch custom event to force brain-script reinitialization
+        window.dispatchEvent(new CustomEvent('forceNeuralRefresh', {
+          detail: { screenType: currentScreenType }
+        }));
+        
+        // Also trigger multiple resize events
+        for (let i = 0; i < 5; i++) {
+          setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+          }, i * 100);
+        }
+      }, 200);
+      
+      console.log('Neural background refresh initiated for:', currentScreenType);
+    }
+
+    // Listen for screen size changes (desktop to mobile transition)
+    let currentScreenType = window.innerWidth <= 768 ? 'mobile' : 'desktop';
+    
+    window.addEventListener('resize', () => {
+      const newScreenType = window.innerWidth <= 768 ? 'mobile' : 'desktop';
+      
+      // If screen type changed, handle canvas resize
+      if (newScreenType !== currentScreenType) {
+        currentScreenType = newScreenType;
+        
+        // Add delay for screen transition to complete
+        setTimeout(() => {
+          handleCanvasResize();
+          
+          // Additional delay for brain-script to reinitialize
+          setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+          }, 200);
+        }, 300);
+        
+        console.log('Screen type changed to:', currentScreenType);
+      }
+    });
+
+    // Handle orientation changes for mobile
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        handleCanvasResize();
+        console.log('Orientation changed, canvas adjusted');
+      }, 300);
     });
   </script>
 </body>
