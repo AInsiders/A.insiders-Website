@@ -48,16 +48,30 @@ As the sun began to set, painting the sky in brilliant oranges and purples, Sara
         this.initializeTextArea();
     }
 
-    setupEventListeners() {
+        setupEventListeners() {
         const textInput = document.getElementById('textInput');
         const clearBtn = document.getElementById('clearBtn');
         const copyBtn = document.getElementById('copyBtn');
         const pasteBtn = document.getElementById('pasteBtn');
         const fileInput = document.getElementById('fileInput');
         const sampleBtn = document.getElementById('sampleBtn');
-
+        
         if (textInput) {
-            textInput.addEventListener('input', () => this.analyzeText());
+            // Use debounced input for better performance
+            let timeout;
+            textInput.addEventListener('input', (e) => {
+                // Clear previous timeout
+                clearTimeout(timeout);
+                
+                // Auto-resize textarea
+                textInput.style.height = 'auto';
+                textInput.style.height = Math.max(300, textInput.scrollHeight) + 'px';
+                
+                // Debounce the analysis to avoid excessive calculations
+                timeout = setTimeout(() => {
+                    this.analyzeText();
+                }, 150); // 150ms delay
+            });
             textInput.addEventListener('paste', () => this.analyzeText());
         }
 
@@ -115,15 +129,18 @@ As the sun began to set, painting the sky in brilliant oranges and purples, Sara
             // Set initial focus
             textInput.focus();
             
-            // Auto-resize textarea
-            textInput.addEventListener('input', () => {
-                textInput.style.height = 'auto';
-                textInput.style.height = Math.max(300, textInput.scrollHeight) + 'px';
-            });
-            
             // Initialize live counter with zero values after a short delay
             setTimeout(() => {
-                this.updateLiveCounter({ characters: 0, charactersNoSpaces: 0, words: 0 });
+                this.updateLiveCounter({ 
+                    characters: 0, 
+                    charactersNoSpaces: 0, 
+                    words: 0, 
+                    sentences: 0, 
+                    paragraphs: 0, 
+                    letters: 0, 
+                    numbers: 0, 
+                    symbols: 0 
+                });
             }, 100);
         }
     }
@@ -147,22 +164,45 @@ As the sun began to set, painting the sky in brilliant oranges and purples, Sara
     }
 
     calculateStats(text) {
+        // Optimized stats calculation - only calculate what's needed for live counter
         const stats = {
+            // Basic counts (always needed)
             characters: text.length,
             charactersNoSpaces: text.replace(/\s/g, '').length,
             words: this.countWords(text),
             sentences: this.countSentences(text),
             paragraphs: this.countParagraphs(text),
             lines: this.countLines(text),
+            
+            // Character analysis (always needed)
+            letters: this.countLetters(text),
+            numbers: this.countNumbers(text),
+            symbols: this.countSymbols(text),
+            punctuation: this.countPunctuation(text),
+            spaces: this.countSpaces(text),
+            uppercase: this.countUppercase(text),
+            lowercase: this.countLowercase(text),
+            specialChars: this.countSpecialChars(text),
+            whitespace: this.countWhitespace(text),
+            
+            // Text structure (always needed)
+            wordsPerSentence: this.getWordsPerSentence(text),
+            wordsPerParagraph: this.getWordsPerParagraph(text),
+            sentencesPerParagraph: this.getSentencesPerParagraph(text),
+            
+            // Reading metrics (always needed)
             readingTime: this.calculateReadingTime(text),
-            analysis: this.performDetailedAnalysis(text),
-            insights: this.generateInsights(text)
+            speakingTime: this.calculateSpeakingTime(text)
         };
 
         return stats;
     }
 
     countWords(text) {
+        // Handle empty or whitespace-only text
+        if (!text || !text.trim()) {
+            return 0;
+        }
         // Remove extra whitespace and split by whitespace
         const words = text.trim().split(/\s+/);
         // Filter out empty strings
@@ -170,6 +210,10 @@ As the sun began to set, painting the sky in brilliant oranges and purples, Sara
     }
 
     countSentences(text) {
+        // Handle empty or whitespace-only text
+        if (!text || !text.trim()) {
+            return 0;
+        }
         // Split by sentence endings (., !, ?) followed by space or end of string
         const sentences = text.split(/[.!?]+(?=\s|$)/);
         // Filter out empty strings and count
@@ -177,6 +221,10 @@ As the sun began to set, painting the sky in brilliant oranges and purples, Sara
     }
 
     countParagraphs(text) {
+        // Handle empty or whitespace-only text
+        if (!text || !text.trim()) {
+            return 0;
+        }
         // Split by double line breaks or single line breaks with empty lines
         const paragraphs = text.split(/\n\s*\n/);
         // Filter out empty paragraphs
@@ -184,9 +232,92 @@ As the sun began to set, painting the sky in brilliant oranges and purples, Sara
     }
 
     countLines(text) {
+        // Handle empty or whitespace-only text
+        if (!text || !text.trim()) {
+            return 0;
+        }
         // Count non-empty lines
         const lines = text.split('\n');
         return lines.filter(line => line.trim().length > 0).length;
+    }
+
+    // Advanced character counting methods
+    countLetters(text) {
+        return (text.match(/[a-zA-Z]/g) || []).length;
+    }
+
+    countNumbers(text) {
+        return (text.match(/\d/g) || []).length;
+    }
+
+    countSymbols(text) {
+        // Count symbols but exclude letters, numbers, spaces, and common punctuation
+        return (text.match(/[^\w\s.,!?;:'"()-]/g) || []).length;
+    }
+
+    countPunctuation(text) {
+        return (text.match(/[.,!?;:'"()[\]{}\-]/g) || []).length;
+    }
+
+    countSpaces(text) {
+        return (text.match(/ /g) || []).length;
+    }
+
+    countUppercase(text) {
+        return (text.match(/[A-Z]/g) || []).length;
+    }
+
+    countLowercase(text) {
+        return (text.match(/[a-z]/g) || []).length;
+    }
+
+    countSpecialChars(text) {
+        // Count all non-alphanumeric characters except spaces
+        return (text.match(/[^\w\s]/g) || []).length;
+    }
+
+    countWhitespace(text) {
+        // Count all types of whitespace (spaces, tabs, newlines, etc.)
+        return (text.match(/\s/g) || []).length;
+    }
+
+    // Text structure analysis methods
+    getWordsPerSentence(text) {
+        const words = this.countWords(text);
+        const sentences = this.countSentences(text);
+        return sentences > 0 ? (words / sentences).toFixed(1) : 0;
+    }
+
+    getWordsPerParagraph(text) {
+        const words = this.countWords(text);
+        const paragraphs = this.countParagraphs(text);
+        return paragraphs > 0 ? (words / paragraphs).toFixed(1) : 0;
+    }
+
+    getSentencesPerParagraph(text) {
+        const sentences = this.countSentences(text);
+        const paragraphs = this.countParagraphs(text);
+        return paragraphs > 0 ? (sentences / paragraphs).toFixed(1) : 0;
+    }
+
+    calculateSpeakingTime(text) {
+        const wordsPerMinute = 150; // Average speaking speed
+        const words = this.countWords(text);
+        const minutes = words / wordsPerMinute;
+        
+        if (minutes < 1) {
+            const seconds = Math.round(minutes * 60);
+            return `${seconds} second${seconds !== 1 ? 's' : ''}`;
+        } else {
+            const wholeMinutes = Math.floor(minutes);
+            const remainingSeconds = Math.round((minutes - wholeMinutes) * 60);
+            
+            if (remainingSeconds === 0) {
+                return `${wholeMinutes} minute${wholeMinutes !== 1 ? 's' : ''}`;
+            } else {
+                return `${wholeMinutes} minute${wholeMinutes !== 1 ? 's' : ''} ${remainingSeconds} second${remainingSeconds !== 1 ? 's' : ''}`;
+            }
+        }
     }
 
     calculateReadingTime(text) {
@@ -212,35 +343,52 @@ As the sun began to set, painting the sky in brilliant oranges and purples, Sara
     performDetailedAnalysis(text) {
         const analysis = {};
         
-        // Average word length
+        // Get basic stats for analysis
+        const stats = {
+            words: this.countWords(text),
+            sentences: this.countSentences(text),
+            paragraphs: this.countParagraphs(text),
+            letters: this.countLetters(text),
+            numbers: this.countNumbers(text),
+            punctuation: this.countPunctuation(text),
+            uppercase: this.countUppercase(text),
+            lowercase: this.countLowercase(text),
+            spaces: this.countSpaces(text),
+            whitespace: this.countWhitespace(text)
+        };
+        
+        // Word analysis
         const words = text.trim().split(/\s+/).filter(word => word.length > 0);
         const totalWordLength = words.reduce((sum, word) => sum + word.length, 0);
         analysis.averageWordLength = words.length > 0 ? (totalWordLength / words.length).toFixed(1) : 0;
+        analysis.longestWord = words.reduce((longest, word) => 
+            word.length > longest.length ? word : longest, '');
+        analysis.shortestWord = words.reduce((shortest, word) => 
+            word.length < shortest.length ? word : shortest, words[0] || '');
         
-        // Average sentence length
-        const sentences = this.countSentences(text);
-        const wordCount = this.countWords(text);
-        analysis.averageSentenceLength = sentences > 0 ? (wordCount / sentences).toFixed(1) : 0;
+        // Sentence and paragraph analysis
+        analysis.averageSentenceLength = stats.sentences > 0 ? (stats.words / stats.sentences).toFixed(1) : 0;
+        analysis.averageParagraphLength = stats.paragraphs > 0 ? (stats.words / stats.paragraphs).toFixed(1) : 0;
+        analysis.averageSentencesPerParagraph = stats.paragraphs > 0 ? (stats.sentences / stats.paragraphs).toFixed(1) : 0;
         
-        // Average paragraph length
-        const paragraphs = this.countParagraphs(text);
-        analysis.averageParagraphLength = paragraphs > 0 ? (wordCount / paragraphs).toFixed(1) : 0;
+        // Character analysis percentages
+        const totalChars = text.length;
+        analysis.letterPercentage = totalChars > 0 ? ((stats.letters / totalChars) * 100).toFixed(1) : 0;
+        analysis.numberPercentage = totalChars > 0 ? ((stats.numbers / totalChars) * 100).toFixed(1) : 0;
+        analysis.punctuationPercentage = totalChars > 0 ? ((stats.punctuation / totalChars) * 100).toFixed(1) : 0;
+        analysis.uppercasePercentage = stats.letters > 0 ? ((stats.uppercase / stats.letters) * 100).toFixed(1) : 0;
+        analysis.lowercasePercentage = stats.letters > 0 ? ((stats.lowercase / stats.letters) * 100).toFixed(1) : 0;
+        analysis.spacePercentage = totalChars > 0 ? ((stats.spaces / totalChars) * 100).toFixed(1) : 0;
+        analysis.whitespacePercentage = totalChars > 0 ? ((stats.whitespace / totalChars) * 100).toFixed(1) : 0;
         
-        // Character density
-        analysis.characterDensity = text.length > 0 ? ((this.countWords(text) / text.length) * 100).toFixed(1) : 0;
+        // Text density and complexity
+        analysis.characterDensity = totalChars > 0 ? ((stats.words / totalChars) * 100).toFixed(1) : 0;
+        analysis.lexicalDiversity = this.calculateLexicalDiversity(words);
         
-        // Space percentage
-        const spaces = (text.match(/\s/g) || []).length;
-        analysis.spacePercentage = text.length > 0 ? ((spaces / text.length) * 100).toFixed(1) : 0;
-        
-        // Unique words
+        // Unique words analysis
         const uniqueWords = new Set(words.map(word => word.toLowerCase().replace(/[^\w]/g, '')));
         analysis.uniqueWords = uniqueWords.size;
         analysis.uniqueWordPercentage = words.length > 0 ? ((uniqueWords.size / words.length) * 100).toFixed(1) : 0;
-        
-        // Longest word
-        analysis.longestWord = words.reduce((longest, word) => 
-            word.length > longest.length ? word : longest, '');
         
         // Most common words (top 5)
         const wordFrequency = {};
@@ -258,7 +406,52 @@ As the sun began to set, painting the sky in brilliant oranges and purples, Sara
         
         analysis.mostCommonWords = sortedWords;
         
+        // Readability scores
+        analysis.fleschScore = this.calculateFleschScore(stats.words, stats.sentences, this.countSyllables(text));
+        analysis.readabilityLevel = this.getReadabilityLevel(analysis.fleschScore);
+        
         return analysis;
+    }
+
+    calculateLexicalDiversity(words) {
+        if (words.length === 0) return 0;
+        const uniqueWords = new Set(words.map(word => word.toLowerCase().replace(/[^\w]/g, '')));
+        return ((uniqueWords.size / words.length) * 100).toFixed(1);
+    }
+
+    countSyllables(text) {
+        const words = text.toLowerCase().match(/\b[a-z]+\b/g) || [];
+        let totalSyllables = 0;
+        
+        words.forEach(word => {
+            let syllables = word.match(/[aeiouy]+/g);
+            if (syllables) {
+                totalSyllables += syllables.length;
+                // Adjust for silent 'e'
+                if (word.endsWith('e') && syllables.length > 1) {
+                    totalSyllables--;
+                }
+            } else {
+                totalSyllables++; // Every word has at least one syllable
+            }
+        });
+        
+        return totalSyllables;
+    }
+
+    calculateFleschScore(words, sentences, syllables) {
+        if (words === 0 || sentences === 0) return 0;
+        return (206.835 - (1.015 * (words / sentences)) - (84.6 * (syllables / words))).toFixed(1);
+    }
+
+    getReadabilityLevel(fleschScore) {
+        if (fleschScore >= 90) return 'Very Easy';
+        if (fleschScore >= 80) return 'Easy';
+        if (fleschScore >= 70) return 'Fairly Easy';
+        if (fleschScore >= 60) return 'Standard';
+        if (fleschScore >= 50) return 'Fairly Difficult';
+        if (fleschScore >= 30) return 'Difficult';
+        return 'Very Difficult';
     }
 
     generateInsights(text) {
@@ -394,28 +587,75 @@ As the sun began to set, painting the sky in brilliant oranges and purples, Sara
         document.getElementById('sentenceCount').textContent = stats.sentences;
         document.getElementById('lineCount').textContent = stats.lines;
 
-        // Update reading time
+        // Update additional statistics if elements exist
+        const lettersElement = document.getElementById('letterCount');
+        if (lettersElement) lettersElement.textContent = stats.letters;
+        
+        const numbersElement = document.getElementById('numberCount');
+        if (numbersElement) numbersElement.textContent = stats.numbers;
+        
+        const symbolsElement = document.getElementById('symbolCount');
+        if (symbolsElement) symbolsElement.textContent = stats.symbols;
+        
+        const punctuationElement = document.getElementById('punctuationCount');
+        if (punctuationElement) punctuationElement.textContent = stats.punctuation;
+        
+        const spacesElement = document.getElementById('spacesCount');
+        if (spacesElement) spacesElement.textContent = stats.spaces;
+        
+        const uppercaseElement = document.getElementById('uppercaseCount');
+        if (uppercaseElement) uppercaseElement.textContent = stats.uppercase;
+        
+        const lowercaseElement = document.getElementById('lowercaseCount');
+        if (lowercaseElement) lowercaseElement.textContent = stats.lowercase;
+
+        // Update reading and speaking time
         document.getElementById('readingTimeText').textContent = 
-            `Estimated reading time: ${stats.readingTime}`;
+            `Reading time: ${stats.readingTime} | Speaking time: ${stats.speakingTime}`;
 
-        // Display detailed analysis
-        this.displayDetailedAnalysis(stats.analysis);
+        // Calculate and display detailed analysis
+        const textInput = document.getElementById('textInput');
+        const analysis = this.performDetailedAnalysis(textInput.value);
+        this.displayDetailedAnalysis(analysis);
 
-        // Display insights
-        this.displayInsights(stats.insights);
+        // Calculate and display insights
+        const insights = this.generateInsights(textInput.value);
+        this.displayInsights(insights);
     }
 
     displayDetailedAnalysis(analysis) {
         const analysisGrid = document.getElementById('analysisGrid');
         
         const analysisItems = [
+            // Text structure analysis
             { label: 'Average Word Length', value: `${analysis.averageWordLength} characters` },
             { label: 'Average Sentence Length', value: `${analysis.averageSentenceLength} words` },
             { label: 'Average Paragraph Length', value: `${analysis.averageParagraphLength} words` },
+            { label: 'Sentences per Paragraph', value: `${analysis.averageSentencesPerParagraph}` },
+            
+            // Character composition
+            { label: 'Letters', value: `${analysis.letterPercentage}%` },
+            { label: 'Numbers', value: `${analysis.numberPercentage}%` },
+            { label: 'Punctuation', value: `${analysis.punctuationPercentage}%` },
+            { label: 'Spaces', value: `${analysis.spacePercentage}%` },
+            { label: 'Whitespace', value: `${analysis.whitespacePercentage}%` },
+            
+            // Case analysis
+            { label: 'Uppercase Letters', value: `${analysis.uppercasePercentage}%` },
+            { label: 'Lowercase Letters', value: `${analysis.lowercasePercentage}%` },
+            
+            // Text complexity
             { label: 'Character Density', value: `${analysis.characterDensity}%` },
-            { label: 'Space Percentage', value: `${analysis.spacePercentage}%` },
+            { label: 'Lexical Diversity', value: `${analysis.lexicalDiversity}%` },
             { label: 'Unique Words', value: `${analysis.uniqueWords} (${analysis.uniqueWordPercentage}%)` },
-            { label: 'Longest Word', value: analysis.longestWord || 'N/A' }
+            
+            // Word analysis
+            { label: 'Longest Word', value: analysis.longestWord || 'N/A' },
+            { label: 'Shortest Word', value: analysis.shortestWord || 'N/A' },
+            
+            // Readability
+            { label: 'Flesch Reading Score', value: `${analysis.fleschScore}` },
+            { label: 'Reading Level', value: analysis.readabilityLevel }
         ];
 
         let analysisHTML = '';
@@ -472,31 +712,40 @@ As the sun began to set, painting the sky in brilliant oranges and purples, Sara
     }
 
     updateLiveCounter(stats) {
-        // Update the live counter that's always visible
-        const liveCharCount = document.getElementById('liveCharCount');
-        const liveCharNoSpaceCount = document.getElementById('liveCharNoSpaceCount');
-        const liveWordCount = document.getElementById('liveWordCount');
+        // Optimized live counter update with animations
+        const updates = [
+            ['liveCharCount', stats.characters || 0],
+            ['liveCharNoSpaceCount', stats.charactersNoSpaces || 0],
+            ['liveWordCount', stats.words || 0],
+            ['liveSentenceCount', stats.sentences || 0],
+            ['liveParagraphCount', stats.paragraphs || 0],
+            ['liveLetterCount', stats.letters || 0],
+            ['liveNumberCount', stats.numbers || 0],
+            ['liveSymbolCount', stats.symbols || 0]
+        ];
         
-        // Debug: Check if elements exist
-        console.log('Live counter elements found:', {
-            liveCharCount: !!liveCharCount,
-            liveCharNoSpaceCount: !!liveCharNoSpaceCount,
-            liveWordCount: !!liveWordCount
+        // Batch update all elements with animation
+        updates.forEach(([id, value]) => {
+            const element = document.getElementById(id);
+            if (element) {
+                const oldValue = parseInt(element.textContent) || 0;
+                const newValue = value;
+                
+                // Only animate if value changed
+                if (oldValue !== newValue) {
+                    // Add animation class
+                    element.classList.add('counter-update');
+                    
+                    // Update the value
+                    element.textContent = newValue;
+                    
+                    // Remove animation class after animation completes
+                    setTimeout(() => {
+                        element.classList.remove('counter-update');
+                    }, 300);
+                }
+            }
         });
-        
-        // Ensure elements exist and update them
-        if (liveCharCount) {
-            liveCharCount.textContent = stats.characters || 0;
-            console.log('Updated char count:', stats.characters || 0);
-        }
-        if (liveCharNoSpaceCount) {
-            liveCharNoSpaceCount.textContent = stats.charactersNoSpaces || 0;
-            console.log('Updated char no space count:', stats.charactersNoSpaces || 0);
-        }
-        if (liveWordCount) {
-            liveWordCount.textContent = stats.words || 0;
-            console.log('Updated word count:', stats.words || 0);
-        }
     }
 
     clearText() {
@@ -504,7 +753,16 @@ As the sun began to set, painting the sky in brilliant oranges and purples, Sara
         textInput.value = '';
         textInput.style.height = '300px';
         this.hideResults();
-        this.updateLiveCounter({ characters: 0, charactersNoSpaces: 0, words: 0 });
+        this.updateLiveCounter({ 
+            characters: 0, 
+            charactersNoSpaces: 0, 
+            words: 0, 
+            sentences: 0, 
+            paragraphs: 0, 
+            letters: 0, 
+            numbers: 0, 
+            symbols: 0 
+        });
         textInput.focus();
     }
 
@@ -638,46 +896,30 @@ As the sun began to set, painting the sky in brilliant oranges and purples, Sara
     }
 }
 
-// Test function for live counter
-function testLiveCounter() {
-    console.log('Testing live counter...');
+// Manual analyze function for testing
+function manualAnalyze() {
     if (window.wordCharacterCounter) {
-        window.wordCharacterCounter.updateLiveCounter({
-            characters: 123,
-            charactersNoSpaces: 100,
-            words: 25
-        });
-    } else {
-        console.log('WordCharacterCounter not found');
+        window.wordCharacterCounter.analyzeText();
     }
 }
 
 // Initialize the word character counter when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, initializing word counter...');
     window.wordCharacterCounter = new WordCharacterCounter();
     
-    // Ensure live counter is initialized after DOM is ready
+    // Initialize counters to zero
     setTimeout(() => {
-        console.log('Initializing live counter...');
         if (window.wordCharacterCounter) {
             window.wordCharacterCounter.updateLiveCounter({ 
                 characters: 0, 
                 charactersNoSpaces: 0, 
-                words: 0 
+                words: 0, 
+                sentences: 0, 
+                paragraphs: 0, 
+                letters: 0, 
+                numbers: 0, 
+                symbols: 0 
             });
         }
-    }, 200);
-    
-    // Additional initialization after a longer delay to ensure everything is ready
-    setTimeout(() => {
-        console.log('Final live counter initialization...');
-        if (window.wordCharacterCounter) {
-            window.wordCharacterCounter.updateLiveCounter({ 
-                characters: 0, 
-                charactersNoSpaces: 0, 
-                words: 0 
-            });
-        }
-    }, 1000);
+    }, 100);
 });

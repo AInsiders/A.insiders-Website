@@ -25,6 +25,11 @@ class AITextDetector {
             maxRetries: 3,
             timeout: 30000
         };
+
+        // In-memory cache for recent requests to reduce API calls and smooth UX
+        this.responseCache = new Map();
+        // Basic exponential backoff schedule in ms
+        this.backoffSchedule = [500, 1000, 2000];
         
         // Fallback detection patterns (used when API is unavailable)
         this.fallbackPatterns = {
@@ -105,8 +110,18 @@ class AITextDetector {
         
         // Store API key when entered
         const apiKeyInput = document.getElementById('apiKeyInput');
+        const saved = localStorage.getItem('hf_api_key');
+        if (saved) {
+            apiKeyInput.value = saved;
+            this.apiConfig.apiKey = saved;
+        }
         apiKeyInput.addEventListener('input', (e) => {
             this.apiConfig.apiKey = e.target.value.trim() || null;
+            if (this.apiConfig.apiKey) {
+                localStorage.setItem('hf_api_key', this.apiConfig.apiKey);
+            } else {
+                localStorage.removeItem('hf_api_key');
+            }
         });
     }
     
@@ -221,24 +236,42 @@ class AITextDetector {
             'Content-Type': 'application/json'
         };
         
-        // Try multiple AI detection models
+        // Run models concurrently and aggregate
         const models = [
             'roberta-base-openai-detector',
             'microsoft/DialoGPT-medium',
             'facebook/opt-350m'
         ];
-        
-        for (const model of models) {
-            try {
-                const response = await this.callHuggingFaceAPI(model, text, headers);
-                return this.processAPIResponse(response, text);
-            } catch (error) {
-                console.warn(`Model ${model} failed:`, error);
-                continue;
+
+        const chunks = this.chunkLongText(text);
+        const perModelPromises = models.map(model => this.scoreModelAcrossChunks(model, chunks, headers));
+        const perModelResults = await Promise.allSettled(perModelPromises);
+
+        const modelScores = {};
+        let anySuccess = false;
+        perModelResults.forEach((res, idx) => {
+            const modelName = models[idx];
+            if (res.status === 'fulfilled') {
+                anySuccess = true;
+                modelScores[modelName] = res.value; // {score, confidence}
+            } else {
+                modelScores[modelName] = { score: null, confidence: null, error: String(res.reason) };
             }
-        }
-        
-        throw new Error('All API models failed');
+        });
+
+        if (!anySuccess) throw new Error('All API models failed');
+
+        const { overallConfidence, aiMetrics, patterns, stats, linguistic } = this.aggregateScores(text, modelScores);
+
+        return {
+            stats,
+            linguistic,
+            aiMetrics,
+            patterns,
+            confidence: overallConfidence,
+            overallResult: this.determineOverallResult(overallConfidence),
+            modelScores
+        };
     }
     
     async performPublicAPIAnalysis(text) {
@@ -247,12 +280,37 @@ class AITextDetector {
             'Content-Type': 'application/json'
         };
         
-        try {
-            const response = await this.callHuggingFaceAPI('microsoft/DialoGPT-medium', text, headers);
-            return this.processAPIResponse(response, text);
-        } catch (error) {
-            throw new Error('Public API unavailable');
-        }
+        const models = [
+            'microsoft/DialoGPT-medium'
+        ];
+        const chunks = this.chunkLongText(text);
+        const perModelPromises = models.map(model => this.scoreModelAcrossChunks(model, chunks, headers));
+        const perModelResults = await Promise.allSettled(perModelPromises);
+
+        const modelScores = {};
+        let anySuccess = false;
+        perModelResults.forEach((res, idx) => {
+            const modelName = models[idx];
+            if (res.status === 'fulfilled') {
+                anySuccess = true;
+                modelScores[modelName] = res.value;
+            } else {
+                modelScores[modelName] = { score: null, confidence: null, error: String(res.reason) };
+            }
+        });
+
+        if (!anySuccess) throw new Error('Public API unavailable');
+
+        const { overallConfidence, aiMetrics, patterns, stats, linguistic } = this.aggregateScores(text, modelScores);
+        return {
+            stats,
+            linguistic,
+            aiMetrics,
+            patterns,
+            confidence: overallConfidence,
+            overallResult: this.determineOverallResult(overallConfidence),
+            modelScores
+        };
     }
     
     async callHuggingFaceAPI(model, text, headers) {
@@ -278,6 +336,115 @@ class AITextDetector {
             clearTimeout(timeoutId);
             throw error;
         }
+    }
+
+    // Break long texts into chunks to respect model limits and stabilize scores
+    chunkLongText(text) {
+        const maxChars = 1500;
+        if (text.length <= maxChars) return [text];
+        const chunks = [];
+        let start = 0;
+        while (start < text.length) {
+            const end = Math.min(start + maxChars, text.length);
+            chunks.push(text.slice(start, end));
+            start = end;
+        }
+        return chunks;
+    }
+
+    // Score a single model across text chunks with caching and basic backoff
+    async scoreModelAcrossChunks(model, chunks, headers) {
+        let scores = [];
+        for (const chunk of chunks) {
+            const cacheKey = `${model}::${headers.Authorization ? 'auth' : 'public'}::${chunk.slice(0,256)}`;
+            let resp;
+            if (this.responseCache.has(cacheKey)) {
+                resp = this.responseCache.get(cacheKey);
+            } else {
+                resp = await this.retryWithBackoff(() => this.callHuggingFaceAPI(model, chunk, headers));
+                this.responseCache.set(cacheKey, resp);
+            }
+            const parsed = this.parseModelScore(resp);
+            if (parsed) scores.push(parsed);
+        }
+        if (scores.length === 0) throw new Error('No scores parsed');
+        const avgScore = scores.reduce((a,b)=>a+b.score,0)/scores.length;
+        const avgConf = scores.reduce((a,b)=>a+b.confidence,0)/scores.length;
+        return { score: avgScore, confidence: avgConf };
+    }
+
+    async retryWithBackoff(fn) {
+        let lastErr;
+        for (let attempt = 0; attempt <= this.apiConfig.maxRetries; attempt++) {
+            try {
+                return await fn();
+            } catch (e) {
+                lastErr = e;
+                const delay = this.backoffSchedule[Math.min(attempt, this.backoffSchedule.length - 1)];
+                await new Promise(r => setTimeout(r, delay));
+            }
+        }
+        throw lastErr;
+    }
+
+    parseModelScore(response) {
+        try {
+            // Standard HF classification: [{label: "AI"|"HUMAN", score: 0.xx}] or [{"generated": 0.8, "human": 0.2}] etc
+            if (Array.isArray(response)) {
+                const top = response[0];
+                if (top && typeof top === 'object' && 'label' in top) {
+                    const label = String(top.label).toLowerCase();
+                    const score = Number(top.score) || 0;
+                    if (label.includes('human') || label.includes('real')) {
+                        return { score: (1 - score) * 100, confidence: score * 100 };
+                    }
+                    return { score: score * 100, confidence: score * 100 };
+                }
+                if (top && typeof top === 'object') {
+                    const vals = Object.values(top).map(Number).filter(n => !isNaN(n));
+                    if (vals.length) {
+                        const m = Math.max(...vals);
+                        return { score: m * 100, confidence: m * 100 };
+                    }
+                }
+            } else if (response && typeof response === 'object') {
+                const vals = Object.values(response).map(Number).filter(n => !isNaN(n));
+                if (vals.length) {
+                    const m = Math.max(...vals);
+                    return { score: m * 100, confidence: m * 100 };
+                }
+            }
+        } catch {}
+        return null;
+    }
+
+    aggregateScores(text, modelScores) {
+        const stats = this.calculateTextStatistics(text);
+        const linguistic = this.performLinguisticAnalysis(text);
+        const patterns = this.analyzePatterns(text);
+
+        // Weighted average across available models
+        const weights = {
+            'roberta-base-openai-detector': 0.5,
+            'microsoft/DialoGPT-medium': 0.3,
+            'facebook/opt-350m': 0.2
+        };
+        let totalWeight = 0;
+        let sum = 0;
+        Object.entries(modelScores).forEach(([model, res]) => {
+            if (res && typeof res.score === 'number') {
+                const w = weights[model] || 0.2;
+                sum += res.score * w;
+                totalWeight += w;
+            }
+        });
+        const ensembleScore = totalWeight ? sum / totalWeight : 0;
+
+        // Blend ensemble score with heuristic AI metrics
+        const aiMetrics = this.calculateAIMetrics(text);
+        const combined = 0.7 * ensembleScore + 0.3 * aiMetrics.confidenceLevel;
+
+        return { overallConfidence: combined, aiMetrics, patterns, stats, linguistic };
     }
     
     processAPIResponse(response, text) {
@@ -569,6 +736,9 @@ class AITextDetector {
             <span>${analysis.overallResult.label}</span>
         `;
         
+        // Update per-model scores
+        this.updatePerModelScores(analysis.modelScores || {});
+
         // Update pattern list
         this.updatePatternList(analysis.patterns);
         
@@ -577,6 +747,16 @@ class AITextDetector {
         
         // Scroll to results
         this.resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    updatePerModelScores(modelScores) {
+        const elRoberta = document.getElementById('score_roberta');
+        const elDialo = document.getElementById('score_dialogpt');
+        const elOpt = document.getElementById('score_opt');
+        const fmt = v => (v == null ? '–' : `${v.score.toFixed(1)}%`);
+        if (elRoberta) elRoberta.textContent = fmt(modelScores['roberta-base-openai-detector']);
+        if (elDialo) elDialo.textContent = fmt(modelScores['microsoft/DialoGPT-medium']);
+        if (elOpt) elOpt.textContent = fmt(modelScores['facebook/opt-350m']);
     }
     
     updatePatternList(patterns) {

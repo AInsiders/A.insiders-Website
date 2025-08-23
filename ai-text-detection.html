@@ -43,7 +43,7 @@
         
         .ai-detection-hero {
             background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(10, 10, 10, 0.9));
-            padding: 2.5rem 0;
+            padding: 4rem 0;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -63,7 +63,7 @@
         }
         
         .ai-detection-hero h1 {
-            font-size: 2.5rem;
+            font-size: 3.5rem;
             margin-bottom: 1rem;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
             -webkit-background-clip: text;
@@ -74,10 +74,10 @@
         }
         
         .ai-detection-hero p {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             color: var(--text-secondary);
             max-width: 600px;
-            margin: 0 auto 1.5rem;
+            margin: 0 auto 2rem;
             position: relative;
             z-index: 1;
         }
@@ -378,7 +378,7 @@
         
         @media (max-width: 768px) {
             .ai-detection-hero h1 {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
             
             .ai-detection-hero p {
@@ -423,32 +423,32 @@
         <!-- Navigation -->
         <nav class="navbar">
             <div class="nav-container">
-                <div class="nav-brand">
-                    <a href="index.html">
-                        <img src="logo.svg" alt="A.Insiders" class="logo">
-                    </a>
-                </div>
-                <ul class="nav-menu">
-                    <li><a href="index.html" class="nav-link">Home</a></li>
-                    <li><a href="software.html" class="nav-link">Software</a></li>
-                    <li class="nav-dropdown">
-                        <div class="nav-link-container">
-                            <a href="about.html" class="nav-link">About</a>
-                            <span class="dropdown-arrow">▼</span>
-                        </div>
-                        <ul class="dropdown-menu">
-                            <li><a href="about.html" class="dropdown-link">About Company</a></li>
-                            <li><a href="blake-zimmerman.html" class="dropdown-link">Blake Zimmerman</a></li>
-                            <li><a href="babu-narayana.html" class="dropdown-link">Babu Narayana</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="contact.html" class="nav-link">Contact</a></li>
-                </ul>
-                <div class="nav-toggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
+              <a href="index.html" class="nav-logo">
+                <img src="ainsiders-logo.png" alt="A.Insiders Logo" class="logo-image" width="40" height="40">
+                <span class="logo-text">A.I</span>
+                <span class="logo-accent">NSIDERS</span>
+              </a>
+              <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="software.html" class="nav-link">Software</a></li>
+                <li class="nav-dropdown">
+                  <div class="nav-link-container">
+                    <a href="about.html" class="nav-link">About</a>
+                    <span class="dropdown-arrow">▼</span>
+                  </div>
+                  <ul class="dropdown-menu">
+                    <li><a href="about.html" class="dropdown-link">About Company</a></li>
+                    <li><a href="blake-zimmerman.html" class="dropdown-link">Blake Zimmerman</a></li>
+                    <li><a href="babu-narayana.html" class="dropdown-link">Babu Narayana</a></li>
+                  </ul>
+                </li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+              </ul>
+              <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
             </div>
         </nav>
 
@@ -556,6 +556,22 @@
                         <div class="metric-item">
                             <span class="metric-label">Confidence Level</span>
                             <span class="metric-value" id="confidenceLevel">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="analysis-card" id="perModelCard">
+                        <h3>Per-Model Scores</h3>
+                        <div class="metric-item">
+                            <span class="metric-label">roberta-base-openai-detector</span>
+                            <span class="metric-value" id="score_roberta">–</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">microsoft/DialoGPT-medium</span>
+                            <span class="metric-value" id="score_dialogpt">–</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">facebook/opt-350m</span>
+                            <span class="metric-value" id="score_opt">–</span>
                         </div>
                     </div>
                 </div>
