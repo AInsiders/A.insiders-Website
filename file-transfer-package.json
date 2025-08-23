@@ -1,0 +1,36 @@
+{
+  "name": "file-transfer-server",
+  "version": "1.0.0",
+  "description": "WebSocket signaling server for secure P2P file transfer",
+  "main": "file-transfer-server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node file-transfer-server.js",
+    "dev": "node --watch file-transfer-server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "webrtc",
+    "file-transfer",
+    "p2p",
+    "encryption",
+    "websocket",
+    "signaling"
+  ],
+  "author": "A.Insiders",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.14.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AInsiders/file-transfer"
+  },
+  "bugs": {
+    "url": "https://github.com/AInsiders/file-transfer/issues"
+  },
+  "homepage": "https://github.com/AInsiders/file-transfer#readme"
+}

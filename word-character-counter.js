@@ -457,7 +457,7 @@ As the sun began to set, painting the sky in brilliant oranges and purples, Sara
     generateInsights(text) {
         const insights = [];
         const stats = this.calculateStats(text);
-        const analysis = stats.analysis;
+        const analysis = this.performDetailedAnalysis(text);
         
         // Word count insights
         if (stats.words < 50) {

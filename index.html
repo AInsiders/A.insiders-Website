@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>A.Insiders - AI & Cybersecurity Solutions</title>
   
   <!-- Favicon Setup -->
@@ -51,7 +51,7 @@
   <!-- Favicon Animation Script -->
   <script src="favicon-animation.js"></script>
   
-  <!-- Tawk.to Widget Styles -->
+  <!-- Mobile-First Responsive Styles -->
   <style>
     /* Make Tawk.to widget half the size */
     #tawkto-container,
@@ -73,35 +73,124 @@
       transform-origin: bottom right !important;
     }
 
-    /* Fix hero buttons interaction */
+    /* MOBILE-FIRST DESIGN (Default for mobile) */
+    
+    /* Mobile Navigation */
+    .nav-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 100%;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(20px);
+      z-index: 1000;
+      transition: right 0.3s ease;
+      overflow-y: auto;
+      padding: 80px 20px 20px 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+
+    .nav-menu.active {
+      right: 0;
+    }
+
+    .nav-menu li {
+      width: 100%;
+      margin: 15px 0;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-menu .nav-link {
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 500;
+      display: block;
+      padding: 15px 0;
+      text-decoration: none;
+      width: 100%;
+    }
+
+    .nav-toggle {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      background: #333;
+      padding: 12px;
+      border-radius: 6px;
+      z-index: 1001;
+      position: relative;
+    }
+
+    .nav-toggle span {
+      width: 28px;
+      height: 3px;
+      background: #fff;
+      margin: 3px 0;
+      transition: 0.3s;
+      display: block;
+    }
+
+    /* Mobile Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
     .hero-content {
-      pointer-events: none !important; /* Allow canvas interaction over text */
-      z-index: 10 !important;
+      pointer-events: none;
+      z-index: 10;
+      max-width: 100%;
+    }
+
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .page-subtitle {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+      opacity: 0.9;
     }
 
     .hero-buttons {
       display: flex;
-      gap: 1.5rem;
+      flex-direction: column;
+      gap: 1rem;
       margin-top: 2rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      pointer-events: auto !important; /* Only buttons are clickable */
-      z-index: 15 !important;
+      pointer-events: auto;
+      z-index: 15;
       position: relative;
     }
 
     .hero-buttons .btn {
-      pointer-events: auto !important;
-      cursor: pointer !important;
-      z-index: 20 !important;
+      pointer-events: auto;
+      cursor: pointer;
+      z-index: 20;
       position: relative;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 160px;
+      width: 100%;
+      max-width: 280px;
+      margin: 0 auto;
       padding: 1rem 2rem;
       font-weight: 600;
       border-radius: 0.5rem;
@@ -111,26 +200,10 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
-    .hero-buttons .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    }
-
-    .hero-buttons .btn:active {
-      transform: translateY(0);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-
     .hero-buttons .btn-primary {
       background: var(--accent-primary);
       color: var(--bg-primary);
       border: 2px solid var(--accent-primary);
-    }
-
-    .hero-buttons .btn-primary:hover {
-      background: var(--accent-secondary);
-      border-color: var(--accent-secondary);
-      box-shadow: 0 8px 25px rgba(0, 102, 255, 0.4);
     }
 
     .hero-buttons .btn-secondary {
@@ -139,51 +212,176 @@
       border: 2px solid var(--border-color);
     }
 
-    .hero-buttons .btn-secondary:hover {
-      background: var(--accent-primary);
-      color: var(--bg-primary);
-      border-color: var(--accent-primary);
-      box-shadow: 0 8px 25px rgba(0, 102, 255, 0.4);
+    /* Mobile Canvas */
+    #aiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: auto;
+    }
+
+    /* Mobile Footer */
+    .footer {
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    .footer-content {
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .footer-section {
+      width: 100%;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .social-link {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    /* Mobile Container */
+    .container {
+      padding: 0 1rem;
+      max-width: 100%;
     }
 
     /* Ensure text elements allow canvas interaction */
     .hero .hero-content .page-title,
     .hero .hero-content .page-subtitle {
-      pointer-events: none !important;
+      pointer-events: none;
       cursor: default;
     }
 
     /* Ensure hero content text is not clickable but canvas is interactive */
     .hero .hero-content *:not(.hero-buttons *) {
-      pointer-events: none !important;
+      pointer-events: none;
     }
 
-    /* Ensure canvas is interactive over text */
-    #aiCanvas {
-      pointer-events: auto !important;
-      z-index: 1 !important;
-    }
+    /* TABLET DESIGN (768px and up) */
+    @media (min-width: 768px) {
+      .nav-menu {
+        width: 320px;
+        right: -320px;
+      }
 
-    /* Mobile responsive buttons */
-    @media (max-width: 768px) {
+      .page-title {
+        font-size: 3.5rem;
+      }
+
+      .page-subtitle {
+        font-size: 1.3rem;
+      }
+
       .hero-buttons {
-        flex-direction: column;
-        gap: 1rem;
-        margin-top: 1.5rem;
+        flex-direction: row;
+        gap: 1.5rem;
+      }
+
+      .hero-buttons .btn {
+        width: auto;
+        min-width: 180px;
+      }
+
+      .container {
+        padding: 0 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .footer-content {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      .footer-section {
+        width: auto;
+      }
+    }
+
+    /* DESKTOP DESIGN (1024px and up) */
+    @media (min-width: 1024px) {
+      .page-title {
+        font-size: 4rem;
+      }
+
+      .page-subtitle {
+        font-size: 1.5rem;
       }
 
       .hero-buttons .btn {
         min-width: 200px;
-        padding: 0.875rem 1.5rem;
-        font-size: 0.9rem;
+        padding: 1.2rem 2.5rem;
+        font-size: 1.1rem;
+      }
+
+      .nav-toggle {
+        display: none;
+      }
+
+      .nav-menu {
+        position: static;
+        width: auto;
+        height: auto;
+        background: transparent;
+        backdrop-filter: none;
+        z-index: auto;
+        transition: none;
+        overflow: visible;
+        padding: 0;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 2rem;
+      }
+
+      .nav-menu li {
+        width: auto;
+        margin: 0;
+        padding: 0;
+        border-bottom: none;
+      }
+
+      .nav-menu .nav-link {
+        color: var(--text-primary);
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        transition: all 0.3s ease;
+      }
+
+      .nav-menu .nav-link:hover {
+        background: rgba(0, 102, 255, 0.1);
+        color: var(--accent-primary);
       }
     }
 
-    @media (max-width: 480px) {
-      .hero-buttons .btn {
-        min-width: 180px;
-        padding: 0.75rem 1.25rem;
-        font-size: 0.85rem;
+    /* Touch-friendly interactions for mobile */
+    @media (hover: none) and (pointer: coarse) {
+      .hero-buttons .btn:hover {
+        transform: none;
+      }
+
+      .hero-buttons .btn:active {
+        transform: scale(0.98);
+      }
+
+      .nav-menu .nav-link {
+        padding: 20px 0;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
       }
     }
   </style>
@@ -234,7 +432,7 @@
   <header class="hero">
     <canvas id="aiCanvas"></canvas>
     <div class="hero-content">
-      <h1 class="page-title">WELCOME TO A.I NSIDERS</h1>
+      <h1 class="page-title" id="dynamic-title">Welcome To A</h1>
       <p class="page-subtitle">Pioneering the future of AI and cybersecurity with innovative solutions</p>
       <div class="hero-buttons">
         <a href="software.html" class="btn btn-primary">Explore Our Software</a>
@@ -299,6 +497,8 @@
   <!-- Mobile Navigation Script -->
   <script src="mobile-nav.js"></script>
   
+
+  
   <!-- Shared Loader Script -->
   <script src="shared-loader.js"></script>
   
@@ -327,6 +527,99 @@
           });
       });
     }
+  </script>
+
+  <!-- Dynamic Title Typing Animation -->
+  <script>
+    class TypeWriter {
+      constructor(element, texts, options = {}) {
+        this.element = element;
+        this.texts = texts;
+        this.currentTextIndex = 0;
+        this.currentCharIndex = 12; // Start after "Welcome To A" (12 characters)
+        this.isDeleting = false;
+        this.isWaiting = false;
+        this.baseText = "Welcome To A";
+        
+        // Animation timing options
+        this.typeSpeed = options.typeSpeed || 100;
+        this.deleteSpeed = options.deleteSpeed || 50;
+        this.waitTime = options.waitTime || 2000;
+        this.pauseTime = options.pauseTime || 500;
+        
+        this.start();
+      }
+      
+      start() {
+        this.type();
+      }
+      
+      type() {
+        const currentText = this.texts[this.currentTextIndex];
+        
+        if (this.isDeleting) {
+          // Deleting characters back to base text
+          this.currentCharIndex--;
+          this.element.textContent = this.baseText + currentText.substring(12, this.currentCharIndex);
+          
+          // Stop deleting when we reach the base text
+          if (this.currentCharIndex === 12) {
+            this.isDeleting = false;
+            this.currentTextIndex = (this.currentTextIndex + 1) % this.texts.length;
+            setTimeout(() => this.type(), this.pauseTime);
+            return;
+          }
+          
+          setTimeout(() => this.type(), this.deleteSpeed);
+        } else {
+          // Typing characters after base text
+          this.currentCharIndex++;
+          this.element.textContent = this.baseText + currentText.substring(12, this.currentCharIndex);
+          
+          if (this.currentCharIndex === currentText.length) {
+            // Finished typing current text
+            if (this.currentTextIndex === this.texts.length - 1) {
+              // This is the final text, keep it
+              return;
+            }
+            
+            // Immediately start deleting - no wait time
+            this.isDeleting = true;
+            this.type();
+            return;
+          }
+          
+          setTimeout(() => this.type(), this.typeSpeed);
+        }
+      }
+    }
+
+    // Initialize the typing animation when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      const titleElement = document.getElementById('dynamic-title');
+      
+      if (titleElement) {
+        const texts = [
+          "Welcome To A Support Team",
+          "Welcome To A News Netwo",
+          "Welcome To A Tech Insid",
+          "Welcome To A Mobile Solutions Co",
+          "Welcome To A Cyber Secur",
+          "Welcome To A AI Develop",
+          "Welcome To A Software Sol",
+          "Welcome To A Digital Inno",
+          "Welcome To A Future Tech",
+          "Welcome To A .Insiders Network"
+        ];
+        
+        new TypeWriter(titleElement, texts, {
+          typeSpeed: 120,   // Slower, more human-like typing speed
+          deleteSpeed: 50,  // Slightly slower deletion for realism
+          waitTime: 0,      // No wait time - immediately start deleting
+          pauseTime: 200    // Brief pause between transitions
+        });
+      }
+    });
   </script>
 </body>
 </html> 

@@ -339,15 +339,40 @@ document.addEventListener('DOMContentLoaded', function() {
             moveTimeout: null
         };
         
-        // Resize canvas with device pixel ratio optimization
+        // Resize canvas with mobile-optimized handling
         function resizeCanvas() {
             const rect = canvas.getBoundingClientRect();
+            const isMobile = isMobileDevice();
             
-            // Use display dimensions directly without DPR scaling for better orb positioning
-            canvas.width = rect.width;
-            canvas.height = rect.height;
-            canvas.style.width = rect.width + 'px';
-            canvas.style.height = rect.height + 'px';
+            // For mobile devices, use viewport dimensions to prevent distortion
+            if (isMobile) {
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+                
+                // Set canvas to viewport size to prevent distortion
+                canvas.width = viewportWidth;
+                canvas.height = viewportHeight;
+                canvas.style.width = '100%';
+                canvas.style.height = '100%';
+                
+                // Ensure canvas covers the full viewport
+                canvas.style.position = 'absolute';
+                canvas.style.top = '0';
+                canvas.style.left = '0';
+                canvas.style.right = '0';
+                canvas.style.bottom = '0';
+            } else {
+                // Desktop: use element dimensions
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+                canvas.style.width = rect.width + 'px';
+                canvas.style.height = rect.height + 'px';
+            }
+            
+            // Force a redraw to prevent visual glitches
+            if (ctx) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
         }
         
         // Initialize nodes
@@ -1039,10 +1064,15 @@ document.addEventListener('DOMContentLoaded', function() {
             mouse.isMoving = false;
         }
 
-        // Orientation change handler
+        // Enhanced orientation change handler for mobile
         function handleOrientationChange() {
+            // Immediate resize to prevent visual glitches
+            resizeCanvas();
+            
             setTimeout(() => {
+                // Force another resize after orientation settles
                 resizeCanvas();
+                
                 // Update node count and connection distance based on new orientation
                 const newNodeCount = getResponsiveNodeCount();
                 const newMaxConnectionDistance = getResponsiveConnectionDistance();
@@ -1053,9 +1083,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 nodes.length = 0;
                 initNodes();
                 
+                // Reset mobile scroll variables
+                if (isMobileDevice()) {
+                    mobileScrollY = 0;
+                    mobileParallaxOffset = 0;
+                    mobileScrollVelocity = 0;
+                }
+                
                 // Log the orientation change update
                 console.log(`📱 Orientation Change: ${nodeCount} orbs, ${maxConnectionDistance}px connections`);
-            }, 100);
+            }, 300);
         }
 
         // Add event listeners for mouse and touch (conditional based on device type)
@@ -1155,9 +1192,22 @@ document.addEventListener('DOMContentLoaded', function() {
         // Orientation change support
         window.addEventListener('orientationchange', handleOrientationChange);
         
-        // Mobile scroll support for background effects
+        // Enhanced mobile scroll support for background effects
         if (isMobileDevice()) {
             window.addEventListener('scroll', handleMobileScroll, { passive: true });
+            
+            // Add scroll event to prevent canvas distortion during scroll
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                // Clear previous timeout
+                clearTimeout(scrollTimeout);
+                
+                // Set a timeout to resize canvas after scroll ends
+                scrollTimeout = setTimeout(() => {
+                    resizeCanvas();
+                }, 150);
+            }, { passive: true });
+            
             console.log('📱 Mobile scroll effects enabled');
         }
         

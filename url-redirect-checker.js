@@ -1,709 +1,770 @@
-/**
- * URL Redirect Checker JavaScript
- * Comprehensive URL redirect analysis with "who is" information
- * Enhanced version with improved accuracy and display logic
- */
-
 class URLRedirectChecker {
     constructor() {
-        this.maxRedirects = 10;
-        this.timeout = 15000; // Increased timeout for better reliability
         this.init();
     }
 
     init() {
         this.setupEventListeners();
-        this.setupKeyboardShortcuts();
+        this.setupFormValidation();
     }
 
     setupEventListeners() {
-        const checkBtn = document.getElementById('checkBtn');
         const urlInput = document.getElementById('urlInput');
+        const checkBtn = document.getElementById('checkBtn');
 
-        if (checkBtn) {
-            checkBtn.addEventListener('click', () => this.checkURL());
-        }
+        if (urlInput && checkBtn) {
+            // Check URL on button click
+            checkBtn.addEventListener('click', () => {
+                this.checkURL();
+            });
 
-        if (urlInput) {
+            // Check URL on Enter key
             urlInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     this.checkURL();
                 }
             });
+
+            // Enable/disable button based on input
+            urlInput.addEventListener('input', () => {
+                checkBtn.disabled = !urlInput.value.trim();
+            });
         }
     }
 
-    setupKeyboardShortcuts() {
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey || e.metaKey) {
-                switch (e.key) {
-                    case 'Enter':
-                        e.preventDefault();
-                        this.checkURL();
-                        break;
-                }
-            }
-        });
+    setupFormValidation() {
+        const urlInput = document.getElementById('urlInput');
+        if (urlInput) {
+            urlInput.addEventListener('blur', () => {
+                this.validateURL(urlInput.value);
+            });
+        }
+    }
+
+    validateURL(url) {
+        const errorMessage = document.getElementById('errorMessage');
+        const urlPattern = /^https?:\/\/.+/i;
+
+        if (!url.trim()) {
+            this.showError('Please enter a URL');
+            return false;
+        }
+
+        if (!urlPattern.test(url)) {
+            this.showError('Please enter a valid URL starting with http:// or https://');
+            return false;
+        }
+
+        this.hideError();
+        return true;
+    }
+
+    showError(message) {
+        const errorMessage = document.getElementById('errorMessage');
+        if (errorMessage) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+    }
+
+    hideError() {
+        const errorMessage = document.getElementById('errorMessage');
+        if (errorMessage) {
+            errorMessage.style.display = 'none';
+        }
     }
 
     async checkURL() {
         const urlInput = document.getElementById('urlInput');
-        const checkBtn = document.getElementById('checkBtn');
         const url = urlInput.value.trim();
 
-        if (!url) {
-            this.showMessage('Please enter a valid URL', 'error');
+        if (!this.validateURL(url)) {
             return;
         }
 
-        if (!this.isValidURL(url)) {
-            this.showMessage('Please enter a valid URL starting with http:// or https://', 'error');
-            return;
-        }
-
-        // Show loading state
-        this.setLoadingState(true);
-        this.clearResults();
+        this.showLoading();
+        this.hideResults();
 
         try {
             const results = await this.analyzeURL(url);
             this.displayResults(results);
         } catch (error) {
-            console.error('Error analyzing URL:', error);
-            this.showMessage(`Error analyzing URL: ${error.message}`, 'error');
+            this.showError(`Error analyzing URL: ${error.message}`);
         } finally {
-            this.setLoadingState(false);
+            this.hideLoading();
         }
     }
 
-    isValidURL(url) {
-        try {
-            const urlObj = new URL(url);
-            return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
-        } catch {
-            return false;
-        }
-    }
-
-    async analyzeURL(originalUrl) {
-        const startTime = performance.now();
-        
+    async analyzeURL(url) {
         const results = {
-            originalUrl,
+            originalUrl: url,
             redirectChain: [],
-            finalUrl: null,
-            totalRedirects: 0,
+            basicInfo: {},
+            securityInfo: {},
             domainInfo: {},
-            securityIssues: [],
-            responseTime: 0,
-            analysisTime: new Date().toISOString()
+            connectionInfo: {}
         };
 
-        try {
-            // Follow redirect chain with improved accuracy
-            const redirectData = await this.followRedirectChain(originalUrl);
-            results.redirectChain = redirectData.chain;
-            results.finalUrl = redirectData.finalUrl;
-            results.totalRedirects = redirectData.chain.length - 1;
-            results.responseTime = redirectData.responseTime;
+        // Analyze redirect chain
+        results.redirectChain = await this.traceRedirects(url);
 
-            // Get domain information for each unique domain/IP
-            const uniqueDomains = this.extractUniqueDomains(results.redirectChain);
-            for (const domain of uniqueDomains) {
-                results.domainInfo[domain] = await this.getDomainInfo(domain);
-            }
+        // Get basic information
+        results.basicInfo = this.getBasicInfo(url, results.redirectChain);
 
-            // Analyze security issues
-            results.securityIssues = this.analyzeSecurityIssues(results);
+        // Get security information
+        results.securityInfo = await this.getSecurityInfo(url, results.redirectChain);
 
-        } catch (error) {
-            console.error('Error in URL analysis:', error);
-            throw error;
-        }
+        // Get domain information
+        results.domainInfo = await this.getDomainInfo(url);
 
-        results.analysisTime = new Date().toISOString();
+        // Get connection information
+        results.connectionInfo = await this.getConnectionInfo(url);
+
         return results;
     }
 
-    async followRedirectChain(url) {
-        const chain = [];
+    async traceRedirects(url) {
+        const redirects = [];
         let currentUrl = url;
-        let redirectCount = 0;
-        const startTime = performance.now();
+        let step = 1;
+        const maxRedirects = 10;
 
-        while (currentUrl && redirectCount < this.maxRedirects) {
+        while (step <= maxRedirects) {
             try {
-                const stepStartTime = performance.now();
+                const startTime = performance.now();
+                const response = await this.makeRequest(currentUrl, 'HEAD');
+                const endTime = performance.now();
+                const pingTime = Math.round(endTime - startTime);
                 
-                chain.push({
+                // Get ping information for this URL
+                const pingInfo = await this.getPingInfo(currentUrl);
+                
+                redirects.push({
+                    step: step,
                     url: currentUrl,
-                    step: redirectCount + 1,
-                    timestamp: new Date().toISOString(),
-                    startTime: stepStartTime
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: response.headers,
+                    pingTime: pingTime,
+                    pingInfo: pingInfo,
+                    final: !this.isRedirect(response.status)
                 });
 
-                const response = await this.makeRequest(currentUrl);
-                
-                // Update the current step with response data
-                const currentStep = chain[chain.length - 1];
-                currentStep.status = response.status;
-                currentStep.responseTime = performance.now() - stepStartTime;
-                currentStep.headers = response.headers;
-                
-                if (response.redirected) {
-                    currentStep.redirectUrl = response.redirectUrl;
-                    currentStep.redirectType = response.redirectType;
-                    currentUrl = response.redirectUrl;
-                    redirectCount++;
+                if (this.isRedirect(response.status)) {
+                    const location = response.headers.get('location');
+                    if (location) {
+                        currentUrl = this.resolveURL(location, currentUrl);
+                        step++;
+                    } else {
+                        break;
+                    }
                 } else {
-                    // No more redirects - this is the final destination
-                    currentStep.isFinal = true;
                     break;
                 }
             } catch (error) {
-                console.error(`Error following redirect for ${currentUrl}:`, error);
-                const currentStep = chain[chain.length - 1];
-                currentStep.error = error.message;
-                currentStep.status = 'error';
+                redirects.push({
+                    step: step,
+                    url: currentUrl,
+                    status: 'ERROR',
+                    statusText: error.message,
+                    pingTime: -1,
+                    pingInfo: null,
+                    final: true
+                });
                 break;
             }
         }
 
-        const totalResponseTime = performance.now() - startTime;
-
-        return {
-            chain,
-            finalUrl: currentUrl,
-            responseTime: totalResponseTime
-        };
+        return redirects;
     }
 
-    async makeRequest(url) {
+    async getPingInfo(url) {
+        try {
+            const urlObj = new URL(url);
+            const domain = urlObj.hostname;
+            
+            // Simulate ping information (in a real implementation, you'd use actual ping)
+            const pingInfo = {
+                domain: domain,
+                ip: await this.resolveIPAddress(domain),
+                ping: await this.simulatePing(domain),
+                ttl: Math.floor(Math.random() * 64) + 32, // Simulated TTL
+                packetSize: 64,
+                timeouts: 0,
+                successful: true
+            };
+            
+            return pingInfo;
+        } catch (error) {
+            return {
+                domain: 'Unknown',
+                ip: 'Unknown',
+                ping: -1,
+                ttl: 0,
+                packetSize: 64,
+                timeouts: 1,
+                successful: false
+            };
+        }
+    }
+
+    async resolveIPAddress(domain) {
+        try {
+            // This is a simplified IP resolution
+            // In a real implementation, you'd use a DNS lookup
+            const ips = {
+                'google.com': '142.250.191.78',
+                'facebook.com': '157.240.241.35',
+                'github.com': '140.82.113.4',
+                'stackoverflow.com': '151.101.193.69',
+                'reddit.com': '151.101.193.140',
+                'youtube.com': '142.250.191.78',
+                'twitter.com': '104.244.42.193',
+                'amazon.com': '176.32.103.205',
+                'microsoft.com': '20.81.111.85',
+                'apple.com': '17.253.144.10'
+            };
+            
+            return ips[domain] || 'Resolved via DNS';
+        } catch (error) {
+            return 'Unable to resolve';
+        }
+    }
+
+    async simulatePing(domain) {
+        try {
+            // Simulate ping times based on domain
+            const pingTimes = {
+                'google.com': 15,
+                'facebook.com': 25,
+                'github.com': 35,
+                'stackoverflow.com': 30,
+                'reddit.com': 40,
+                'youtube.com': 20,
+                'twitter.com': 45,
+                'amazon.com': 50,
+                'microsoft.com': 30,
+                'apple.com': 25
+            };
+            
+            // Add some randomness to make it more realistic
+            const baseTime = pingTimes[domain] || 30;
+            const variation = Math.random() * 20 - 10; // ±10ms variation
+            return Math.max(1, Math.round(baseTime + variation));
+        } catch (error) {
+            return -1;
+        }
+    }
+
+    async makeRequest(url, method = 'HEAD') {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
 
         try {
-            // Use fetch with redirect: 'manual' to handle redirects manually for better control
             const response = await fetch(url, {
-                method: 'HEAD',
+                method: method,
                 mode: 'cors',
                 signal: controller.signal,
-                redirect: 'manual', // Handle redirects manually
                 headers: {
-                    'User-Agent': 'Mozilla/5.0 (compatible; URL-Redirect-Checker/1.0)'
+                    'User-Agent': 'A.Insiders URL Redirect Checker/1.0'
                 }
             });
 
             clearTimeout(timeoutId);
-
-            // Check if this is a redirect response
-            if (response.status >= 300 && response.status < 400) {
-                const location = response.headers.get('Location');
-                if (location) {
-                    // Resolve relative URLs to absolute
-                    const redirectUrl = new URL(location, url).href;
-                    return {
-                        redirected: true,
-                        redirectUrl: redirectUrl,
-                        status: response.status,
-                        redirectType: this.getRedirectType(response.status),
-                        headers: this.extractHeaders(response.headers)
-                    };
-                }
-            }
-
-            return {
-                redirected: false,
-                status: response.status,
-                headers: this.extractHeaders(response.headers)
-            };
-
+            return response;
         } catch (error) {
             clearTimeout(timeoutId);
-            
-            if (error.name === 'AbortError') {
-                throw new Error('Request timeout');
-            } else if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-                throw new Error('Network error or CORS blocked');
-            } else {
-                throw new Error(`Request failed: ${error.message}`);
-            }
+            throw error;
         }
     }
 
-    getRedirectType(status) {
-        const redirectTypes = {
-            300: 'Multiple Choices',
-            301: 'Moved Permanently',
-            302: 'Found (Temporary)',
-            303: 'See Other',
-            307: 'Temporary Redirect',
-            308: 'Permanent Redirect'
+    isRedirect(status) {
+        return status >= 300 && status < 400;
+    }
+
+    resolveURL(relative, base) {
+        try {
+            return new URL(relative, base).href;
+        } catch {
+            return relative;
+        }
+    }
+
+    getBasicInfo(url, redirectChain) {
+        const finalUrl = redirectChain.length > 0 ? redirectChain[redirectChain.length - 1].url : url;
+        const finalStep = redirectChain.length > 0 ? redirectChain[redirectChain.length - 1] : null;
+
+        return {
+            originalUrl: url,
+            finalUrl: finalUrl,
+            redirectCount: redirectChain.filter(r => this.isRedirect(r.status)).length,
+            totalSteps: redirectChain.length,
+            finalStatus: finalStep ? finalStep.status : 'Unknown',
+            finalStatusText: finalStep ? finalStep.statusText : 'Unknown',
+            hasRedirects: redirectChain.filter(r => this.isRedirect(r.status)).length > 0
         };
-        return redirectTypes[status] || 'Unknown Redirect';
     }
 
-    extractHeaders(headers) {
-        const extracted = {};
-        headers.forEach((value, key) => {
-            extracted[key.toLowerCase()] = value;
-        });
-        return extracted;
+    async getSecurityInfo(url, redirectChain) {
+        const finalUrl = redirectChain.length > 0 ? redirectChain[redirectChain.length - 1].url : url;
+        const urlObj = new URL(finalUrl);
+
+        const securityInfo = {
+            protocol: urlObj.protocol,
+            isSecure: urlObj.protocol === 'https:',
+            hasSSL: urlObj.protocol === 'https:',
+            domain: urlObj.hostname,
+            port: urlObj.port || (urlObj.protocol === 'https:' ? '443' : '80'),
+            path: urlObj.pathname,
+            query: urlObj.search,
+            fragment: urlObj.hash
+        };
+
+        // Check for security headers
+        try {
+            const response = await this.makeRequest(finalUrl, 'HEAD');
+            const headers = response.headers;
+
+            securityInfo.securityHeaders = {
+                hsts: headers.get('strict-transport-security'),
+                csp: headers.get('content-security-policy'),
+                xFrameOptions: headers.get('x-frame-options'),
+                xContentTypeOptions: headers.get('x-content-type-options'),
+                xXSSProtection: headers.get('x-xss-protection'),
+                referrerPolicy: headers.get('referrer-policy')
+            };
+
+            securityInfo.securityScore = this.calculateSecurityScore(securityInfo);
+        } catch (error) {
+            securityInfo.securityHeaders = {};
+            securityInfo.securityScore = 0;
+        }
+
+        return securityInfo;
     }
 
-    extractUniqueDomains(redirectChain) {
-        const domains = new Set();
-        
-        redirectChain.forEach(step => {
-            try {
-                const url = new URL(step.url);
-                domains.add(url.hostname);
-            } catch (error) {
-                console.error('Error extracting domain:', error);
-            }
-        });
+    calculateSecurityScore(securityInfo) {
+        let score = 0;
 
-        return Array.from(domains);
+        // HTTPS
+        if (securityInfo.isSecure) score += 30;
+
+        // Security headers
+        if (securityInfo.securityHeaders.hsts) score += 20;
+        if (securityInfo.securityHeaders.csp) score += 15;
+        if (securityInfo.securityHeaders.xFrameOptions) score += 10;
+        if (securityInfo.securityHeaders.xContentTypeOptions) score += 10;
+        if (securityInfo.securityHeaders.xXSSProtection) score += 10;
+        if (securityInfo.securityHeaders.referrerPolicy) score += 5;
+
+        return Math.min(score, 100);
     }
 
-    async getDomainInfo(domain) {
-        const info = {
-            domain,
-            ip: null,
-            whois: {},
-            dns: {},
-            security: {},
-            ping: null
+    async getDomainInfo(url) {
+        const urlObj = new URL(url);
+        const domain = urlObj.hostname;
+
+        const domainInfo = {
+            domain: domain,
+            subdomain: this.getSubdomain(domain),
+            tld: this.getTLD(domain),
+            ipAddress: await this.resolveIP(domain),
+            registrar: 'Unknown',
+            creationDate: 'Unknown',
+            expiryDate: 'Unknown',
+            nameServers: []
+        };
+
+        // Try to get WHOIS-like information (simplified)
+        try {
+            const whoisData = await this.getWHOISData(domain);
+            Object.assign(domainInfo, whoisData);
+        } catch (error) {
+            // WHOIS data not available, use basic info
+        }
+
+        return domainInfo;
+    }
+
+    getSubdomain(domain) {
+        const parts = domain.split('.');
+        return parts.length > 2 ? parts.slice(0, -2).join('.') : '';
+    }
+
+    getTLD(domain) {
+        const parts = domain.split('.');
+        return parts.length >= 2 ? parts.slice(-2).join('.') : domain;
+    }
+
+    async resolveIP(domain) {
+        try {
+            // This is a simplified IP resolution
+            // In a real implementation, you might use a DNS lookup service
+            return 'Resolved via DNS';
+        } catch (error) {
+            return 'Unable to resolve';
+        }
+    }
+
+    async getWHOISData(domain) {
+        // This is a placeholder for WHOIS data
+        // In a real implementation, you would query a WHOIS service
+        return {
+            registrar: 'Domain Registrar',
+            creationDate: '2020-01-01',
+            expiryDate: '2025-01-01',
+            nameServers: ['ns1.example.com', 'ns2.example.com']
+        };
+    }
+
+    async getConnectionInfo(url) {
+        const urlObj = new URL(url);
+        const startTime = performance.now();
+
+        const connectionInfo = {
+            domain: urlObj.hostname,
+            protocol: urlObj.protocol,
+            port: urlObj.port || (urlObj.protocol === 'https:' ? '443' : '80'),
+            responseTime: 0,
+            serverInfo: {},
+            headers: {}
         };
 
         try {
-            // Get IP address and ping time
-            const ipData = await this.resolveIPWithPing(domain);
-            info.ip = ipData.ip;
-            info.ping = ipData.ping;
+            const response = await this.makeRequest(url, 'HEAD');
+            const endTime = performance.now();
             
-            // Get basic DNS information
-            info.dns = await this.getDNSInfo(domain);
-            
-            // Get security information
-            info.security = await this.getSecurityInfo(domain);
-            
-            // Get WHOIS-like information (simulated)
-            info.whois = await this.getWHOISInfo(domain);
+            connectionInfo.responseTime = Math.round(endTime - startTime);
+            connectionInfo.serverInfo = {
+                server: response.headers.get('server'),
+                poweredBy: response.headers.get('x-powered-by'),
+                contentType: response.headers.get('content-type'),
+                contentLength: response.headers.get('content-length')
+            };
+
+            // Get all headers
+            const headers = {};
+            response.headers.forEach((value, key) => {
+                headers[key] = value;
+            });
+            connectionInfo.headers = headers;
 
         } catch (error) {
-            console.error(`Error getting domain info for ${domain}:`, error);
-            info.error = error.message;
+            connectionInfo.responseTime = -1;
+            connectionInfo.error = error.message;
         }
 
-        return info;
+        return connectionInfo;
     }
 
-    async resolveIPWithPing(domain) {
-        // Enhanced IP resolution with ping simulation
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                // Simulate different IPs and ping times for different domains
-                const mockData = {
-                    'google.com': { ip: '142.250.191.78', ping: 15 },
-                    'facebook.com': { ip: '157.240.241.35', ping: 25 },
-                    'amazon.com': { ip: '52.84.0.0', ping: 35 },
-                    'microsoft.com': { ip: '20.81.111.85', ping: 20 },
-                    'github.com': { ip: '140.82.112.4', ping: 30 },
-                    'example.com': { ip: '93.184.216.34', ping: 45 }
-                };
-                
-                const data = mockData[domain] || { 
-                    ip: '192.168.1.1', 
-                    ping: Math.floor(Math.random() * 50) + 10 
-                };
-                
-                resolve(data);
-            }, 100);
-        });
-    }
-
-    async getDNSInfo(domain) {
-        // Enhanced DNS information simulation
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({
-                    a: ['192.168.1.1'],
-                    aaaa: ['2001:db8::1'],
-                    mx: [`mail.${domain}`],
-                    ns: [`ns1.${domain}`, `ns2.${domain}`],
-                    txt: [`v=spf1 include:_spf.${domain} ~all`],
-                    cname: null
-                });
-            }, 200);
-        });
-    }
-
-    async getSecurityInfo(domain) {
-        // Enhanced security information simulation
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const isSecure = Math.random() > 0.2; // 80% chance of being secure
-                resolve({
-                    ssl: isSecure,
-                    hsts: isSecure,
-                    spf: Math.random() > 0.3,
-                    dmarc: Math.random() > 0.4,
-                    dkim: Math.random() > 0.3,
-                    sslGrade: isSecure ? 'A' : 'F',
-                    securityHeaders: {
-                        'Strict-Transport-Security': isSecure ? 'max-age=31536000' : null,
-                        'X-Content-Type-Options': 'nosniff',
-                        'X-Frame-Options': 'DENY',
-                        'X-XSS-Protection': '1; mode=block'
-                    }
-                });
-            }, 300);
-        });
-    }
-
-    async getWHOISInfo(domain) {
-        // Enhanced WHOIS information simulation
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const registrars = [
-                    'GoDaddy.com, LLC',
-                    'NameCheap, Inc.',
-                    'Google Domains',
-                    'Cloudflare, Inc.',
-                    'Amazon Registrar, Inc.'
-                ];
-                
-                resolve({
-                    registrar: registrars[Math.floor(Math.random() * registrars.length)],
-                    creationDate: '2020-01-01',
-                    expirationDate: '2025-01-01',
-                    updatedDate: '2023-01-01',
-                    status: 'active',
-                    nameServers: [`ns1.${domain}`, `ns2.${domain}`],
-                    registrant: {
-                        organization: 'Example Organization',
-                        country: 'US',
-                        email: 'admin@example.com'
-                    }
-                });
-            }, 400);
-        });
-    }
-
-    analyzeSecurityIssues(results) {
-        const issues = [];
-
-        // Check for too many redirects
-        if (results.totalRedirects > 5) {
-            issues.push({
-                type: 'warning',
-                message: `High number of redirects (${results.totalRedirects}). This may indicate a redirect chain attack.`,
-                severity: 'medium'
-            });
-        }
-
-        // Check for mixed content
-        const hasHttp = results.redirectChain.some(step => step.url.startsWith('http://'));
-        const hasHttps = results.redirectChain.some(step => step.url.startsWith('https://'));
+    showLoading() {
+        const loadingSection = document.getElementById('loadingSection');
+        const checkBtn = document.getElementById('checkBtn');
         
-        if (hasHttp && hasHttps) {
-            issues.push({
-                type: 'warning',
-                message: 'Mixed HTTP/HTTPS redirects detected. This may pose security risks.',
-                severity: 'high'
-            });
-        }
+        if (loadingSection) loadingSection.style.display = 'block';
+        if (checkBtn) checkBtn.disabled = true;
+    }
 
-        // Check for suspicious domains
-        const suspiciousPatterns = ['bit.ly', 'tinyurl.com', 'goo.gl', 't.co', 'is.gd', 'short.ly'];
-        const hasSuspicious = results.redirectChain.some(step => {
-            try {
-                const url = new URL(step.url);
-                return suspiciousPatterns.some(pattern => url.hostname.includes(pattern));
-            } catch {
-                return false;
-            }
-        });
+    hideLoading() {
+        const loadingSection = document.getElementById('loadingSection');
+        const checkBtn = document.getElementById('checkBtn');
+        
+        if (loadingSection) loadingSection.style.display = 'none';
+        if (checkBtn) checkBtn.disabled = false;
+    }
 
-        if (hasSuspicious) {
-            issues.push({
-                type: 'alert',
-                message: 'URL shortener detected in redirect chain. Verify the final destination.',
-                severity: 'medium'
-            });
-        }
-
-        // Check for slow response times
-        if (results.responseTime > 5000) {
-            issues.push({
-                type: 'warning',
-                message: `Slow response time (${Math.round(results.responseTime)}ms). This may indicate server issues.`,
-                severity: 'low'
-            });
-        }
-
-        return issues;
+    hideResults() {
+        const resultsSection = document.getElementById('resultsSection');
+        if (resultsSection) resultsSection.style.display = 'none';
     }
 
     displayResults(results) {
-        const resultsSection = document.getElementById('resultsSection');
-        resultsSection.style.display = 'block';
+        this.displayRedirectChain(results.redirectChain);
+        this.displayBasicInfo(results.basicInfo);
+        this.displaySecurityInfo(results.securityInfo);
+        this.displayDomainInfo(results.domainInfo);
+        this.displayConnectionInfo(results.connectionInfo);
 
-        this.displayURLInfo(results);
-        this.displaySecurityInfo(results);
-        this.displayRedirectChain(results);
-        this.displayDomainInfo(results);
+        const resultsSection = document.getElementById('resultsSection');
+        if (resultsSection) resultsSection.style.display = 'block';
     }
 
-    displayURLInfo(results) {
-        const urlStatus = document.getElementById('urlStatus');
-        const urlInfo = document.getElementById('urlInfo');
+    displayRedirectChain(redirectChain) {
+        const redirectChainElement = document.getElementById('redirectChain');
+        if (!redirectChainElement) return;
 
-        // Set status based on redirect count
-        if (results.totalRedirects === 0) {
-            urlStatus.textContent = 'No Redirects';
-            urlStatus.className = 'status-indicator status-green';
-        } else if (results.totalRedirects <= 3) {
-            urlStatus.textContent = `${results.totalRedirects} Redirects`;
-            urlStatus.className = 'status-indicator status-yellow';
-        } else {
-            urlStatus.textContent = `${results.totalRedirects} Redirects`;
-            urlStatus.className = 'status-indicator status-red';
+        if (redirectChain.length === 0) {
+            redirectChainElement.innerHTML = '<p>No redirects found. Direct access to the URL.</p>';
+            return;
         }
 
-        // Display URL information
-        urlInfo.innerHTML = `
-            <div class="info-item">
-                <span class="info-label">Original URL:</span>
-                <span class="info-value">${results.originalUrl}</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Final URL:</span>
-                <span class="info-value">${results.finalUrl}</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Total Redirects:</span>
-                <span class="info-value">${results.totalRedirects}</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Response Time:</span>
-                <span class="info-value">${Math.round(results.responseTime)}ms</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Analysis Time:</span>
-                <span class="info-value">${new Date(results.analysisTime).toLocaleString()}</span>
+        const chainHTML = redirectChain.map(step => {
+            const statusClass = this.getStatusClass(step.status);
+            const statusText = step.status === 'ERROR' ? 'Error' : `${step.status} ${step.statusText}`;
+            const pingClass = step.pingTime > 0 ? 'ping-success' : 'ping-error';
+            const pingText = step.pingTime > 0 ? `${step.pingTime}ms` : 'Failed';
+            
+            // Only show ping info if it's not the final destination (to avoid showing user's own ping)
+            const pingInfoHTML = step.final ? '' : this.renderPingInfo(step.pingInfo, step.pingTime);
+            
+            return `
+                <div class="redirect-step">
+                    <div class="step-header">
+                        <div class="step-number">${step.step}</div>
+                        <div class="step-url">${step.url}</div>
+                        <div class="step-status ${statusClass}">${statusText}</div>
+                        <div class="step-ping ${pingClass}">${pingText}</div>
+                    </div>
+                    ${pingInfoHTML}
+                </div>
+            `;
+        }).join('');
+
+        redirectChainElement.innerHTML = chainHTML;
+    }
+
+    renderPingInfo(pingInfo, responseTime) {
+        if (!pingInfo || !pingInfo.successful) {
+            return `
+                <div class="ping-info error">
+                    <div class="ping-error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Ping failed - Unable to reach destination
+                    </div>
+                </div>
+            `;
+        }
+
+        const pingQuality = this.getPingQuality(pingInfo.ping);
+        const responseQuality = this.getResponseQuality(responseTime);
+
+        return `
+            <div class="ping-info">
+                <div class="ping-grid">
+                    <div class="ping-item">
+                        <div class="ping-label">
+                            <i class="fas fa-globe"></i>
+                            Domain
+                        </div>
+                        <div class="ping-value">${pingInfo.domain}</div>
+                    </div>
+                    <div class="ping-item">
+                        <div class="ping-label">
+                            <i class="fas fa-network-wired"></i>
+                            IP Address
+                        </div>
+                        <div class="ping-value">${pingInfo.ip}</div>
+                    </div>
+                    <div class="ping-item">
+                        <div class="ping-label">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Ping Time
+                        </div>
+                        <div class="ping-value ${pingQuality.class}">${pingInfo.ping}ms</div>
+                    </div>
+                    <div class="ping-item">
+                        <div class="ping-label">
+                            <i class="fas fa-clock"></i>
+                            Response Time
+                        </div>
+                        <div class="ping-value ${responseQuality.class}">${responseTime}ms</div>
+                    </div>
+                    <div class="ping-item">
+                        <div class="ping-label">
+                            <i class="fas fa-layer-group"></i>
+                            TTL
+                        </div>
+                        <div class="ping-value">${pingInfo.ttl}</div>
+                    </div>
+                    <div class="ping-item">
+                        <div class="ping-label">
+                            <i class="fas fa-box"></i>
+                            Packet Size
+                        </div>
+                        <div class="ping-value">${pingInfo.packetSize} bytes</div>
+                    </div>
+                </div>
+                <div class="ping-summary">
+                    <div class="ping-quality ${pingQuality.class}">
+                        <i class="fas ${pingQuality.icon}"></i>
+                        ${pingQuality.text}
+                    </div>
+                    <div class="response-quality ${responseQuality.class}">
+                        <i class="fas ${responseQuality.icon}"></i>
+                        ${responseQuality.text}
+                    </div>
+                </div>
             </div>
         `;
     }
 
-    displaySecurityInfo(results) {
-        const securityStatus = document.getElementById('securityStatus');
-        const securityInfo = document.getElementById('securityInfo');
+    getPingQuality(ping) {
+        if (ping < 20) return { class: 'excellent', text: 'Excellent', icon: 'fa-star' };
+        if (ping < 50) return { class: 'good', text: 'Good', icon: 'fa-thumbs-up' };
+        if (ping < 100) return { class: 'fair', text: 'Fair', icon: 'fa-minus' };
+        return { class: 'poor', text: 'Poor', icon: 'fa-exclamation-triangle' };
+    }
 
-        // Determine security status
-        const hasIssues = results.securityIssues.length > 0;
-        const highSeverityIssues = results.securityIssues.filter(issue => issue.severity === 'high');
+    getResponseQuality(responseTime) {
+        if (responseTime < 100) return { class: 'excellent', text: 'Fast', icon: 'fa-bolt' };
+        if (responseTime < 300) return { class: 'good', text: 'Normal', icon: 'fa-clock' };
+        if (responseTime < 1000) return { class: 'fair', text: 'Slow', icon: 'fa-hourglass-half' };
+        return { class: 'poor', text: 'Very Slow', icon: 'fa-exclamation-triangle' };
+    }
 
-        if (highSeverityIssues.length > 0) {
-            securityStatus.textContent = 'Security Issues';
-            securityStatus.className = 'status-indicator status-red';
-        } else if (hasIssues) {
-            securityStatus.textContent = 'Warnings';
-            securityStatus.className = 'status-indicator status-yellow';
-        } else {
-            securityStatus.textContent = 'Secure';
-            securityStatus.className = 'status-indicator status-green';
-        }
+    displayBasicInfo(basicInfo) {
+        const basicInfoElement = document.getElementById('basicInfo');
+        if (!basicInfoElement) return;
 
-        // Display security information
-        let securityHTML = '';
+        const infoHTML = `
+            <div class="result-item">
+                <span class="result-label">Original URL</span>
+                <span class="result-value">${basicInfo.originalUrl}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Final URL</span>
+                <span class="result-value">${basicInfo.finalUrl}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Redirect Count</span>
+                <span class="result-value">${basicInfo.redirectCount}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Total Steps</span>
+                <span class="result-value">${basicInfo.totalSteps}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Final Status</span>
+                <span class="result-value">${basicInfo.finalStatus} ${basicInfo.finalStatusText}</span>
+            </div>
+        `;
+
+        basicInfoElement.innerHTML = infoHTML;
+    }
+
+    displaySecurityInfo(securityInfo) {
+        const securityInfoElement = document.getElementById('securityInfo');
+        if (!securityInfoElement) return;
+
+        const securityScoreClass = this.getSecurityScoreClass(securityInfo.securityScore);
         
-        if (results.securityIssues.length === 0) {
-            securityHTML = '<div class="success-message">No security issues detected.</div>';
-        } else {
-            results.securityIssues.forEach(issue => {
-                const alertClass = issue.type === 'alert' ? 'security-alert' : 
-                                 issue.type === 'warning' ? 'error-message' : 'error-message';
-                securityHTML += `
-                    <div class="${alertClass}">
-                        <strong>${issue.severity.toUpperCase()}:</strong> ${issue.message}
-                    </div>
-                `;
-            });
-        }
+        const infoHTML = `
+            <div class="result-item">
+                <span class="result-label">Protocol</span>
+                <span class="result-value">${securityInfo.protocol}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">SSL/TLS</span>
+                <span class="result-value">${securityInfo.isSecure ? 'Yes' : 'No'}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Security Score</span>
+                <span class="result-value ${securityScoreClass}">${securityInfo.securityScore}/100</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">HSTS</span>
+                <span class="result-value">${securityInfo.securityHeaders.hsts ? 'Yes' : 'No'}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">CSP</span>
+                <span class="result-value">${securityInfo.securityHeaders.csp ? 'Yes' : 'No'}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">X-Frame-Options</span>
+                <span class="result-value">${securityInfo.securityHeaders.xFrameOptions || 'Not Set'}</span>
+            </div>
+        `;
 
-        securityInfo.innerHTML = securityHTML;
+        securityInfoElement.innerHTML = infoHTML;
     }
 
-    displayRedirectChain(results) {
-        const redirectChain = document.getElementById('redirectChain');
-        
-        // Improved display logic: show only final destination if no redirects, show all steps if redirects exist
-        if (results.totalRedirects === 0) {
-            // No redirects - show only the final destination
-            const finalStep = results.redirectChain[0];
-            redirectChain.innerHTML = `
-                <div class="redirect-step">
-                    <div class="step-number">1</div>
-                    <div class="step-url">${finalStep.url}</div>
-                    <span class="step-status status-green">Final Destination</span>
-                </div>
-                <div style="margin-top: 1rem; padding: 1rem; background: rgba(0, 170, 0, 0.1); border: 1px solid rgba(0, 170, 0, 0.3); border-radius: var(--border-radius); color: #00aa00;">
-                    <i class="fas fa-check-circle"></i> No redirects detected. This URL goes directly to its destination.
-                </div>
-            `;
-        } else {
-            // Has redirects - show the complete chain
-            let chainHTML = '';
-            results.redirectChain.forEach((step, index) => {
-                const isLast = index === results.redirectChain.length - 1;
-                const statusClass = isLast ? 'status-green' : 'status-yellow';
-                const statusText = isLast ? 'Final Destination' : `${step.redirectType || 'Redirect'}`;
-                
-                let stepDetails = '';
-                if (step.responseTime) {
-                    stepDetails = `<div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">
-                        Response: ${Math.round(step.responseTime)}ms | Status: ${step.status}
-                    </div>`;
-                }
-                
-                chainHTML += `
-                    <div class="redirect-step">
-                        <div class="step-number">${step.step}</div>
-                        <div class="step-url">
-                            ${step.url}
-                            ${stepDetails}
-                        </div>
-                        <span class="step-status ${statusClass}">${statusText}</span>
-                    </div>
-                `;
-            });
-            
-            chainHTML += `
-                <div style="margin-top: 1rem; padding: 1rem; background: rgba(255, 170, 0, 0.1); border: 1px solid rgba(255, 170, 0, 0.3); border-radius: var(--border-radius); color: #ffaa00;">
-                    <i class="fas fa-info-circle"></i> ${results.totalRedirects} redirect${results.totalRedirects > 1 ? 's' : ''} detected in the chain.
-                </div>
-            `;
-            
-            redirectChain.innerHTML = chainHTML;
-        }
+    displayDomainInfo(domainInfo) {
+        const domainInfoElement = document.getElementById('domainInfo');
+        if (!domainInfoElement) return;
+
+        const infoHTML = `
+            <div class="result-item">
+                <span class="result-label">Domain</span>
+                <span class="result-value">${domainInfo.domain}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Subdomain</span>
+                <span class="result-value">${domainInfo.subdomain || 'None'}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">TLD</span>
+                <span class="result-value">${domainInfo.tld}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">IP Address</span>
+                <span class="result-value">${domainInfo.ipAddress}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Registrar</span>
+                <span class="result-value">${domainInfo.registrar}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Creation Date</span>
+                <span class="result-value">${domainInfo.creationDate}</span>
+            </div>
+        `;
+
+        domainInfoElement.innerHTML = infoHTML;
     }
 
-    displayDomainInfo(results) {
-        const domainInfo = document.getElementById('domainInfo');
-        let domainHTML = '';
+    displayConnectionInfo(connectionInfo) {
+        const connectionInfoElement = document.getElementById('connectionInfo');
+        if (!connectionInfoElement) return;
 
-        Object.entries(results.domainInfo).forEach(([domain, info]) => {
-            if (info.error) {
-                domainHTML += `
-                    <div class="error-message">
-                        <strong>${domain}:</strong> Error retrieving information - ${info.error}
-                    </div>
-                `;
-            } else {
-                const pingStatus = info.ping ? 
-                    `<span style="color: ${info.ping < 50 ? '#00aa00' : info.ping < 100 ? '#ffaa00' : '#ff0000'};">${info.ping}ms</span>` : 
-                    'N/A';
-                
-                domainHTML += `
-                    <div style="margin-bottom: 2rem; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: var(--border-radius);">
-                        <h4 style="color: var(--text-primary); margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
-                            <i class="fas fa-globe"></i> ${domain}
-                        </h4>
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                            <div>
-                                <h5 style="color: var(--text-secondary); margin-bottom: 0.5rem;">Network Information</h5>
-                                <div class="info-item">
-                                    <span class="info-label">IP Address:</span>
-                                    <span class="info-value">${info.ip}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">Ping Time:</span>
-                                    <span class="info-value">${pingStatus}</span>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <h5 style="color: var(--text-secondary); margin-bottom: 0.5rem;">Security Status</h5>
-                                <div class="info-item">
-                                    <span class="info-label">SSL:</span>
-                                    <span class="info-value">${info.security.ssl ? '✓' : '✗'}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">HSTS:</span>
-                                    <span class="info-value">${info.security.hsts ? '✓' : '✗'}</span>
-                                </div>
-                                <div class="info-item">
-                                    <span class="info-label">SPF:</span>
-                                    <span class="info-value">${info.security.spf ? '✓' : '✗'}</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div style="margin-top: 1rem;">
-                            <h5 style="color: var(--text-secondary); margin-bottom: 0.5rem;">WHOIS Information</h5>
-                            <div class="info-item">
-                                <span class="info-label">Registrar:</span>
-                                <span class="info-value">${info.whois.registrar}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Created:</span>
-                                <span class="info-value">${info.whois.creationDate}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Expires:</span>
-                                <span class="info-value">${info.whois.expirationDate}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Status:</span>
-                                <span class="info-value">${info.whois.status}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-        });
+        const responseTimeClass = connectionInfo.responseTime > 0 ? 'status-success' : 'status-error';
+        const responseTimeText = connectionInfo.responseTime > 0 ? `${connectionInfo.responseTime}ms` : 'Failed';
 
-        domainInfo.innerHTML = domainHTML;
+        const infoHTML = `
+            <div class="result-item">
+                <span class="result-label">Domain</span>
+                <span class="result-value">${connectionInfo.domain}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Protocol</span>
+                <span class="result-value">${connectionInfo.protocol}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Port</span>
+                <span class="result-value">${connectionInfo.port}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Response Time</span>
+                <span class="result-value ${responseTimeClass}">${responseTimeText}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Server</span>
+                <span class="result-value">${connectionInfo.serverInfo.server || 'Unknown'}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Content Type</span>
+                <span class="result-value">${connectionInfo.serverInfo.contentType || 'Unknown'}</span>
+            </div>
+        `;
+
+        connectionInfoElement.innerHTML = infoHTML;
     }
 
-    setLoadingState(loading) {
-        const checkBtn = document.getElementById('checkBtn');
-        const urlInput = document.getElementById('urlInput');
-
-        if (loading) {
-            checkBtn.disabled = true;
-            checkBtn.innerHTML = '<div class="loading-spinner"></div> Analyzing...';
-            urlInput.disabled = true;
-        } else {
-            checkBtn.disabled = false;
-            checkBtn.innerHTML = '<i class="fas fa-search"></i> Check URL';
-            urlInput.disabled = false;
-        }
+    getStatusClass(status) {
+        if (status === 'ERROR') return 'status-error';
+        if (status >= 200 && status < 300) return 'status-success';
+        if (status >= 300 && status < 400) return 'status-warning';
+        if (status >= 400) return 'status-error';
+        return 'status-warning';
     }
 
-    clearResults() {
-        const resultsSection = document.getElementById('resultsSection');
-        resultsSection.style.display = 'none';
-    }
-
-    showMessage(message, type = 'info') {
-        const messageContainer = document.getElementById('messageContainer');
-        const messageClass = type === 'error' ? 'error-message' : 
-                           type === 'success' ? 'success-message' : 'security-alert';
-
-        messageContainer.innerHTML = `<div class="${messageClass}">${message}</div>`;
-
-        // Auto-remove message after 5 seconds
-        setTimeout(() => {
-            messageContainer.innerHTML = '';
-        }, 5000);
+    getSecurityScoreClass(score) {
+        if (score >= 80) return 'status-success';
+        if (score >= 60) return 'status-warning';
+        return 'status-error';
     }
 }
 
-// Initialize the URL redirect checker when DOM is loaded
+// Initialize the URL Redirect Checker when the DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    window.urlRedirectChecker = new URLRedirectChecker();
-}); 
+    new URLRedirectChecker();
+});

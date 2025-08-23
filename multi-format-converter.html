@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Format File Converter - A.Insiders Tools</title>
+    
+    <!-- Favicon Setup -->
+    <link rel="icon" type="image/png" href="ainsiders-logo.png" id="main-favicon">
+    <link rel="apple-touch-icon" href="ainsiders-logo.png">
+    <meta name="description" content="Convert files between multiple formats with advanced options. Support for images, documents, audio, and more. Free, secure, and browser-based.">
+    <meta name="keywords" content="file converter, format converter, image converter, document converter, audio converter, A.Insiders tools">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    
+    <!-- Enhanced Cache Control Headers for Cloudflare -->
+    <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable, stale-while-revalidate=86400">
+    <meta http-equiv="Expires" content="31536000">
+    <meta http-equiv="ETag" content="multi-converter-v1.0">
+    <meta http-equiv="Last-Modified" content="2023-12-31T00:00:00Z">
+    
+    <!-- Optimized Asset Caching System with Cloudflare Headers -->
+    <link rel="stylesheet" href="brain-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Preload critical assets with Cloudflare caching -->
+    <link rel="preload" href="brain-script.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="shared-loader.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="mobile-nav.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="sphere-loader.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="ainsiders-logo.png?v=1.0" as="image" type="image/png">
+    <link rel="preload" href="logo.svg?v=1.0" as="image" type="image/svg+xml">
+    
+    <!-- Cache Manager and Asset Preloader with Cloudflare caching -->
+    <script src="browser-cache-manager.js"></script>
+    <script src="asset-preloader.js"></script>
+    
+    <!-- Optimized Background System -->
+    <script src="brain-script.js"></script>
+    
+    <!-- Font Awesome with CDN and Fallback -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    
+    <!-- Favicon Animation Script -->
+    <script src="favicon-animation.js"></script>
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ffmpeg.js/0.12.7/ffmpeg.min.js"></script>
+    
+    <style>
+        /* Multi-Format Converter Specific Styles */
+        .converter-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+            box-shadow: var(--shadow-dark);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Neural Background Canvas - Full Page Coverage */
+        #aiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        /* Page Hero Section with Neural Background */
+        .page-hero {
+            position: relative;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(17, 17, 17, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 102, 255, 0.1) 0%, transparent 70%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 102, 255, 0.3);
+        }
+
+        .page-title i {
+            margin-right: 1rem;
+            color: var(--accent-primary);
+            filter: drop-shadow(0 0 10px rgba(0, 102, 255, 0.5));
+        }
+
+        .page-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* Responsive design for hero section */
+        @media (max-width: 768px) {
+            .page-hero {
+                min-height: 50vh;
+                padding: 4rem 1rem 3rem;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+
+            .page-subtitle {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .page-subtitle {
+                font-size: 1rem;
+            }
+        }
+
+        /* Ensure cursor is always visible */
+        body.converter-page {
+            cursor: default !important;
+        }
+
+        .converter-container,
+        .format-selector,
+        .upload-section,
+        .options-section,
+        .preview-section,
+        .format-compatibility,
+        .upload-area,
+        .format-select,
+        .option-group select,
+        .option-group input,
+        .convert-btn,
+        .download-btn,
+        .preset-btn {
+            cursor: pointer !important;
+        }
+
+        .upload-area:hover,
+        .format-select:hover,
+        .option-group select:hover,
+        .option-group input:hover,
+        .convert-btn:hover,
+        .download-btn:hover,
+        .preset-btn:hover:not(.disabled) {
+            cursor: pointer !important;
+        }
+
+        /* Index.html Color Scheme */
+        body.converter-page {
+            min-height: 100vh;
+            background: #000000;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .website-content {
+            min-height: 100vh;
+            background: transparent;
+            color: var(--text-primary);
+            position: relative;
+            z-index: 1;
+        }
+
+
+
+        .format-selector {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-dark);
+            border: 1px solid rgba(0, 102, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .format-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .format-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .format-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .format-select {
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            transition: var(--transition-smooth);
+            cursor: pointer;
+        }
+
+        .format-select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .conversion-arrow {
+            font-size: 2rem;
+            color: var(--accent-primary);
+            text-align: center;
+        }
+
+        .upload-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px dashed rgba(0, 102, 255, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            transition: var(--transition-smooth);
+        }
+
+        .upload-section:hover {
+            border-color: var(--accent-secondary);
+            transform: translateY(-2px);
+        }
+
+        .upload-area {
+            text-align: center;
+            cursor: pointer;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px dashed rgba(0, 102, 255, 0.6);
+            border-radius: 10px;
+        }
+
+        .upload-area.dragover {
+            background: rgba(0, 102, 255, 0.1);
+            border-color: var(--accent-primary);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .options-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-dark);
+            border: 1px solid rgba(0, 102, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .option-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .option-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .option-group select,
+        .option-group input {
+            padding: 0.75rem;
+            border: 2px solid rgba(0, 102, 255, 0.2);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: var(--text-primary);
+            transition: var(--transition-fast);
+        }
+
+        .option-group select:focus,
+        .option-group input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        /* Quality Presets Styles */
+        .quality-presets .presets-container {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .preset-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid rgba(0, 102, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .preset-btn:hover:not(.disabled) {
+            border-color: var(--accent-primary);
+            background: var(--bg-secondary);
+        }
+
+        .preset-btn.active {
+            border-color: var(--accent-primary);
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        .preset-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+        }
+
+        /* Value Display Styles */
+        .value-display {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        /* File Size Estimate Styles */
+        .file-size-estimate .estimate-display {
+            margin-top: 0.5rem;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-primary);
+        }
+
+        .estimate-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-right: 0.5rem;
+        }
+
+        .estimate-value {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Disabled Option Groups */
+        .option-group.disabled {
+            opacity: 0.6;
+        }
+
+        .option-group.disabled input,
+        .option-group.disabled select {
+            background: var(--bg-secondary);
+            cursor: not-allowed;
+        }
+
+        .preview-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-dark);
+            border: 1px solid rgba(0, 102, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .preview-item {
+            text-align: center;
+        }
+
+        .preview-item h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .preview-canvas {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+        }
+
+        .convert-btn {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--text-primary);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .convert-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .convert-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-dark);
+            border: 1px solid rgba(0, 102, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .status-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .file-info {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 102, 255, 0.1);
+        }
+
+        .file-info h4 {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .file-info p {
+            margin: 0.25rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .download-section {
+            text-align: center;
+        }
+
+        .download-btn {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--text-primary);
+            border: 1px solid rgba(40, 167, 69, 0.4);
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .format-compatibility {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-dark);
+            border: 1px solid rgba(0, 102, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .compatibility-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .format-category {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 102, 255, 0.1);
+        }
+
+        .format-category h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+        }
+
+        .format-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .format-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .format-list li:last-child {
+            border-bottom: none;
+        }
+
+        .format-list li strong {
+            color: var(--text-primary);
+        }
+
+        /* Enhanced Performance Animations */
+        .fade-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .fade-section.fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .converter-container,
+        .format-selector,
+        .upload-section,
+        .options-section,
+        .preview-section,
+        .format-compatibility {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, opacity;
+        }
+        
+        .converter-container:hover,
+        .format-selector:hover,
+        .upload-section:hover,
+        .options-section:hover,
+        .preview-section:hover,
+        .format-compatibility:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-dark);
+            border-color: var(--accent-primary);
+        }
+        
+        /* Performance optimizations */
+        .converter-container *,
+        .format-selector *,
+        .upload-section *,
+        .options-section *,
+        .preview-section *,
+        .format-compatibility * {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        /* Global cursor visibility fix */
+        * {
+            cursor: inherit;
+        }
+
+        html, body {
+            cursor: default !important;
+        }
+
+        /* Ensure interactive elements show proper cursor */
+        button, select, input, a, .upload-area, .format-select {
+            cursor: pointer !important;
+        }
+
+        button:disabled, select:disabled, input:disabled {
+            cursor: not-allowed !important;
+        }
+
+        /* Neural Background for All Elements */
+        .format-grid,
+        .upload-area,
+        .options-grid,
+        .option-group,
+        .preview-grid,
+        .preview-item,
+        .status-message,
+        .compatibility-grid,
+        .compatibility-item,
+        .quality-presets,
+        .preset-btn,
+        .file-size-display,
+        .progress-bar,
+        .download-btn,
+        .format-select,
+        .option-group select,
+        .option-group input,
+        .convert-btn,
+        .upload-icon,
+        .file-info,
+        .conversion-status,
+        .download-section {
+            background: rgba(0, 0, 0, 0.15) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(0, 102, 255, 0.1) !important;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Enhanced neural visibility for interactive elements */
+        .upload-area:hover,
+        .format-select:hover,
+        .option-group select:hover,
+        .option-group input:hover,
+        .convert-btn:hover,
+        .preset-btn:hover:not(.disabled),
+        .download-btn:hover {
+            background: rgba(0, 0, 0, 0.25) !important;
+            backdrop-filter: blur(15px) !important;
+            -webkit-backdrop-filter: blur(15px) !important;
+            border-color: rgba(0, 102, 255, 0.3) !important;
+        }
+
+        /* Neural background for form elements */
+        select, input, textarea {
+            background: rgba(0, 0, 0, 0.2) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            border: 1px solid rgba(0, 102, 255, 0.2) !important;
+            color: var(--text-primary) !important;
+        }
+
+        select:focus, input:focus, textarea:focus {
+            background: rgba(0, 0, 0, 0.3) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border-color: var(--accent-primary) !important;
+            outline: none !important;
+        }
+
+        /* Neural background for buttons */
+        button {
+            background: rgba(0, 0, 0, 0.3) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(0, 102, 255, 0.2) !important;
+        }
+
+        button:hover:not(:disabled) {
+            background: rgba(0, 0, 0, 0.4) !important;
+            backdrop-filter: blur(15px) !important;
+            -webkit-backdrop-filter: blur(15px) !important;
+            border-color: var(--accent-primary) !important;
+        }
+
+        /* Neural background for progress and status elements */
+        .progress-container,
+        .status-message,
+        .file-info,
+        .conversion-status {
+            background: rgba(0, 0, 0, 0.2) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(0, 102, 255, 0.15) !important;
+        }
+
+        /* Neural background for dropdowns and menus */
+        .dropdown-content,
+        .menu-item,
+        .format-option {
+            background: rgba(0, 0, 0, 0.25) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(0, 102, 255, 0.1) !important;
+        }
+
+        /* Neural background for tooltips and overlays */
+        .tooltip,
+        .overlay,
+        .modal {
+            background: rgba(0, 0, 0, 0.3) !important;
+            backdrop-filter: blur(15px) !important;
+            -webkit-backdrop-filter: blur(15px) !important;
+            border: 1px solid rgba(0, 102, 255, 0.2) !important;
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            .converter-container,
+            .format-selector,
+            .upload-section,
+            .options-section,
+            .preview-section,
+            .format-compatibility,
+            .fade-section {
+                transition: none;
+                animation: none;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .converter-container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+
+            .converter-header h1 {
+                font-size: 2rem;
+            }
+
+            .format-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .conversion-arrow {
+                transform: rotate(90deg);
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .compatibility-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .converter-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .upload-section {
+                padding: 1rem;
+            }
+
+            .upload-area {
+                padding: 1rem;
+            }
+
+            .upload-icon {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body class="converter-page">
+    <!-- Loading Screen -->
+    <div id="loader" class="loader">
+        <canvas></canvas>
+        <div class="spark-text">It All Starts With A Spark</div>
+        <div class="continue-text">Click Anywhere To Continue</div>
+    </div>
+
+    <!-- Website Content -->
+    <div id="website-content" class="website-content">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="nav-logo">
+                    <img src="ainsiders-logo.png" alt="A.Insiders Logo" class="logo-image" width="40" height="40">
+                    <span class="logo-text">A.I</span>
+                    <span class="logo-accent">NSIDERS</span>
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="software.html" class="nav-link">Software</a></li>
+                    <li class="nav-dropdown">
+                        <div class="nav-link-container">
+                            <a href="about.html" class="nav-link">About</a>
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <ul class="dropdown-menu">
+                            <li><a href="about.html" class="dropdown-link">About Company</a></li>
+                            <li><a href="blake-zimmerman.html" class="dropdown-link">Blake Zimmerman</a></li>
+                            <li><a href="babu-narayana.html" class="dropdown-link">Babu Narayana</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
+                </ul>
+                <div class="nav-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Performance Optimization: Preload critical images -->
+        <link rel="preload" href="ainsiders-logo.png" as="image" type="image/png">
+        <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+        <!-- Page Hero Section -->
+        <header class="page-hero">
+            <canvas id="aiCanvas"></canvas>
+            <div class="hero-content">
+                <h1 class="page-title"><i class="fas fa-exchange-alt"></i> Multi-Format File Converter</h1>
+                <p class="page-subtitle">Convert files between multiple formats with advanced options. Support for images, documents, audio, and more. Fast, secure, and completely browser-based.</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="converter-container">
+
+                <!-- Format Selector -->
+                <div class="format-selector">
+                    <div class="format-grid">
+                        <div class="format-group">
+                            <label for="inputFormat">Input Format:</label>
+                            <select id="inputFormat" class="format-select">
+                                <option value="">Select input format...</option>
+                                <optgroup label="Images">
+                                    <option value="webp">WebP</option>
+                                    <option value="png">PNG</option>
+                                    <option value="jpg">JPG/JPEG</option>
+                                    <option value="gif">GIF</option>
+                                    <option value="bmp">BMP</option>
+                                    <option value="svg">SVG</option>
+                                    <option value="tiff">TIFF</option>
+                                    <option value="ico">ICO</option>
+                                </optgroup>
+                                <optgroup label="Documents">
+                                    <option value="pdf">PDF</option>
+                                    <option value="txt">Text</option>
+                                    <option value="doc">DOC</option>
+                                    <option value="docx">DOCX</option>
+                                    <option value="rtf">RTF</option>
+                                    <option value="odt">ODT</option>
+                                </optgroup>
+                                <optgroup label="Audio">
+                                    <option value="mp3">MP3</option>
+                                    <option value="wav">WAV</option>
+                                    <option value="ogg">OGG</option>
+                                    <option value="aac">AAC</option>
+                                    <option value="m4a">M4A</option>
+                                    <option value="flac">FLAC</option>
+                                    <option value="wma">WMA</option>
+                                </optgroup>
+                                <optgroup label="Video">
+                                    <option value="mp4">MP4</option>
+                                    <option value="avi">AVI</option>
+                                    <option value="mov">MOV</option>
+                                    <option value="webm">WebM</option>
+                                    <option value="mkv">MKV</option>
+                                    <option value="flv">FLV</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        
+                        <div class="conversion-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                        
+                        <div class="format-group">
+                            <label for="outputFormat">Output Format:</label>
+                            <select id="outputFormat" class="format-select" disabled>
+                                <option value="">Select output format...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Section -->
+                <div class="upload-section" id="uploadSection" style="display: none;">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">Drop files here or click to browse</div>
+                        <div class="upload-hint" id="uploadHint">Supports multiple files, max 50MB each</div>
+                        <input type="file" id="fileInput" class="file-input" multiple>
+                    </div>
+                </div>
+
+                <!-- File Info -->
+                <div class="file-info" id="fileInfo" style="display: none;">
+                    <h4>Selected Files:</h4>
+                    <div id="fileList"></div>
+                </div>
+
+                <!-- Options Section -->
+                <div class="options-section" id="optionsSection" style="display: none;">
+                    <h2>Conversion Options</h2>
+                    <div class="options-grid" id="optionsGrid">
+                        <!-- Dynamic options will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Preview Section -->
+                <div class="preview-section" id="previewSection" style="display: none;">
+                    <h2>File Preview</h2>
+                    <div class="preview-grid" id="previewGrid"></div>
+                </div>
+
+                <!-- Convert Button -->
+                <button class="convert-btn" id="convertBtn" disabled>
+                    <i class="fas fa-cog fa-spin" style="display: none;"></i>
+                    <span>Convert Files</span>
+                </button>
+
+                <!-- Status Section -->
+                <div class="status-section">
+                    <div class="status-message" id="statusMessage"></div>
+                    <div class="progress-bar" id="progressBar" style="display: none;">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <!-- Download Section -->
+                <div class="download-section" id="downloadSection" style="display: none;">
+                    <h3>Conversion Complete!</h3>
+                    <p>Your files have been converted successfully. Click below to download:</p>
+                    <div id="downloadButtons"></div>
+                    <button class="download-btn" onclick="resetConverter()" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%);">
+                        <i class="fas fa-redo"></i> Convert Another
+                    </button>
+                </div>
+
+                <!-- Format Compatibility Section -->
+                <div class="format-compatibility">
+                    <h2>Supported Format Conversions</h2>
+                    <div class="compatibility-grid">
+                        <div class="format-category">
+                            <h3><i class="fas fa-image"></i> Images</h3>
+                            <ul class="format-list">
+                                <li><strong>WebP</strong> → PNG, JPG, GIF, PDF</li>
+                                <li><strong>PNG</strong> → WebP, JPG, GIF, PDF</li>
+                                <li><strong>JPG</strong> → WebP, PNG, PDF</li>
+                                <li><strong>GIF</strong> → WebP, PNG, JPG, PDF</li>
+                                <li><strong>BMP</strong> → PNG, JPG, WebP, PDF</li>
+                                <li><strong>SVG</strong> → PNG, JPG, PDF, WebP, GIF</li>
+                                <li><strong>TIFF</strong> → PNG, JPG, WebP, GIF, PDF</li>
+                                <li><strong>ICO</strong> → PNG, JPG, WebP, GIF</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="format-category">
+                            <h3><i class="fas fa-file-alt"></i> Documents</h3>
+                            <ul class="format-list">
+                                <li><strong>PDF</strong> → Images (PNG, JPG), Text</li>
+                                <li><strong>TXT</strong> → PDF</li>
+                                <li><strong>DOC/DOCX</strong> → PDF, TXT, RTF</li>
+                                <li><strong>RTF</strong> → PDF, TXT, DOCX</li>
+                                <li><strong>ODT</strong> → PDF, TXT, DOCX, RTF</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="format-category">
+                            <h3><i class="fas fa-music"></i> Audio</h3>
+                            <ul class="format-list">
+                                <li><strong>MP3</strong> → WAV, OGG, AAC, M4A, FLAC, WMA</li>
+                                <li><strong>WAV</strong> → MP3, OGG, AAC, M4A, FLAC, WMA</li>
+                                <li><strong>OGG</strong> → MP3, WAV, AAC, M4A, FLAC, WMA</li>
+                                <li><strong>AAC</strong> → MP3, WAV, OGG, M4A, FLAC, WMA</li>
+                                <li><strong>M4A</strong> → MP3, WAV, OGG, AAC, FLAC, WMA</li>
+                                <li><strong>FLAC</strong> → MP3, WAV, OGG, AAC, M4A, WMA</li>
+                                <li><strong>WMA</strong> → MP3, WAV, OGG, AAC, M4A, FLAC</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="format-category">
+                            <h3><i class="fas fa-video"></i> Video</h3>
+                            <ul class="format-list">
+                                <li><strong>MP4</strong> → WebM, AVI, MOV, MKV, FLV + Audio (MP3, WAV, OGG, AAC, M4A, FLAC)</li>
+                                <li><strong>WebM</strong> → MP4, AVI, MOV, MKV, FLV + Audio (MP3, WAV, OGG, AAC, M4A, FLAC)</li>
+                                <li><strong>AVI</strong> → MP4, WebM, MOV, MKV, FLV + Audio (MP3, WAV, OGG, AAC, M4A, FLAC)</li>
+                                <li><strong>MOV</strong> → MP4, WebM, AVI, MKV, FLV + Audio (MP3, WAV, OGG, AAC, M4A, FLAC)</li>
+                                <li><strong>MKV</strong> → MP4, WebM, AVI, MOV, FLV + Audio (MP3, WAV, OGG, AAC, M4A, FLAC)</li>
+                                <li><strong>FLV</strong> → MP4, WebM, AVI, MOV, MKV + Audio (MP3, WAV, OGG, AAC, M4A, FLAC)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>A.Insiders</h3>
+                    <p>Leading AI and cybersecurity solutions for the modern world.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="software.html">Software</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Tools</h3>
+                    <ul>
+                        <li><a href="password-checker.html">Password Checker</a></li>
+                        <li><a href="ip-checker.html">IP Checker</a></li>
+                        <li><a href="encryption-tool.html">Encryption Tool</a></li>
+
+                        <li><a href="multi-format-converter.html">Multi-Format Converter</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 A.Insiders. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="shared-loader.js"></script>
+    <script src="mobile-nav.js"></script>
+    <script src="sphere-loader.js"></script>
+    
+    <!-- Multi-Format Converter Script -->
+    <script src="multi-format-converter.js"></script>
+
+    <!-- Neural Background Enhancement Script -->
+    <script>
+        // Neural Background Enhancement Script
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Multi-Format Converter page loaded with neural background!');
+            
+            // Initialize neural background functionality
+            initializeNeuralBackground();
+            
+            // Preload next likely pages for better UX
+            setTimeout(() => {
+                if (window.browserCacheManager) {
+                    window.browserCacheManager.preloadPage('index');
+                    window.browserCacheManager.preloadPage('software');
+                }
+            }, 2000);
+        });
+        
+        function initializeNeuralBackground() {
+            // Ensure the neural background is always active
+            const canvas = document.getElementById('aiCanvas');
+            if (canvas) {
+                // Force canvas to be visible but non-interactive
+                canvas.style.display = 'block';
+                canvas.style.pointerEvents = 'none';
+                canvas.style.opacity = '0.6';
+                canvas.style.cursor = 'default';
+                
+                // Ensure the brain script is running
+                if (window.brainScript) {
+                    window.brainScript.init();
+                }
+            }
+            
+            // Ensure cursor is always visible on the page
+            document.body.style.cursor = 'default';
+            document.documentElement.style.cursor = 'default';
+            
+            // Enhanced converter interactions with neural theme
+            const converterElements = document.querySelectorAll('.converter-container, .format-selector, .upload-section, .options-section');
+            converterElements.forEach(element => {
+                element.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                    this.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.15)';
+                });
+                
+                element.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.1)';
+                });
+            });
+            
+            // Smooth fade-in animations for sections
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.format-selector, .upload-section, .options-section, .preview-section, .format-compatibility').forEach(section => {
+                section.classList.add('fade-section');
+                sectionObserver.observe(section);
+            });
+            
+            // Performance monitoring
+            if ('performance' in window) {
+                window.addEventListener('load', function() {
+                    const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+                    console.log(`Multi-Format Converter page loaded in ${loadTime}ms`);
+                    
+                    // Report performance metrics
+                    if (window.gtag) {
+                        window.gtag('event', 'timing_complete', {
+                            'name': 'load',
+                            'value': loadTime
+                        });
+                    }
+                });
+            }
+        }
+        
+        // Export for potential use in other scripts
+        window.converterPage = {
+            initialize: initializeNeuralBackground
+        };
+        
+        // Ensure smooth loading by preloading critical assets
+        window.addEventListener('load', function() {
+            // Force a repaint to ensure smooth animations
+            document.body.style.display = 'none';
+            document.body.offsetHeight; // Trigger reflow
+            document.body.style.display = '';
+        });
+    </script>
+</body>
+</html>

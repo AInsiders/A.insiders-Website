@@ -174,17 +174,11 @@ class ToolsManager {
 
         // Handle different tool actions
         switch (action) {
-            case 'Check IP':
-                window.location.href = 'ip-checker.html';
-                break;
             case 'Check URL':
                 window.location.href = 'url-redirect-checker.html';
                 break;
             case 'Analyze Text': // Word & Character Counter
                 window.location.href = 'word-character-counter.html';
-                break;
-            case 'Check IP': // IP Blacklist Checker
-                window.location.href = 'ip-blacklist-checker.html';
                 break;
             case 'Analyze Text': // AI Text Detection
                 window.location.href = 'ai-text-detection.html';
@@ -228,14 +222,31 @@ class ToolsManager {
     }
 
     launchTool(toolTitle) {
-        // This would be implemented to actually launch the tools
-        // For now, show a placeholder message
-        this.showNotification(`Launching ${toolTitle}...`, 'info');
-        
-        // Simulate tool loading
-        setTimeout(() => {
+        // Map tool titles to their corresponding HTML files
+        const toolUrls = {
+            'Multi-Format File Converter': 'multi-format-converter.html',
+            'Password Checker': 'password-checker.html',
+            'Encryption Tool': 'encryption-tool.html',
+            'Word Character Counter': 'word-character-counter.html',
+            'URL Redirect Checker': 'url-redirect-checker.html',
+            'AI Text Detection': 'ai-text-detection.html',
+            'Entropy Calculator': 'entropy-calculator.html',
+            'Advanced Entropy Simulator': 'advanced-entropy-simulator.html',
+            'Identity Generator': 'identity-generator.html',
+            'LUHN Card Generator': 'luhn-card-generator.html',
+            'Bin Checker': 'bin-checker.html',
+            'Pwned Checker': 'pwned.html'
+        };
+
+        const url = toolUrls[toolTitle];
+        if (url) {
+            this.showNotification(`Launching ${toolTitle}...`, 'info');
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        } else {
             this.showNotification(`${toolTitle} is not yet implemented. Coming soon!`, 'warning');
-        }, 1000);
+        }
     }
 
     showToolInfo(toolTitle, action) {
