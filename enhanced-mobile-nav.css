@@ -1,0 +1,284 @@
+/* Enhanced Mobile Navigation CSS */
+/* This file contains all the necessary styles for the enhanced mobile navigation system */
+
+/* CSS Custom Properties for zoom detection */
+:root {
+  --current-zoom: 1;
+  --viewport-width: 100vw;
+  --viewport-height: 100vh;
+}
+
+/* Enhanced Mobile Navigation Styles */
+@media (max-width: 768px) {
+  .nav-menu {
+    position: fixed !important;
+    top: 80px !important;
+    right: -100% !important;
+    width: 80vw !important;
+    max-width: 350px !important;
+    height: calc(100vh - 80px) !important;
+    background: #000000 !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    padding: 2rem 1.5rem !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    z-index: 100 !important;
+    overflow-y: auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    border-left: 2px solid rgba(0, 150, 255, 0.3) !important;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5) !important;
+    overflow-x: hidden !important;
+    max-height: calc(100vh - 80px) !important;
+    transform: translateX(100%) !important;
+    will-change: transform, right !important;
+  }
+  
+  .nav-menu.active {
+    right: 0 !important;
+    transform: translateX(0) !important;
+    box-shadow: -15px 0 40px rgba(0, 0, 0, 0.7) !important;
+  }
+
+  .nav-toggle {
+    display: flex !important;
+    cursor: pointer !important;
+    z-index: 101 !important;
+    position: relative !important;
+  }
+  
+  /* Backdrop effect when menu is open */
+  body.menu-open::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--backdrop-width, calc(100% - 80vw));
+    max-width: var(--backdrop-width, calc(100% - 350px));
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 99;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+  }
+  
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Prevent body scroll when menu is open */
+  body.menu-open {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+  }
+  
+  /* Enhanced mobile menu items */
+  .nav-menu .nav-link {
+    color: #ffffff !important;
+    font-size: 1.1rem !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    flex: 1 !important;
+    padding: 0.8rem 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+  }
+  
+  .nav-menu .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 150, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .nav-menu .nav-link:hover::before {
+    left: 100%;
+  }
+  
+  .nav-menu .nav-link:hover {
+    color: #0096ff !important;
+    transform: translateX(5px) !important;
+  }
+
+  /* Mobile navigation styles with dropdown functionality */
+  .nav-menu li {
+    width: 100% !important;
+  }
+  
+  .nav-dropdown {
+    width: 100% !important;
+    position: relative !important;
+  }
+
+  .nav-link-container {
+    position: relative !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  
+  .dropdown-arrow {
+    font-size: 0.8rem !important;
+    transition: transform 0.3s ease !important;
+    color: #ffffff !important;
+    cursor: pointer !important;
+    padding: 0.2rem !important;
+    margin-left: 0.2rem !important;
+  }
+  
+  .dropdown-arrow:hover {
+    color: #ccc !important;
+  }
+  
+  .nav-dropdown.active .dropdown-arrow {
+    transform: rotate(180deg) !important;
+  }
+
+  /* Dropdown menu styles for mobile */
+  .dropdown-menu {
+    position: static !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(-5px) !important;
+    background: rgba(0, 150, 255, 0.2) !important;
+    border: 1px solid rgba(0, 150, 255, 0.4) !important;
+    border-radius: 8px !important;
+    margin: 0 !important;
+    min-width: auto !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: all 0.15s ease !important;
+    width: 100% !important;
+    display: none !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .nav-dropdown.active .dropdown-menu {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    max-height: 600px !important;
+    padding: 0 !important;
+    position: static !important;
+    z-index: 1 !important;
+    display: block !important;
+    margin-top: 0 !important;
+  }
+
+  .dropdown-menu::before {
+    display: none !important;
+  }
+  
+  .dropdown-menu::after {
+    display: none !important;
+  }
+
+  .dropdown-link {
+    padding: 0 1rem !important;
+    font-size: 0.9rem !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    border-left: 3px solid transparent !important;
+    display: block !important;
+    color: var(--text-secondary, #ccc) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    margin: 0 !important;
+  }
+
+  .dropdown-link:hover {
+    background: rgba(0, 150, 255, 0.2) !important;
+    border-left-color: rgba(0, 150, 255, 0.8) !important;
+    color: #ffffff !important;
+    transform: translateX(5px) !important;
+  }
+}
+
+/* Zoom-aware mobile menu adjustments */
+@media (max-width: 768px) and (min-resolution: 2dppx) {
+  .nav-menu {
+    width: 70vw !important;
+    max-width: 300px !important;
+  }
+}
+
+@media (max-width: 768px) and (min-resolution: 3dppx) {
+  .nav-menu {
+    width: 60vw !important;
+    max-width: 250px !important;
+  }
+}
+
+/* High DPI display optimizations for mobile menu */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .nav-menu {
+    border-left-width: 1px !important;
+  }
+  
+  .nav-menu .nav-link {
+    font-size: 1rem !important;
+    padding: 0.7rem 0 !important;
+  }
+}
+
+/* Prevent zoom on input focus */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+  
+  /* Improve touch scrolling */
+  html {
+    -webkit-text-size-adjust: 100% !important;
+    touch-action: manipulation !important;
+  }
+}
+
+/* Ensure desktop navigation is hidden on mobile */
+@media (max-width: 768px) {
+  .nav-menu {
+    display: flex !important;
+  }
+  
+  /* Hide desktop navigation elements on mobile */
+  .nav-menu:not(.active) {
+    visibility: hidden !important;
+  }
+}
+
+/* Ensure proper z-index stacking */
+@media (max-width: 768px) {
+  .nav-container {
+    z-index: 50 !important;
+  }
+  
+  .nav-toggle {
+    z-index: 101 !important;
+  }
+  
+  .nav-menu {
+    z-index: 100 !important;
+  }
+  
+  body.menu-open::before {
+    z-index: 99 !important;
+  }
+}

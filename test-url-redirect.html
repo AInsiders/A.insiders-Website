@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Redirect Checker Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-section {
+            background: #333;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        button {
+            background: #0066ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0052cc;
+        }
+        pre {
+            background: #222;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        input[type="url"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background: #222;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>URL Redirect Checker Test</h1>
+    
+    <div class="test-section">
+        <h2>Backend Health Check</h2>
+        <button onclick="testHealth()">Test Backend Health</button>
+        <div id="healthResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>URL Redirect Test</h2>
+        <input type="url" id="testURL" value="https://google.com" placeholder="Enter URL to test">
+        <button onclick="testRedirect()">Test URL Redirect</button>
+        <div id="redirectResult"></div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'http://localhost:81';
+        
+        async function testHealth() {
+            const resultDiv = document.getElementById('healthResult');
+            resultDiv.innerHTML = '<p class="warning">Testing backend health...</p>';
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <p class="success">✅ Backend is healthy!</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <p class="error">❌ Backend health check failed: ${response.status}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Backend connection failed: ${error.message}</p>
+                    <p>Make sure the IP API server is running on port 81</p>
+                    <p>Run: <code>npm run start-api</code> or <code>start-ip-server.bat</code></p>
+                `;
+            }
+        }
+        
+        async function testRedirect() {
+            const resultDiv = document.getElementById('redirectResult');
+            const url = document.getElementById('testURL').value.trim();
+            
+            if (!url) {
+                resultDiv.innerHTML = '<p class="error">Please enter a URL</p>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<p class="warning">Testing URL redirect...</p>';
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/proxy`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        url: url,
+                        method: 'HEAD'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    resultDiv.innerHTML = `
+                        <p class="success">✅ URL redirect test successful!</p>
+                        <p><strong>Status:</strong> ${data.status} ${data.statusText}</p>
+                        <p><strong>Location Header:</strong> ${data.headers.location || 'None'}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <p class="error">❌ URL redirect test failed: ${data.error || 'Unknown error'}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Connection failed: ${error.message}</p>
+                    <p>Make sure the IP API server is running on port 81</p>
+                `;
+            }
+        }
+        
+        // Auto-test on page load
+        window.onload = function() {
+            console.log('Testing URL redirect checker...');
+            testHealth();
+        };
+    </script>
+</body>
+</html>

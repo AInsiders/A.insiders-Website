@@ -2974,6 +2974,33 @@ body:has(.loader:not(.hidden)) .dropdown-menu {
     font-size: 16px !important;
   }
   
+  /* Zoom-aware mobile menu adjustments */
+  @media (max-width: 768px) and (min-resolution: 2dppx) {
+    .nav-menu {
+      width: 70vw;
+      max-width: 300px;
+    }
+  }
+  
+  @media (max-width: 768px) and (min-resolution: 3dppx) {
+    .nav-menu {
+      width: 60vw;
+      max-width: 250px;
+    }
+  }
+  
+  /* High DPI display optimizations for mobile menu */
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .nav-menu {
+      border-left-width: 1px;
+    }
+    
+    .nav-menu .nav-link {
+      font-size: 1rem;
+      padding: 0.7rem 0;
+    }
+  }
+  
   /* Improve touch scrolling */
   html {
     -webkit-text-size-adjust: 100%;
@@ -3075,34 +3102,119 @@ body:has(.loader:not(.hidden)) .dropdown-menu {
     position: fixed;
     top: 80px;
     right: -100%;
-    width: 50%;
+    width: 80vw;
+    max-width: 350px;
     height: calc(100vh - 80px);
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(15px);
+    background: #000000;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
     padding: 2rem 1.5rem;
-    transition: right 0.3s ease;
-    z-index: 999;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
     overflow-y: auto;
     visibility: visible;
     opacity: 1;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+    border-left: 2px solid rgba(0, 150, 255, 0.3);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
     overflow-x: hidden;
     max-height: calc(100vh - 80px);
+    transform: translateX(100%);
+    will-change: transform, right;
   }
   
   .nav-menu.active {
     right: 0 !important;
+    transform: translateX(0) !important;
+    box-shadow: -15px 0 40px rgba(0, 0, 0, 0.7);
   }
 
   .nav-toggle {
     display: flex;
     cursor: pointer;
-    z-index: 1001;
+    z-index: 101;
     position: relative;
+  }
+  
+  /* Backdrop effect when menu is open */
+  body.menu-open::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--backdrop-width, calc(100% - 80vw));
+    max-width: var(--backdrop-width, calc(100% - 350px));
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 99;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+  }
+  
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Prevent body scroll when menu is open */
+  body.menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
+  
+  /* Ensure mobile navigation doesn't interfere with mouse tracking on home page */
+  body.home-page .nav-menu {
+    z-index: 50;
+    background: #000000;
+  }
+  
+  body.home-page .nav-toggle {
+    z-index: 51;
+  }
+  
+  body.home-page.menu-open::before {
+    z-index: 49;
+    background: rgba(0, 0, 0, 0.7);
+    width: calc(100% - 80vw);
+    max-width: calc(100% - 350px);
+  }
+  
+  /* Enhanced mobile menu items */
+  .nav-menu .nav-link {
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    flex: 1;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .nav-menu .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 150, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .nav-menu .nav-link:hover::before {
+    left: 100%;
+  }
+  
+  .nav-menu .nav-link:hover {
+    color: #0096ff;
+    transform: translateX(5px);
   }
 
   /* Mobile navigation styles with dropdown functionality */

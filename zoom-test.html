@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, minimum-scale=0.25, user-scalable=yes, viewport-fit=cover">
+  <title>Mobile Zoom Adapter Test - A.Insiders</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="ainsiders-logo.png">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="mobile-zoom-styles.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #0a0a0a;
+      color: #ffffff;
+      line-height: 1.6;
+    }
+    
+    .test-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .test-header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      border-radius: 12px;
+      border: 1px solid #333;
+    }
+    
+    .test-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #00ccff, #0080ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .test-subtitle {
+      font-size: 1.2rem;
+      color: #cccccc;
+      margin-bottom: 2rem;
+    }
+    
+    .zoom-info {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      margin-bottom: 30px;
+    }
+    
+    .zoom-info h3 {
+      color: #00ccff;
+      margin-bottom: 15px;
+    }
+    
+    .zoom-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .zoom-stat {
+      background: #2a2a2a;
+      padding: 15px;
+      border-radius: 6px;
+      border: 1px solid #444;
+    }
+    
+    .zoom-stat-label {
+      font-size: 0.9rem;
+      color: #888;
+      margin-bottom: 5px;
+    }
+    
+    .zoom-stat-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #00ccff;
+    }
+    
+    .test-sections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .test-section {
+      background: #1a1a1a;
+      padding: 25px;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+    
+    .test-section h3 {
+      color: #00ccff;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+    
+    .test-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .test-btn {
+      background: linear-gradient(135deg, #00ccff, #0080ff);
+      color: #000;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+    
+    .test-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 204, 255, 0.3);
+    }
+    
+    .test-btn.secondary {
+      background: transparent;
+      color: #00ccff;
+      border: 2px solid #00ccff;
+    }
+    
+    .test-btn.secondary:hover {
+      background: rgba(0, 204, 255, 0.1);
+    }
+    
+    .zoom-level-indicator {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #00ccff;
+      padding: 10px 15px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      z-index: 1000;
+      border: 1px solid #00ccff;
+    }
+    
+    .instructions {
+      background: #1a1a1a;
+      padding: 25px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      margin-bottom: 30px;
+    }
+    
+    .instructions h3 {
+      color: #00ccff;
+      margin-bottom: 15px;
+    }
+    
+    .instructions ol {
+      padding-left: 20px;
+    }
+    
+    .instructions li {
+      margin-bottom: 10px;
+      color: #cccccc;
+    }
+    
+    .instructions strong {
+      color: #00ccff;
+    }
+    
+    .status-indicator {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    
+    .status-active {
+      background: #00ff00;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+    
+    .status-inactive {
+      background: #ff0000;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    }
+    
+    @media (max-width: 768px) {
+      .test-container {
+        padding: 10px;
+      }
+      
+      .test-title {
+        font-size: 2rem;
+      }
+      
+      .test-subtitle {
+        font-size: 1rem;
+      }
+      
+      .zoom-stats {
+        grid-template-columns: 1fr;
+      }
+      
+      .test-sections {
+        grid-template-columns: 1fr;
+      }
+      
+      .zoom-level-indicator {
+        top: 10px;
+        right: 10px;
+        font-size: 0.8rem;
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="zoom-level-indicator" id="zoomIndicator">
+    Zoom: <span id="zoomLevel">Detecting...</span>
+  </div>
+
+  <div class="test-container">
+    <div class="test-header">
+      <h1 class="test-title">Mobile Zoom Adapter Test</h1>
+      <p class="test-subtitle">Test the automatic zoom level detection and layout adjustments</p>
+      <div class="status-indicator status-inactive" id="adapterStatus"></div>
+      <span id="adapterStatusText">Adapter Status: Initializing...</span>
+    </div>
+
+    <div class="instructions">
+      <h3>How to Test</h3>
+      <ol>
+        <li><strong>On Mobile:</strong> Use pinch-to-zoom gestures to change zoom levels</li>
+        <li><strong>On Desktop:</strong> Use Ctrl/Cmd + scroll or browser zoom controls</li>
+        <li><strong>Watch:</strong> The layout automatically adjusts based on zoom level</li>
+        <li><strong>Check:</strong> Text sizes, spacing, and element dimensions change smoothly</li>
+        <li><strong>Verify:</strong> All elements remain accessible and readable</li>
+      </ol>
+    </div>
+
+    <div class="zoom-info">
+      <h3>Current Zoom Information</h3>
+      <div class="zoom-stats">
+        <div class="zoom-stat">
+          <div class="zoom-stat-label">Current Zoom Level</div>
+          <div class="zoom-stat-value" id="currentZoom">Detecting...</div>
+        </div>
+        <div class="zoom-stat">
+          <div class="zoom-stat-label">Zoom Category</div>
+          <div class="zoom-stat-value" id="zoomCategory">Detecting...</div>
+        </div>
+        <div class="zoom-stat">
+          <div class="zoom-stat-label">Device Pixel Ratio</div>
+          <div class="zoom-stat-value" id="devicePixelRatio">Detecting...</div>
+        </div>
+        <div class="zoom-stat">
+          <div class="zoom-stat-label">Visual Viewport Scale</div>
+          <div class="zoom-stat-value" id="visualViewportScale">Detecting...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-sections">
+      <div class="test-section">
+        <h3>Adapter Controls</h3>
+        <div class="test-buttons">
+          <button class="test-btn" onclick="refreshAdapter()">Refresh Adapter</button>
+          <button class="test-btn secondary" onclick="getZoomInfo()">Get Zoom Info</button>
+          <button class="test-btn secondary" onclick="toggleDebug()">Toggle Debug Mode</button>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h3>Test Elements</h3>
+        <div class="test-buttons">
+          <button class="test-btn" onclick="testTextScaling()">Test Text Scaling</button>
+          <button class="test-btn secondary" onclick="testCanvasAdjustment()">Test Canvas</button>
+          <button class="test-btn secondary" onclick="testNavigation()">Test Navigation</button>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h3>Performance</h3>
+        <div class="test-buttons">
+          <button class="test-btn" onclick="testPerformance()">Run Performance Test</button>
+          <button class="test-btn secondary" onclick="clearLogs()">Clear Console</button>
+          <button class="test-btn secondary" onclick="exportLogs()">Export Logs</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h3>Live Updates</h3>
+      <div id="liveUpdates">
+        <p>Zoom changes and adapter events will appear here...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Zoom Adapter Script -->
+  <script src="mobile-zoom-adapter.js"></script>
+  
+  <script>
+    let adapter = null;
+    let debugMode = false;
+    let updateCount = 0;
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeTest();
+    });
+
+    function initializeTest() {
+      // Wait for adapter to initialize
+      setTimeout(() => {
+        adapter = window.mobileZoomAdapter;
+        if (adapter) {
+          updateAdapterStatus(true);
+          updateZoomInfo();
+          setupEventListeners();
+          logEvent('Test page initialized successfully');
+        } else {
+          updateAdapterStatus(false);
+          logEvent('Error: Mobile Zoom Adapter not found');
+        }
+      }, 1000);
+    }
+
+    function updateAdapterStatus(isActive) {
+      const statusIndicator = document.getElementById('adapterStatus');
+      const statusText = document.getElementById('adapterStatusText');
+      
+      if (isActive) {
+        statusIndicator.className = 'status-indicator status-active';
+        statusText.textContent = 'Adapter Status: Active';
+      } else {
+        statusIndicator.className = 'status-indicator status-inactive';
+        statusText.textContent = 'Adapter Status: Inactive';
+      }
+    }
+
+    function updateZoomInfo() {
+      if (!adapter) return;
+
+      const zoomInfo = adapter.getZoomInfo();
+      
+      document.getElementById('currentZoom').textContent = zoomInfo.currentZoom.toFixed(2);
+      document.getElementById('zoomCategory').textContent = zoomInfo.zoomLevel;
+      document.getElementById('devicePixelRatio').textContent = zoomInfo.devicePixelRatio.toFixed(2);
+      document.getElementById('visualViewportScale').textContent = 
+        zoomInfo.visualViewportScale ? zoomInfo.visualViewportScale.toFixed(2) : 'N/A';
+      
+      document.getElementById('zoomLevel').textContent = `${(zoomInfo.currentZoom * 100).toFixed(0)}%`;
+    }
+
+    function setupEventListeners() {
+      // Listen for zoom changes
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+          setTimeout(updateZoomInfo, 100);
+          logEvent('Zoom level changed');
+        });
+      }
+
+      // Listen for window resize
+      window.addEventListener('resize', () => {
+        setTimeout(updateZoomInfo, 100);
+        logEvent('Window resized');
+      });
+    }
+
+    function logEvent(message) {
+      updateCount++;
+      const timestamp = new Date().toLocaleTimeString();
+      const liveUpdates = document.getElementById('liveUpdates');
+      
+      const eventDiv = document.createElement('div');
+      eventDiv.style.cssText = `
+        background: #2a2a2a;
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 4px;
+        border-left: 3px solid #00ccff;
+        font-size: 0.9rem;
+      `;
+      eventDiv.innerHTML = `<strong>${timestamp}</strong> - ${message}`;
+      
+      liveUpdates.appendChild(eventDiv);
+      
+      // Keep only last 10 events
+      while (liveUpdates.children.length > 10) {
+        liveUpdates.removeChild(liveUpdates.firstChild);
+      }
+      
+      if (debugMode) {
+        console.log(`[${timestamp}] ${message}`);
+      }
+    }
+
+    // Test Functions
+    function refreshAdapter() {
+      if (adapter) {
+        adapter.refresh();
+        logEvent('Adapter refreshed manually');
+        updateZoomInfo();
+      } else {
+        logEvent('Error: Adapter not available');
+      }
+    }
+
+    function getZoomInfo() {
+      if (adapter) {
+        const info = adapter.getZoomInfo();
+        console.log('Zoom Info:', info);
+        logEvent('Zoom info logged to console');
+      } else {
+        logEvent('Error: Adapter not available');
+      }
+    }
+
+    function toggleDebug() {
+      debugMode = !debugMode;
+      if (adapter) {
+        adapter.debug = debugMode;
+      }
+      logEvent(`Debug mode ${debugMode ? 'enabled' : 'disabled'}`);
+    }
+
+    function testTextScaling() {
+      logEvent('Testing text scaling...');
+      const testElements = document.querySelectorAll('.test-title, .test-subtitle, .test-btn');
+      testElements.forEach(element => {
+        element.style.transition = 'font-size 0.3s ease';
+        element.style.fontSize = '1.2em';
+        setTimeout(() => {
+          element.style.fontSize = '';
+        }, 300);
+      });
+    }
+
+    function testCanvasAdjustment() {
+      logEvent('Testing canvas adjustment...');
+      // Simulate canvas resize
+      window.dispatchEvent(new Event('resize'));
+    }
+
+    function testNavigation() {
+      logEvent('Testing navigation adjustment...');
+      const navElements = document.querySelectorAll('.test-btn');
+      navElements.forEach(element => {
+        element.style.transition = 'all 0.3s ease';
+        element.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          element.style.transform = '';
+        }, 300);
+      });
+    }
+
+    function testPerformance() {
+      logEvent('Running performance test...');
+      const startTime = performance.now();
+      
+      // Simulate multiple zoom changes
+      for (let i = 0; i < 10; i++) {
+        if (adapter) {
+          adapter.handleZoomChange();
+        }
+      }
+      
+      const endTime = performance.now();
+      const duration = endTime - startTime;
+      
+      logEvent(`Performance test completed in ${duration.toFixed(2)}ms`);
+      console.log(`Performance test: ${duration.toFixed(2)}ms for 10 zoom adjustments`);
+    }
+
+    function clearLogs() {
+      const liveUpdates = document.getElementById('liveUpdates');
+      liveUpdates.innerHTML = '<p>Logs cleared...</p>';
+      console.clear();
+      logEvent('Logs cleared');
+    }
+
+    function exportLogs() {
+      const liveUpdates = document.getElementById('liveUpdates');
+      const logs = liveUpdates.innerText;
+      
+      const blob = new Blob([logs], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `zoom-adapter-logs-${new Date().toISOString().slice(0, 19)}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      logEvent('Logs exported');
+    }
+
+    // Auto-update zoom info every second
+    setInterval(() => {
+      if (adapter) {
+        updateZoomInfo();
+      }
+    }, 1000);
+  </script>
+</body>
+</html>

@@ -1408,6 +1408,42 @@
       line-height: 1.5;
     }
     
+    /* Neural Background Styles */
+    .neural-background-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    
+    .neural-canvas {
+      width: 100%;
+      height: 100%;
+      opacity: 0.3;
+      filter: blur(1px);
+    }
+    
+    /* Ensure main content flows over the neural background */
+    .main-content {
+      position: relative;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      border-radius: 20px;
+      margin: 20px;
+      padding: 20px;
+    }
+    
+    .embed-builder-container {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
     @media (max-width: 768px) {
       .embed-builder-content {
         grid-template-columns: 1fr;
@@ -1419,6 +1455,11 @@
       
       .btn-group {
         flex-direction: column;
+      }
+      
+      .main-content {
+        margin: 10px;
+        padding: 15px;
       }
     }
   </style>
@@ -1495,6 +1536,11 @@
       <p class="page-subtitle">Create professional Discord embeds with our advanced drag-and-drop builder</p>
     </div>
   </header>
+
+  <!-- Neural Background Canvas for Main Content -->
+  <div class="neural-background-container">
+    <canvas id="neuralCanvas" class="neural-canvas"></canvas>
+  </div>
 
   <!-- Main Content -->
   <main class="main-content">
@@ -1784,16 +1830,8 @@
     <div class="container">
       <div class="footer-content">
         <div class="footer-section">
-          <div class="footer-logo">
-            <img src="ainsiders-logo.png" alt="A.Insiders Logo" class="logo-image" width="40" height="40">
-            <span class="logo-text">A.I</span>
-            <span class="logo-accent">NSIDERS</span>
-          </div>
-          <p>Pioneering the future of AI and cybersecurity with innovative solutions and cutting-edge applications.</p>
-        </div>
-        <div class="footer-section">
           <h4>Quick Links</h4>
-          <ul class="footer-links">
+          <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="software.html">Software</a></li>
@@ -1801,23 +1839,34 @@
           </ul>
         </div>
         <div class="footer-section">
-          <h4>Team</h4>
-          <ul class="footer-links">
-            <li><a href="blake-zimmerman.html">Blake Zimmerman</a></li>
-            <li><a href="babu-narayana.html">Babu Narayana</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h4>Connect</h4>
+          <h4>Connect With Us</h4>
           <div class="social-links">
+            <a href="https://www.linkedin.com/in/blake-zimmerman-a59575342/" class="social-link" title="LinkedIn" target="_blank" rel="noopener">
+              <i class="fab fa-linkedin"></i>
+              <span>LinkedIn</span>
+            </a>
+            <a href="https://github.com/AInsiders" class="social-link" title="GitHub" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+              <span>GitHub</span>
+            </a>
             <a href="https://www.youtube.com/@A.Insiders01" class="social-link" title="YouTube" target="_blank" rel="noopener">
               <i class="fab fa-youtube"></i>
+              <span>YouTube</span>
+            </a>
+            <a href="https://discord.gg/Y4kCtaBZFM" class="social-link" title="Discord" target="_blank" rel="noopener">
+              <i class="fab fa-discord"></i>
+              <span>Discord</span>
             </a>
           </div>
         </div>
       </div>
       <div class="footer-bottom">
         <p>&copy; 2024 A.Insiders Network. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms-of-service.html">Terms of Service</a>
+          <a href="cookie-policy.html">Cookie Policy</a>
+        </div>
       </div>
     </div>
   </footer>
@@ -3600,6 +3649,162 @@
       inputs.forEach(input => {
         input.addEventListener('input', generateEmbed);
       });
+    });
+  </script>
+  
+  <!-- Neural Background Animation -->
+  <script>
+    // Neural background animation
+    class NeuralBackground {
+      constructor() {
+        this.canvas = document.getElementById('neuralCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.nodes = [];
+        this.connections = [];
+        this.mouse = { x: 0, y: 0 };
+        this.animationId = null;
+        
+        this.init();
+      }
+      
+      init() {
+        this.resize();
+        this.createNodes();
+        this.createConnections();
+        this.bindEvents();
+        this.animate();
+      }
+      
+      resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+      }
+      
+      createNodes() {
+        const nodeCount = Math.floor((this.canvas.width * this.canvas.height) / 50000);
+        
+        for (let i = 0; i < nodeCount; i++) {
+          this.nodes.push({
+            x: Math.random() * this.canvas.width,
+            y: Math.random() * this.canvas.height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            radius: Math.random() * 2 + 1,
+            opacity: Math.random() * 0.5 + 0.2
+          });
+        }
+      }
+      
+      createConnections() {
+        for (let i = 0; i < this.nodes.length; i++) {
+          for (let j = i + 1; j < this.nodes.length; j++) {
+            const distance = this.getDistance(this.nodes[i], this.nodes[j]);
+            if (distance < 150) {
+              this.connections.push({
+                from: i,
+                to: j,
+                opacity: 1 - (distance / 150)
+              });
+            }
+          }
+        }
+      }
+      
+      getDistance(node1, node2) {
+        const dx = node1.x - node2.x;
+        const dy = node1.y - node2.y;
+        return Math.sqrt(dx * dx + dy * dy);
+      }
+      
+      bindEvents() {
+        window.addEventListener('resize', () => this.resize());
+        
+        this.canvas.addEventListener('mousemove', (e) => {
+          this.mouse.x = e.clientX;
+          this.mouse.y = e.clientY;
+        });
+      }
+      
+      update() {
+        // Update node positions
+        this.nodes.forEach(node => {
+          node.x += node.vx;
+          node.y += node.vy;
+          
+          // Bounce off edges
+          if (node.x <= 0 || node.x >= this.canvas.width) node.vx *= -1;
+          if (node.y <= 0 || node.y >= this.canvas.height) node.vy *= -1;
+          
+          // Attract to mouse
+          const dx = this.mouse.x - node.x;
+          const dy = this.mouse.y - node.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < 200) {
+            const force = (200 - distance) / 200;
+            node.vx += (dx / distance) * force * 0.01;
+            node.vy += (dy / distance) * force * 0.01;
+          }
+          
+          // Limit velocity
+          node.vx = Math.max(-1, Math.min(1, node.vx));
+          node.vy = Math.max(-1, Math.min(1, node.vy));
+        });
+      }
+      
+      draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Draw connections
+        this.connections.forEach(connection => {
+          const from = this.nodes[connection.from];
+          const to = this.nodes[connection.to];
+          const distance = this.getDistance(from, to);
+          
+          if (distance < 150) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(from.x, from.y);
+            this.ctx.lineTo(to.x, to.y);
+            this.ctx.strokeStyle = `rgba(102, 126, 234, ${connection.opacity * 0.3})`;
+            this.ctx.lineWidth = 1;
+            this.ctx.stroke();
+          }
+        });
+        
+        // Draw nodes
+        this.nodes.forEach(node => {
+          this.ctx.beginPath();
+          this.ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+          this.ctx.fillStyle = `rgba(102, 126, 234, ${node.opacity})`;
+          this.ctx.fill();
+        });
+      }
+      
+      animate() {
+        this.update();
+        this.draw();
+        this.animationId = requestAnimationFrame(() => this.animate());
+      }
+      
+      destroy() {
+        if (this.animationId) {
+          cancelAnimationFrame(this.animationId);
+        }
+      }
+    }
+    
+    // Initialize neural background when page loads
+    let neuralBackground;
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      neuralBackground = new NeuralBackground();
+    });
+    
+    // Clean up on page unload
+    window.addEventListener('beforeunload', () => {
+      if (neuralBackground) {
+        neuralBackground.destroy();
+      }
     });
   </script>
   

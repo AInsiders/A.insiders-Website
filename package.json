@@ -11,7 +11,9 @@
     "preview": "vite preview",
     "format": "prettier --write .",
     "serve": "npx serve .",
-    "start": "python -m http.server 8000"
+    "start": "python -m http.server 8000",
+    "start-api": "node ip-api-server.js",
+    "start-server": "node start-server.js"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -24,7 +26,12 @@
     "lucide-react": "^0.292.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "tailwind-merge": "^2.0.0"
+    "tailwind-merge": "^2.0.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "axios": "^1.6.0",
+    "node-cache": "^5.1.2",
+    "express-rate-limit": "^7.1.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",

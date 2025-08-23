@@ -1,0 +1,9 @@
+@echo off
+echo Starting IP API Server...
+echo.
+echo Installing dependencies...
+npm install
+echo.
+echo Starting server on port 81...
+node ip-api-server.js
+pause

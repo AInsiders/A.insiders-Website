@@ -1,0 +1,247 @@
+// Enhanced Mobile Navigation Snippet
+// Include this script in any page to enable enhanced mobile navigation with zoom detection
+
+(function() {
+    'use strict';
+    
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initEnhancedMobileNav);
+    } else {
+        initEnhancedMobileNav();
+    }
+    
+    function initEnhancedMobileNav() {
+        console.log('Enhanced mobile navigation snippet loaded');
+        
+        // Zoom level detection and viewport management
+        let currentZoom = 1;
+        let viewportWidth = window.innerWidth;
+        let viewportHeight = window.innerHeight;
+        
+        function updateViewportInfo() {
+            // Detect zoom level
+            const visualViewport = window.visualViewport;
+            if (visualViewport) {
+                currentZoom = visualViewport.scale;
+                viewportWidth = visualViewport.width;
+                viewportHeight = visualViewport.height;
+            } else {
+                // Fallback zoom detection
+                currentZoom = window.devicePixelRatio || 1;
+                viewportWidth = window.innerWidth;
+                viewportHeight = window.innerHeight;
+            }
+            
+            console.log('Zoom level:', currentZoom);
+            console.log('Viewport dimensions:', viewportWidth + 'x' + viewportHeight);
+            
+            // Update CSS custom properties for responsive calculations
+            document.documentElement.style.setProperty('--current-zoom', currentZoom);
+            document.documentElement.style.setProperty('--viewport-width', viewportWidth + 'px');
+            document.documentElement.style.setProperty('--viewport-height', viewportHeight + 'px');
+            
+            // Adjust mobile menu positioning based on zoom
+            adjustMobileMenuPosition();
+        }
+        
+        function adjustMobileMenuPosition() {
+            const navMenu = document.querySelector('.nav-menu');
+            if (navMenu && window.innerWidth <= 768) {
+                // Calculate adjusted width based on zoom and viewport
+                const baseWidth = Math.min(viewportWidth * 0.8, 350); // Max 80% of viewport or 350px
+                const adjustedWidth = Math.min(baseWidth / currentZoom, viewportWidth * 0.9);
+                
+                navMenu.style.width = adjustedWidth + 'px';
+                navMenu.style.maxWidth = '90vw';
+                
+                // Ensure menu is properly positioned
+                if (navMenu.classList.contains('active')) {
+                    navMenu.style.right = '0';
+                    navMenu.style.transform = 'translateX(0)';
+                } else {
+                    navMenu.style.right = '-' + adjustedWidth + 'px';
+                    navMenu.style.transform = 'translateX(100%)';
+                }
+                
+                console.log('Menu width adjusted to:', adjustedWidth + 'px');
+            }
+        }
+        
+        // Initialize mobile navigation
+        setTimeout(function() {
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            console.log('Nav toggle element:', navToggle);
+            console.log('Nav menu element:', navMenu);
+            
+            if (navToggle && navMenu) {
+                let isAnimating = false;
+                
+                // Initialize menu positioning
+                adjustMobileMenuPosition();
+                
+                // Add event listeners
+                navToggle.addEventListener('click', handleToggleClick);
+                navToggle.addEventListener('mousedown', handleToggleClick);
+                navToggle.addEventListener('touchstart', handleToggleClick);
+                
+                function handleToggleClick(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (isAnimating) return; // Prevent rapid clicking during animation
+                    
+                    console.log('Nav toggle clicked!');
+                    console.log('Current zoom:', currentZoom);
+                    
+                    isAnimating = true;
+                    
+                    navToggle.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                    
+                    // Smooth reveal animation
+                    if (navMenu.classList.contains('active')) {
+                        // Opening animation
+                        navMenu.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                        navMenu.style.right = '0';
+                        navMenu.style.transform = 'translateX(0)';
+                        navMenu.style.visibility = 'visible';
+                        navMenu.style.opacity = '1';
+                        
+                        // Add backdrop blur to body
+                        document.body.style.overflow = 'hidden';
+                        document.body.classList.add('menu-open');
+                    } else {
+                        // Closing animation
+                        navMenu.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                        navMenu.style.right = '-' + navMenu.offsetWidth + 'px';
+                        navMenu.style.transform = 'translateX(100%)';
+                        
+                        // Remove backdrop blur from body
+                        document.body.style.overflow = '';
+                        document.body.classList.remove('menu-open');
+                    }
+                    
+                    // Reset animation flag after transition
+                    setTimeout(() => {
+                        isAnimating = false;
+                    }, 300);
+                    
+                    console.log('Toggle active:', navToggle.classList.contains('active'));
+                    console.log('Menu active:', navMenu.classList.contains('active'));
+                }
+                
+                // Handle dropdown arrows
+                const dropdownArrows = document.querySelectorAll('.dropdown-arrow');
+                dropdownArrows.forEach(arrow => {
+                    arrow.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const dropdown = this.closest('.nav-dropdown');
+                        if (dropdown) {
+                            // Close other dropdowns first
+                            document.querySelectorAll('.nav-dropdown.active').forEach(activeDropdown => {
+                                if (activeDropdown !== dropdown) {
+                                    activeDropdown.classList.remove('active');
+                                }
+                            });
+                            
+                            dropdown.classList.toggle('active');
+                            console.log('Dropdown toggled:', dropdown.classList.contains('active'));
+                        }
+                    });
+                });
+                
+                // Close menu when clicking on menu items
+                const menuLinks = navMenu.querySelectorAll('.nav-link');
+                menuLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        console.log('Menu link clicked:', this.href);
+                        // Close all dropdowns when clicking a menu link
+                        document.querySelectorAll('.nav-dropdown.active').forEach(dropdown => {
+                            dropdown.classList.remove('active');
+                        });
+                        navToggle.classList.remove('active');
+                        navMenu.classList.remove('active');
+                        
+                        // Smooth close animation
+                        navMenu.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                        navMenu.style.right = '-' + navMenu.offsetWidth + 'px';
+                        navMenu.style.transform = 'translateX(100%)';
+                        
+                        // Remove backdrop blur from body
+                        document.body.style.overflow = '';
+                        document.body.classList.remove('menu-open');
+                    });
+                });
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.nav-toggle') && 
+                        !e.target.closest('.nav-menu') && 
+                        navMenu.classList.contains('active')) {
+                        navToggle.classList.remove('active');
+                        navMenu.classList.remove('active');
+                        
+                        // Smooth close animation
+                        navMenu.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                        navMenu.style.right = '-' + navMenu.offsetWidth + 'px';
+                        navMenu.style.transform = 'translateX(100%)';
+                        
+                        // Remove backdrop blur from body
+                        document.body.style.overflow = '';
+                        document.body.classList.remove('menu-open');
+                    }
+                });
+                
+                // Close menu on ESC key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                        navToggle.classList.remove('active');
+                        navMenu.classList.remove('active');
+                        
+                        // Smooth close animation
+                        navMenu.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                        navMenu.style.right = '-' + navMenu.offsetWidth + 'px';
+                        navMenu.style.transform = 'translateX(100%)';
+                        
+                        // Remove backdrop blur from body
+                        document.body.style.overflow = '';
+                        document.body.classList.remove('menu-open');
+                    }
+                });
+                
+                console.log('Enhanced mobile navigation initialized successfully');
+            } else {
+                console.error('Navigation elements not found!');
+                console.error('navToggle:', navToggle);
+                console.error('navMenu:', navMenu);
+            }
+        }, 100);
+        
+        // Initialize viewport info
+        updateViewportInfo();
+        
+        // Update on resize and zoom changes
+        window.addEventListener('resize', updateViewportInfo);
+        window.addEventListener('orientationchange', updateViewportInfo);
+        
+        // Listen for visual viewport changes (zoom, keyboard, etc.)
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', updateViewportInfo);
+            window.visualViewport.addEventListener('scroll', updateViewportInfo);
+        }
+        
+        // Update width display for debugging
+        function updateWidth() {
+            console.log('Window width:', window.innerWidth + 'px');
+            console.log('Visual viewport width:', window.visualViewport ? window.visualViewport.width + 'px' : 'not supported');
+            console.log('Device pixel ratio:', window.devicePixelRatio);
+        }
+        updateWidth();
+        window.addEventListener('resize', updateWidth);
+    }
+})();

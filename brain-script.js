@@ -66,9 +66,8 @@ document.addEventListener('DOMContentLoaded', function() {
             mobileScrollY = scrollY;
             lastScrollTime = currentTime;
             
-            // Show mobile interaction indicator (only once)
+            // Mobile interaction tracking (no notification)
             if (!window.mobileInteractionShown) {
-                showNotification('📱 Mobile touch & scroll enabled!', 'success');
                 window.mobileInteractionShown = true;
             }
         }
@@ -84,9 +83,8 @@ document.addEventListener('DOMContentLoaded', function() {
             mobileTouchDeltaY = 0;
             mobileTouchDeltaX = 0;
             
-            // Show touch interaction indicator (only once)
+            // Touch interaction tracking (no notification)
             if (!window.mobileTouchShown) {
-                showNotification('👆 Touch to interact with background!', 'info');
                 window.mobileTouchShown = true;
             }
             
@@ -227,11 +225,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (screenRatio >= 2.0 && screenArea >= 2000000) {
                 // Ultra-wide desktop (21:9, 32:9, etc.) - Level 5
                 level = 5;
-                count = 200; // Increased from 150 to 200 for ultra-wide displays
+                count = 160; // Reduced by 20% from 200 to 160 for ultra-wide displays
             } else if (screenRatio >= 1.5 && screenArea >= 1500000) {
                 // Wide desktop (16:10, 16:9) - Level 4
                 level = 4;
-                count = 100; // Increased from 60 to 100 for wide displays
+                count = 80; // Reduced by 20% from 100 to 80 for wide displays
             } else if (screenRatio >= 1.2 && screenArea >= 1000000) {
                 // Standard desktop (4:3, 5:4) - Level 3
                 level = 3;

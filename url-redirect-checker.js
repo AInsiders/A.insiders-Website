@@ -261,17 +261,46 @@ class URLRedirectChecker {
         const timeoutId = setTimeout(() => controller.abort(), 10000);
 
         try {
-            const response = await fetch(url, {
-                method: method,
+            // Use the backend proxy API to avoid CORS issues
+            const response = await fetch('http://localhost:81/api/proxy', {
+                method: 'POST',
                 mode: 'cors',
                 signal: controller.signal,
                 headers: {
+                    'Content-Type': 'application/json',
                     'User-Agent': 'A.Insiders URL Redirect Checker/1.0'
-                }
+                },
+                body: JSON.stringify({
+                    url: url,
+                    method: method
+                })
             });
 
             clearTimeout(timeoutId);
-            return response;
+            
+            if (!response.ok) {
+                throw new Error(`Proxy request failed: ${response.status} ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            
+            if (!result.success) {
+                throw new Error(result.error || 'Proxy request failed');
+            }
+
+            // Create a mock Response object that matches the expected interface
+            return {
+                status: result.status,
+                statusText: result.statusText,
+                headers: {
+                    get: (name) => result.headers[name] || null,
+                    forEach: (callback) => {
+                        Object.entries(result.headers).forEach(([key, value]) => {
+                            callback(value, key);
+                        });
+                    }
+                }
+            };
         } catch (error) {
             clearTimeout(timeoutId);
             throw error;

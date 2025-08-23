@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, minimum-scale=0.25, user-scalable=yes, viewport-fit=cover">
   <title>A.Insiders - AI & Cybersecurity Solutions</title>
   
   <!-- Favicon Setup -->
@@ -26,6 +26,7 @@
   
   <!-- Optimized Asset Caching System with Cloudflare Headers -->
   <link rel="stylesheet" href="brain-styles.css">
+  <link rel="stylesheet" href="mobile-zoom-styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -672,7 +673,7 @@
         </li>
         <li><a href="contact.html" class="nav-link">Contact</a></li>
       </ul>
-      <div class="nav-toggle" onclick="toggleMobileMenu()">
+      <div class="nav-toggle">
         <span></span>
         <span></span>
         <span></span>
@@ -755,6 +756,9 @@
 
   <!-- Mobile Navigation Script -->
   <script src="mobile-nav.js"></script>
+  
+  <!-- Mobile Zoom Adapter Script -->
+  <script src="mobile-zoom-adapter.js"></script>
   
 
   
@@ -894,18 +898,19 @@
       }
     });
 
-    // Mobile menu toggle function
+    // Mobile menu toggle function (enhanced)
     function toggleMobileMenu() {
       const navToggle = document.querySelector('.nav-toggle');
       const navMenu = document.querySelector('.nav-menu');
       
-      console.log('Toggle function called');
+      console.log('Enhanced toggle function called');
       console.log('Nav toggle:', navToggle);
       console.log('Nav menu:', navMenu);
       
       if (navToggle && navMenu) {
-        navToggle.classList.toggle('active');
-        navMenu.classList.toggle('active');
+        // Use the enhanced mobile navigation system
+        const event = new Event('click');
+        navToggle.dispatchEvent(event);
         
         console.log('Toggle active:', navToggle.classList.contains('active'));
         console.log('Menu active:', navMenu.classList.contains('active'));
