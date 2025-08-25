@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Obfuscation Tools - A.Insiders Tools</title>
+    
+    <!-- Favicon Setup -->
+    <link rel="icon" type="image/png" href="ainsiders-logo.png" id="main-favicon">
+    <link rel="apple-touch-icon" href="ainsiders-logo.png">
+    <meta name="description" content="Advanced text obfuscation tools including reverse cipher, leetspeak, null cipher, typoglycemia, invisible ink, emoji encoding, and text shifting. Free, secure, and browser-based.">
+    <meta name="keywords" content="text obfuscation, cipher, leetspeak, typoglycemia, invisible ink, emoji encoding, text shifting, A.Insiders tools">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    
+    <!-- Enhanced Cache Control Headers for Cloudflare -->
+    <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable, stale-while-revalidate=86400">
+    <meta http-equiv="Expires" content="31536000">
+    <meta http-equiv="ETag" content="obfuscation-tools-v1.0">
+    <meta http-equiv="Last-Modified" content="2023-12-31T00:00:00Z">
+    
+    <!-- Optimized Asset Caching System with Cloudflare Headers -->
+    <link rel="stylesheet" href="brain-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Preload critical assets with Cloudflare caching -->
+    <link rel="preload" href="brain-script.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="shared-loader.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="mobile-nav.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="sphere-loader.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="ainsiders-logo.png?v=1.0" as="image" type="image/png">
+    <link rel="preload" href="logo.svg?v=1.0" as="image" type="image/svg+xml">
+    
+    <!-- Cache Manager and Asset Preloader with Cloudflare caching -->
+    <script src="browser-cache-manager.js"></script>
+    <script src="asset-preloader.js"></script>
+    
+    <!-- Optimized Background System -->
+    <script src="brain-script.js"></script>
+    
+    <!-- Font Awesome with CDN and Fallback -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    
+    <!-- Favicon Animation Script -->
+    <script src="favicon-animation.js"></script>
+    
+    <style>
+        /* Obfuscation Tools Specific Styles */
+        .obfuscation-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+            box-shadow: var(--shadow-dark);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Neural Background Canvas - Full Page Coverage */
+        #aiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        /* Page Hero Section with Neural Background */
+        .page-hero {
+            position: relative;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(17, 17, 17, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ff88, #00ccff, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Method Cards Grid */
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .method-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 136, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.2);
+        }
+
+        .method-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .method-card:hover::before {
+            left: 100%;
+        }
+
+        .method-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .method-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            color: #000;
+        }
+
+        .method-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+
+        .method-description {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        /* Input/Output Areas */
+        .input-output-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-label {
+            display: block;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .text-input, .text-area {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .text-input:focus, .text-area:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+        }
+
+        .text-area {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .output-display {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 60px;
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(0, 102, 255, 0.2);
+            color: #fff;
+            border: 1px solid rgba(0, 102, 255, 0.5);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 102, 255, 0.3);
+            border-color: rgba(0, 102, 255, 0.7);
+        }
+
+        .btn-danger {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.5);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 107, 107, 0.3);
+            border-color: rgba(255, 107, 107, 0.7);
+        }
+
+        /* Special Styles for Invisible Ink */
+        .invisible-text {
+            color: transparent;
+            background: transparent;
+            user-select: text;
+        }
+
+        .invisible-text::selection {
+            background: rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+        }
+
+        /* Emoji Encoding Styles */
+        .emoji-output {
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        /* Typoglycemia Styles */
+        .scrambled-text {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.5px;
+        }
+
+        /* Copy to Clipboard Animation */
+        .copy-success {
+            animation: copyPulse 0.5s ease;
+        }
+
+        @keyframes copyPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .methods-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .method-card {
+                padding: 1.5rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #00ff88;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Neural Background Canvas -->
+    <canvas id="aiCanvas"></canvas>
+    
+    <!-- Page Header -->
+    <header class="page-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">🧼 Text Obfuscation Tools</h1>
+            <p class="hero-subtitle">
+                Advanced visual and textual obfuscation methods to hide, encode, and transform your text. 
+                From simple reversals to complex invisible ink techniques.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="obfuscation-container">
+        <div class="methods-grid">
+            <!-- Reverse Cipher -->
+            <div class="method-card" data-method="reverse">
+                <div class="method-header">
+                    <div class="method-icon">🔄</div>
+                    <h3 class="method-title">Reverse Cipher</h3>
+                </div>
+                <p class="method-description">
+                    Reverses the entire text string. Simple but effective for basic obfuscation.
+                </p>
+                <div class="input-output-section">
+                    <div class="input-group">
+                        <label class="input-label">Input Text:</label>
+                        <textarea class="text-area" placeholder="Enter text to reverse..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Output:</label>
+                        <div class="output-display" id="reverse-output"></div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="reverseText(this)">
+                        <i class="fas fa-undo"></i> Reverse
+                    </button>
+                    <button class="btn btn-secondary" onclick="copyToClipboard('reverse-output')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearOutput('reverse-output')">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Leetspeak -->
+            <div class="method-card" data-method="leetspeak">
+                <div class="method-header">
+                    <div class="method-icon">1337</div>
+                    <h3 class="method-title">Leetspeak</h3>
+                </div>
+                <p class="method-description">
+                    Converts text to leetspeak by replacing letters with similar-looking numbers and symbols.
+                </p>
+                <div class="input-output-section">
+                    <div class="input-group">
+                        <label class="input-label">Input Text:</label>
+                        <textarea class="text-area" placeholder="Enter text to convert to leetspeak..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Output:</label>
+                        <div class="output-display" id="leetspeak-output"></div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="convertToLeetspeak(this)">
+                        <i class="fas fa-language"></i> Convert
+                    </button>
+                    <button class="btn btn-secondary" onclick="copyToClipboard('leetspeak-output')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearOutput('leetspeak-output')">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Null Cipher -->
+            <div class="method-card" data-method="null">
+                <div class="method-header">
+                    <div class="method-icon">🔍</div>
+                    <h3 class="method-title">Null Cipher</h3>
+                </div>
+                <p class="method-description">
+                    Hides messages in plain text by using specific letters from words or sentences.
+                </p>
+                <div class="input-output-section">
+                    <div class="input-group">
+                        <label class="input-label">Hidden Message:</label>
+                        <input type="text" class="text-input" placeholder="Enter message to hide..." id="null-message">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Cover Text:</label>
+                        <textarea class="text-area" placeholder="Enter cover text to embed the message in..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Output:</label>
+                        <div class="output-display" id="null-output"></div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="createNullCipher(this)">
+                        <i class="fas fa-eye-slash"></i> Hide Message
+                    </button>
+                    <button class="btn btn-secondary" onclick="extractNullCipher(this)">
+                        <i class="fas fa-eye"></i> Extract Message
+                    </button>
+                    <button class="btn btn-secondary" onclick="copyToClipboard('null-output')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+            </div>
+
+            <!-- Typoglycemia -->
+            <div class="method-card" data-method="typoglycemia">
+                <div class="method-header">
+                    <div class="method-icon">🔀</div>
+                    <h3 class="method-title">Typoglycemia</h3>
+                </div>
+                <p class="method-description">
+                    Scrambles the inner letters of words while keeping the first and last letters in place.
+                </p>
+                <div class="input-output-section">
+                    <div class="input-group">
+                        <label class="input-label">Input Text:</label>
+                        <textarea class="text-area" placeholder="Enter text to scramble..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Output:</label>
+                        <div class="output-display scrambled-text" id="typoglycemia-output"></div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="scrambleText(this)">
+                        <i class="fas fa-random"></i> Scramble
+                    </button>
+                    <button class="btn btn-secondary" onclick="copyToClipboard('typoglycemia-output')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearOutput('typoglycemia-output')">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Invisible Ink -->
+            <div class="method-card" data-method="invisible">
+                <div class="method-header">
+                    <div class="method-icon">👻</div>
+                    <h3 class="method-title">Invisible Ink</h3>
+                </div>
+                <p class="method-description">
+                    Creates invisible text using zero-width characters and white font. Select to reveal.
+                </p>
+                <div class="input-output-section">
+                    <div class="input-group">
+                        <label class="input-label">Input Text:</label>
+                        <textarea class="text-area" placeholder="Enter text to make invisible..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Output (Select to reveal):</label>
+                        <div class="output-display invisible-text" id="invisible-output"></div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="createInvisibleText(this)">
+                        <i class="fas fa-ghost"></i> Make Invisible
+                    </button>
+                    <button class="btn btn-secondary" onclick="copyToClipboard('invisible-output')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearOutput('invisible-output')">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Emoji Encoding -->
+            <div class="method-card" data-method="emoji">
+                <div class="method-header">
+                    <div class="method-icon">😀</div>
+                    <h3 class="method-title">Emoji Encoding</h3>
+                </div>
+                <p class="method-description">
+                    Encodes text using emojis. Each character is mapped to a specific emoji.
+                </p>
+                <div class="input-output-section">
+                    <div class="input-group">
+                        <label class="input-label">Input Text:</label>
+                        <textarea class="text-area" placeholder="Enter text to encode with emojis..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Output:</label>
+                        <div class="output-display emoji-output" id="emoji-output"></div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="encodeWithEmojis(this)">
+                        <i class="fas fa-smile"></i> Encode
+                    </button>
+                    <button class="btn btn-secondary" onclick="decodeFromEmojis(this)">
+                        <i class="fas fa-smile-beam"></i> Decode
+                    </button>
+                    <button class="btn btn-secondary" onclick="copyToClipboard('emoji-output')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+            </div>
+
+            <!-- Text Shifting -->
+            <div class="method-card" data-method="shift">
+                <div class="method-header">
+                    <div class="method-icon">⌨️</div>
+                    <h3 class="method-title">Text Shifting</h3>
+                </div>
+                <p class="method-description">
+                    Shifts text based on keyboard layout (QWERTY to Dvorak or custom mappings).
+                </p>
+                <div class="input-output-section">
+                    <div class="input-group">
+                        <label class="input-label">Input Text:</label>
+                        <textarea class="text-area" placeholder="Enter text to shift..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Shift Type:</label>
+                        <select class="text-input" id="shift-type">
+                            <option value="qwerty-dvorak">QWERTY → Dvorak</option>
+                            <option value="dvorak-qwerty">Dvorak → QWERTY</option>
+                            <option value="shift-left">Shift Left (1 position)</option>
+                            <option value="shift-right">Shift Right (1 position)</option>
+                            <option value="custom">Custom Shift</option>
+                        </select>
+                    </div>
+                    <div class="input-group" id="custom-shift-group" style="display: none;">
+                        <label class="input-label">Custom Shift Amount:</label>
+                        <input type="number" class="text-input" id="custom-shift-amount" placeholder="Enter shift amount..." min="-26" max="26">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Output:</label>
+                        <div class="output-display" id="shift-output"></div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="shiftText(this)">
+                        <i class="fas fa-arrows-alt-h"></i> Shift
+                    </button>
+                    <button class="btn btn-secondary" onclick="copyToClipboard('shift-output')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearOutput('shift-output')">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="shared-loader.js"></script>
+    <script src="mobile-nav.js"></script>
+    <script src="sphere-loader.js"></script>
+    
+    <script>
+        // Obfuscation Tools JavaScript
+        class ObfuscationTools {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.setupShiftTypeListener();
+            }
+
+            setupEventListeners() {
+                // Setup copy buttons
+                document.querySelectorAll('[onclick*="copyToClipboard"]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const outputId = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+                        this.copyToClipboard(outputId);
+                    });
+                });
+
+                // Setup clear buttons
+                document.querySelectorAll('[onclick*="clearOutput"]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const outputId = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+                        this.clearOutput(outputId);
+                    });
+                });
+            }
+
+            setupShiftTypeListener() {
+                const shiftType = document.getElementById('shift-type');
+                const customGroup = document.getElementById('custom-shift-group');
+                
+                if (shiftType) {
+                    shiftType.addEventListener('change', () => {
+                        if (shiftType.value === 'custom') {
+                            customGroup.style.display = 'block';
+                        } else {
+                            customGroup.style.display = 'none';
+                        }
+                    });
+                }
+            }
+
+            // Reverse Cipher
+            reverseText(button) {
+                const card = button.closest('.method-card');
+                const input = card.querySelector('.text-area');
+                const output = card.querySelector('.output-display');
+                
+                if (!input.value.trim()) {
+                    this.showError(output, 'Please enter some text to reverse.');
+                    return;
+                }
+
+                const reversed = input.value.split('').reverse().join('');
+                output.textContent = reversed;
+                output.style.color = '#00ff88';
+            }
+
+            // Leetspeak Conversion
+            convertToLeetspeak(button) {
+                const card = button.closest('.method-card');
+                const input = card.querySelector('.text-area');
+                const output = card.querySelector('.output-display');
+                
+                if (!input.value.trim()) {
+                    this.showError(output, 'Please enter some text to convert.');
+                    return;
+                }
+
+                const leetMap = {
+                    'a': '4', 'e': '3', 'i': '1', 'o': '0', 's': '5', 't': '7',
+                    'A': '4', 'E': '3', 'I': '1', 'O': '0', 'S': '5', 'T': '7'
+                };
+
+                let result = input.value;
+                for (let char in leetMap) {
+                    result = result.replace(new RegExp(char, 'g'), leetMap[char]);
+                }
+
+                output.textContent = result;
+                output.style.color = '#00ff88';
+            }
+
+            // Null Cipher
+            createNullCipher(button) {
+                const card = button.closest('.method-card');
+                const message = card.querySelector('#null-message');
+                const coverText = card.querySelector('.text-area');
+                const output = card.querySelector('.output-display');
+                
+                if (!message.value.trim() || !coverText.value.trim()) {
+                    this.showError(output, 'Please enter both message and cover text.');
+                    return;
+                }
+
+                const words = coverText.value.split(' ');
+                const messageChars = message.value.replace(/\s/g, '').split('');
+                
+                if (words.length < messageChars.length) {
+                    this.showError(output, 'Cover text must have at least as many words as message characters.');
+                    return;
+                }
+
+                let result = '';
+                for (let i = 0; i < words.length; i++) {
+                    if (i < messageChars.length) {
+                        // Use first letter of word for the message
+                        result += words[i].charAt(0) + words[i].substring(1) + ' ';
+                    } else {
+                        result += words[i] + ' ';
+                    }
+                }
+
+                output.textContent = result.trim();
+                output.style.color = '#00ff88';
+            }
+
+            extractNullCipher(button) {
+                const card = button.closest('.method-card');
+                const coverText = card.querySelector('.text-area');
+                const output = card.querySelector('.output-display');
+                
+                if (!coverText.value.trim()) {
+                    this.showError(output, 'Please enter cover text to extract message from.');
+                    return;
+                }
+
+                const words = coverText.value.split(' ');
+                const message = words.map(word => word.charAt(0)).join('');
+                
+                output.textContent = message;
+                output.style.color = '#00ff88';
+            }
+
+            // Typoglycemia
+            scrambleText(button) {
+                const card = button.closest('.method-card');
+                const input = card.querySelector('.text-area');
+                const output = card.querySelector('.output-display');
+                
+                if (!input.value.trim()) {
+                    this.showError(output, 'Please enter some text to scramble.');
+                    return;
+                }
+
+                const words = input.value.split(' ');
+                const scrambled = words.map(word => {
+                    if (word.length <= 3) return word;
+                    
+                    const first = word.charAt(0);
+                    const last = word.charAt(word.length - 1);
+                    const middle = word.substring(1, word.length - 1).split('');
+                    
+                    // Shuffle middle characters
+                    for (let i = middle.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [middle[i], middle[j]] = [middle[j], middle[i]];
+                    }
+                    
+                    return first + middle.join('') + last;
+                });
+
+                output.textContent = scrambled.join(' ');
+                output.style.color = '#00ff88';
+            }
+
+            // Invisible Ink
+            createInvisibleText(button) {
+                const card = button.closest('.method-card');
+                const input = card.querySelector('.text-area');
+                const output = card.querySelector('.output-display');
+                
+                if (!input.value.trim()) {
+                    this.showError(output, 'Please enter some text to make invisible.');
+                    return;
+                }
+
+                // Create invisible text using zero-width characters and white color
+                const invisibleText = input.value.split('').map(char => {
+                    return char + '\u200B'; // Zero-width space after each character
+                }).join('');
+
+                output.textContent = invisibleText;
+                output.style.color = 'transparent';
+                output.style.backgroundColor = 'transparent';
+                output.classList.add('invisible-text');
+            }
+
+            // Emoji Encoding
+            encodeWithEmojis(button) {
+                const card = button.closest('.method-card');
+                const input = card.querySelector('.text-area');
+                const output = card.querySelector('.output-display');
+                
+                if (!input.value.trim()) {
+                    this.showError(output, 'Please enter some text to encode.');
+                    return;
+                }
+
+                const emojiMap = {
+                    'a': '😀', 'b': '😃', 'c': '😄', 'd': '😁', 'e': '😆', 'f': '😅', 'g': '😂', 'h': '🤣',
+                    'i': '😊', 'j': '😇', 'k': '🙂', 'l': '🙃', 'm': '😉', 'n': '😌', 'o': '😍', 'p': '🥰',
+                    'q': '😘', 'r': '😗', 's': '😙', 't': '😚', 'u': '😋', 'v': '😛', 'w': '😝', 'x': '😜',
+                    'y': '🤪', 'z': '🤨', ' ': '  ', '0': '0️⃣', '1': '1️⃣', '2': '2️⃣', '3': '3️⃣', '4': '4️⃣',
+                    '5': '5️⃣', '6': '6️⃣', '7': '7️⃣', '8': '8️⃣', '9': '9️⃣'
+                };
+
+                const result = input.value.toLowerCase().split('').map(char => {
+                    return emojiMap[char] || char;
+                }).join('');
+
+                output.textContent = result;
+                output.style.color = '#00ff88';
+            }
+
+            decodeFromEmojis(button) {
+                const card = button.closest('.method-card');
+                const input = card.querySelector('.text-area');
+                const output = card.querySelector('.output-display');
+                
+                if (!input.value.trim()) {
+                    this.showError(output, 'Please enter emoji text to decode.');
+                    return;
+                }
+
+                const reverseEmojiMap = {
+                    '😀': 'a', '😃': 'b', '😄': 'c', '😁': 'd', '😆': 'e', '😅': 'f', '😂': 'g', '🤣': 'h',
+                    '😊': 'i', '😇': 'j', '🙂': 'k', '🙃': 'l', '😉': 'm', '😌': 'n', '😍': 'o', '🥰': 'p',
+                    '😘': 'q', '😗': 'r', '😙': 's', '😚': 't', '😋': 'u', '😛': 'v', '😝': 'w', '😜': 'x',
+                    '🤪': 'y', '🤨': 'z', '0️⃣': '0', '1️⃣': '1', '2️⃣': '2', '3️⃣': '3', '4️⃣': '4',
+                    '5️⃣': '5', '6️⃣': '6', '7️⃣': '7', '8️⃣': '8', '9️⃣': '9'
+                };
+
+                const result = input.value.split('').map(char => {
+                    return reverseEmojiMap[char] || char;
+                }).join('');
+
+                output.textContent = result;
+                output.style.color = '#00ff88';
+            }
+
+            // Text Shifting
+            shiftText(button) {
+                const card = button.closest('.method-card');
+                const input = card.querySelector('.text-area');
+                const output = card.querySelector('.output-display');
+                const shiftType = document.getElementById('shift-type').value;
+                
+                if (!input.value.trim()) {
+                    this.showError(output, 'Please enter some text to shift.');
+                    return;
+                }
+
+                let result = '';
+                
+                switch (shiftType) {
+                    case 'qwerty-dvorak':
+                        result = this.qwertyToDvorak(input.value);
+                        break;
+                    case 'dvorak-qwerty':
+                        result = this.dvorakToQwerty(input.value);
+                        break;
+                    case 'shift-left':
+                        result = this.shiftCharacters(input.value, -1);
+                        break;
+                    case 'shift-right':
+                        result = this.shiftCharacters(input.value, 1);
+                        break;
+                    case 'custom':
+                        const amount = parseInt(document.getElementById('custom-shift-amount').value) || 0;
+                        result = this.shiftCharacters(input.value, amount);
+                        break;
+                }
+
+                output.textContent = result;
+                output.style.color = '#00ff88';
+            }
+
+            qwertyToDvorak(text) {
+                const qwerty = 'qwertyuiop[]asdfghjkl;zxcvbnm,./QWERTYUIOP{}ASDFGHJKL:ZXCVBNM<>?';
+                const dvorak = 'pyfgcrlaoeuidhtnsqjkxbmwvzPYFGCRLAOEUIDHTNSQJKXBMWVZ';
+                
+                return text.split('').map(char => {
+                    const index = qwerty.indexOf(char);
+                    return index !== -1 ? dvorak[index] : char;
+                }).join('');
+            }
+
+            dvorakToQwerty(text) {
+                const dvorak = 'pyfgcrlaoeuidhtnsqjkxbmwvzPYFGCRLAOEUIDHTNSQJKXBMWVZ';
+                const qwerty = 'qwertyuiop[]asdfghjkl;zxcvbnm,./QWERTYUIOP{}ASDFGHJKL:ZXCVBNM<>?';
+                
+                return text.split('').map(char => {
+                    const index = dvorak.indexOf(char);
+                    return index !== -1 ? qwerty[index] : char;
+                }).join('');
+            }
+
+            shiftCharacters(text, shift) {
+                return text.split('').map(char => {
+                    if (char.match(/[a-z]/)) {
+                        const code = char.charCodeAt(0) - 97;
+                        return String.fromCharCode(((code + shift + 26) % 26) + 97);
+                    } else if (char.match(/[A-Z]/)) {
+                        const code = char.charCodeAt(0) - 65;
+                        return String.fromCharCode(((code + shift + 26) % 26) + 65);
+                    }
+                    return char;
+                }).join('');
+            }
+
+            // Utility Functions
+            copyToClipboard(outputId) {
+                const output = document.getElementById(outputId);
+                if (!output || !output.textContent.trim()) {
+                    this.showNotification('Nothing to copy!', 'error');
+                    return;
+                }
+
+                navigator.clipboard.writeText(output.textContent).then(() => {
+                    this.showNotification('Copied to clipboard!', 'success');
+                    output.classList.add('copy-success');
+                    setTimeout(() => output.classList.remove('copy-success'), 500);
+                }).catch(() => {
+                    this.showNotification('Failed to copy!', 'error');
+                });
+            }
+
+            clearOutput(outputId) {
+                const output = document.getElementById(outputId);
+                if (output) {
+                    output.textContent = '';
+                    output.style.color = '#00ff88';
+                    output.classList.remove('invisible-text');
+                }
+            }
+
+            showError(output, message) {
+                output.textContent = message;
+                output.style.color = '#ff6b6b';
+            }
+
+            showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 1rem 1.5rem;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 600;
+                    z-index: 10000;
+                    animation: slideIn 0.3s ease;
+                    background: ${type === 'success' ? '#00ff88' : '#ff6b6b'};
+                `;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => notification.remove(), 300);
+                }, 2000);
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new ObfuscationTools();
+        });
+
+        // Global functions for onclick handlers
+        function reverseText(button) {
+            window.obfuscationTools = window.obfuscationTools || new ObfuscationTools();
+            window.obfuscationTools.reverseText(button);
+        }
+
+        function convertToLeetspeak(button) {
+            window.obfuscationTools = window.obfuscationTools || new ObfuscationTools();
+            window.obfuscationTools.convertToLeetspeak(button);
+        }
+
+        function createNullCipher(button) {
+            window.obfuscationTools = window.obfuscationTools || new ObfuscationTools();
+            window.obfuscationTools.createNullCipher(button);
+        }
+
+        function extractNullCipher(button) {
+            window.obfuscationTools = window.obfuscationTools || new ObfuscationTools();
+            window.obfuscationTools.extractNullCipher(button);
+        }
+
+        function scrambleText(button) {
+            window.obfuscationTools = window.obfuscationTools || new ObfuscationTools();
+            window.obfuscationTools.scrambleText(button);
+        }
+
+        function createInvisibleText(button) {
+            window.obfuscationTools = window.obfuscationTools || new ObfuscationTools();
+            window.obfuscationTools.createInvisibleText(button);
+        }
+
+        function encodeWithEmojis(button) {
+            window.obfuscationTools = window.obfuscationTools || new ObfuscationTools();
+            window.obfuscationTools.encodeWithEmojis(button);
+        }
+
+        function decodeFromEmojis(button) {
+            window.obfuscationTools = window.obfuscationTools || new ObfuscationTools();
+            window.obfuscationTools.decodeFromEmojis(button);
+        }
+
+        function shiftText(button) {
+            window.obfuscationTools = window.obfuscationTools || new ObfuscationTools();
+            window.obfuscationTools.shiftText(button);
+        }
+
+        function copyToClipboard(outputId) {
+            window.obfuscationTools = window.obfuscationTools || new ObfuscationTools();
+            window.obfuscationTools.copyToClipboard(outputId);
+        }
+
+        function clearOutput(outputId) {
+            window.obfuscationTools = window.obfuscationTools || new ObfuscationTools();
+            window.obfuscationTools.clearOutput(outputId);
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

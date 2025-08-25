@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematical Ciphers - A.Insiders Tools</title>
+    
+    <!-- Favicon Setup -->
+    <link rel="icon" type="image/png" href="ainsiders-logo.png" id="main-favicon">
+    <link rel="apple-touch-icon" href="ainsiders-logo.png">
+    <meta name="description" content="Advanced mathematical cipher tools including Hill Cipher, One-Time Pad, XOR Cipher, Bit Shifting, and Modular Arithmetic. Free, secure, and browser-based encryption tools.">
+    <meta name="keywords" content="mathematical ciphers, hill cipher, one-time pad, xor cipher, bit shifting, modular arithmetic, encryption, cryptography, A.Insiders tools">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    
+    <!-- Enhanced Cache Control Headers for Cloudflare -->
+    <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable, stale-while-revalidate=86400">
+    <meta http-equiv="Expires" content="31536000">
+    <meta http-equiv="ETag" content="mathematical-ciphers-v1.0">
+    <meta http-equiv="Last-Modified" content="2023-12-31T00:00:00Z">
+    
+    <!-- Optimized Asset Caching System with Cloudflare Headers -->
+    <link rel="stylesheet" href="brain-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Preload critical assets with Cloudflare caching -->
+    <link rel="preload" href="brain-script.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="shared-loader.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="mobile-nav.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="sphere-loader.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="ainsiders-logo.png?v=1.0" as="image" type="image/png">
+    <link rel="preload" href="logo.svg?v=1.0" as="image" type="image/svg+xml">
+    
+    <!-- Cache Manager and Asset Preloader with Cloudflare caching -->
+    <script src="browser-cache-manager.js"></script>
+    <script src="asset-preloader.js"></script>
+    
+    <!-- Optimized Background System -->
+    <script src="brain-script.js"></script>
+    
+    <!-- Font Awesome with CDN and Fallback -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    
+    <!-- Favicon Animation Script -->
+    <script src="favicon-animation.js"></script>
+    
+    <style>
+        /* Mathematical Ciphers Specific Styles */
+        .cipher-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+            box-shadow: var(--shadow-dark);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Neural Background Canvas - Full Page Coverage */
+        #aiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        /* Page Hero Section with Neural Background */
+        .page-hero {
+            position: relative;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(17, 17, 17, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00ff88, #00ccff, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Cipher Grid Layout */
+        .cipher-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .cipher-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .cipher-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.2);
+            border-color: rgba(0, 102, 255, 0.4);
+        }
+
+        .cipher-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0, 102, 255, 0.2);
+        }
+
+        .cipher-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            color: #000;
+        }
+
+        .cipher-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .cipher-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cipher-input:focus {
+            outline: none;
+            border-color: #00ccff;
+            box-shadow: 0 0 0 3px rgba(0, 204, 255, 0.1);
+        }
+
+        .cipher-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .cipher-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .cipher-textarea:focus {
+            outline: none;
+            border-color: #00ccff;
+            box-shadow: 0 0 0 3px rgba(0, 204, 255, 0.1);
+        }
+
+        /* Results Display */
+        .results-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 102, 255, 0.2);
+        }
+
+        .results-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .results-title i {
+            margin-right: 0.5rem;
+            color: #00ff88;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(0, 102, 255, 0.1);
+        }
+
+        .result-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .result-value {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            word-break: break-all;
+            max-width: 60%;
+        }
+
+        .result-value:hover {
+            background: rgba(0, 255, 136, 0.2);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(0, 102, 255, 0.2);
+            color: var(--text-primary);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 102, 255, 0.3);
+            border-color: rgba(0, 102, 255, 0.5);
+        }
+
+        .btn-danger {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 107, 107, 0.3);
+            border-color: rgba(255, 107, 107, 0.5);
+        }
+
+        /* Matrix Display for Hill Cipher */
+        .matrix-container {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 102, 255, 0.2);
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            max-width: 200px;
+            margin: 0 auto;
+        }
+
+        .matrix-input {
+            width: 100%;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            border-radius: 4px;
+            color: var(--text-primary);
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Key Display */
+        .key-display {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .key-label {
+            font-weight: 600;
+            color: #00ff88;
+            margin-bottom: 0.5rem;
+        }
+
+        .key-value {
+            font-family: 'Courier New', monospace;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+
+        /* Error Messages */
+        .error-message {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Success Messages */
+        .success-message {
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .cipher-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                justify-content: center;
+            }
+            
+            .result-value {
+                max-width: 50%;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 255, 136, 0.3);
+            border-radius: 50%;
+            border-top-color: #00ff88;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Copy Animation */
+        .copy-animation {
+            animation: copyPulse 0.5s ease-in-out;
+        }
+
+        @keyframes copyPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            justify-content: center;
+        }
+
+        .mode-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 102, 255, 0.1);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+            color: #000;
+            border-color: transparent;
+        }
+
+        .mode-btn:hover {
+            background: rgba(0, 102, 255, 0.2);
+        }
+
+        .mode-btn.active:hover {
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+        }
+    </style>
+</head>
+<body>
+    <!-- Neural Background Canvas -->
+    <canvas id="aiCanvas"></canvas>
+
+    <!-- Page Hero Section -->
+    <section class="page-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <i class="fas fa-shield-alt"></i>
+                Mathematical Ciphers
+            </h1>
+            <p class="hero-subtitle">
+                Advanced mathematical encryption tools including Hill Cipher, One-Time Pad, XOR Cipher, Bit Shifting, and Modular Arithmetic ciphers
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Cipher Container -->
+    <div class="cipher-container">
+        <!-- Cipher Grid -->
+        <div class="cipher-grid">
+            <!-- Hill Cipher -->
+            <div class="cipher-card">
+                <div class="cipher-header">
+                    <div class="cipher-icon">
+                        <i class="fas fa-th"></i>
+                    </div>
+                    <div class="cipher-title">Hill Cipher</div>
+                </div>
+                
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setHillMode('encrypt')">Encrypt</button>
+                    <button class="mode-btn" onclick="setHillMode('decrypt')">Decrypt</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Message (Letters only)</label>
+                    <textarea id="hillMessage" class="cipher-textarea" placeholder="Enter message to encrypt/decrypt (letters only)"></textarea>
+                </div>
+
+                <div class="matrix-container">
+                    <label class="input-label">Encryption Matrix (2x2)</label>
+                    <div class="matrix-grid">
+                        <input type="number" id="hillMatrix00" class="matrix-input" value="3" placeholder="a">
+                        <input type="number" id="hillMatrix01" class="matrix-input" value="2" placeholder="b">
+                        <input type="number" id="hillMatrix10" class="matrix-input" value="1" placeholder="c">
+                        <input type="number" id="hillMatrix11" class="matrix-input" value="4" placeholder="d">
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="hillCipher()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearHill()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                    <button class="btn btn-secondary" onclick="generateHillMatrix()">
+                        <i class="fas fa-random"></i>
+                        Random Matrix
+                    </button>
+                </div>
+
+                <div id="hillResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="hillResultContent"></div>
+                </div>
+            </div>
+
+            <!-- One-Time Pad -->
+            <div class="cipher-card">
+                <div class="cipher-header">
+                    <div class="cipher-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div class="cipher-title">One-Time Pad</div>
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setOTPMode('encrypt')">Encrypt</button>
+                    <button class="mode-btn" onclick="setOTPMode('decrypt')">Decrypt</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Message</label>
+                    <textarea id="otpMessage" class="cipher-textarea" placeholder="Enter message to encrypt/decrypt"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Key (or leave empty for random)</label>
+                    <input type="text" id="otpKey" class="cipher-input" placeholder="Enter key or leave empty for random generation">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="oneTimePad()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearOTP()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                    <button class="btn btn-secondary" onclick="generateOTPKey()">
+                        <i class="fas fa-random"></i>
+                        Generate Key
+                    </button>
+                </div>
+
+                <div id="otpResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="otpResultContent"></div>
+                </div>
+            </div>
+
+            <!-- XOR Cipher -->
+            <div class="cipher-card">
+                <div class="cipher-header">
+                    <div class="cipher-icon">
+                        <i class="fas fa-xmark"></i>
+                    </div>
+                    <div class="cipher-title">XOR Cipher</div>
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setXORMode('encrypt')">Encrypt</button>
+                    <button class="mode-btn" onclick="setXORMode('decrypt')">Decrypt</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Message</label>
+                    <textarea id="xorMessage" class="cipher-textarea" placeholder="Enter message to encrypt/decrypt"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Key</label>
+                    <input type="text" id="xorKey" class="cipher-input" placeholder="Enter encryption key">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="xorCipher()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearXOR()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                    <button class="btn btn-secondary" onclick="generateXORKey()">
+                        <i class="fas fa-random"></i>
+                        Generate Key
+                    </button>
+                </div>
+
+                <div id="xorResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="xorResultContent"></div>
+                </div>
+            </div>
+
+            <!-- Bit Shifting Cipher -->
+            <div class="cipher-card">
+                <div class="cipher-header">
+                    <div class="cipher-icon">
+                        <i class="fas fa-arrows-alt-h"></i>
+                    </div>
+                    <div class="cipher-title">Bit Shifting Cipher</div>
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setBitShiftMode('encrypt')">Encrypt</button>
+                    <button class="mode-btn" onclick="setBitShiftMode('decrypt')">Decrypt</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Message</label>
+                    <textarea id="bitShiftMessage" class="cipher-textarea" placeholder="Enter message to encrypt/decrypt"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Shift Amount (1-7)</label>
+                    <input type="number" id="bitShiftAmount" class="cipher-input" value="3" min="1" max="7" placeholder="Shift amount">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Direction</label>
+                    <select id="bitShiftDirection" class="cipher-input">
+                        <option value="left">Left Shift</option>
+                        <option value="right">Right Shift</option>
+                    </select>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="bitShiftCipher()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearBitShift()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="bitShiftResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="bitShiftResultContent"></div>
+                </div>
+            </div>
+
+            <!-- Modular Arithmetic Cipher -->
+            <div class="cipher-card">
+                <div class="cipher-header">
+                    <div class="cipher-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="cipher-title">Modular Arithmetic Cipher</div>
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setModularMode('encrypt')">Encrypt</button>
+                    <button class="mode-btn" onclick="setModularMode('decrypt')">Decrypt</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Message (Numbers only)</label>
+                    <textarea id="modularMessage" class="cipher-textarea" placeholder="Enter numbers separated by spaces (e.g., 1 2 3 4 5)"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Modulus (default: 26)</label>
+                    <input type="number" id="modularModulus" class="cipher-input" value="26" min="2" max="100" placeholder="Modulus">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Key (Multiplier)</label>
+                    <input type="number" id="modularKey" class="cipher-input" value="3" min="1" placeholder="Key">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="modularCipher()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearModular()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                    <button class="btn btn-secondary" onclick="generateModularKey()">
+                        <i class="fas fa-random"></i>
+                        Generate Key
+                    </button>
+                </div>
+
+                <div id="modularResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="modularResultContent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Container -->
+        <div id="messageContainer" style="margin-top: 2rem;"></div>
+    </div>
+
+    <script>
+        // Global variables for cipher modes
+        let hillMode = 'encrypt';
+        let otpMode = 'encrypt';
+        let xorMode = 'encrypt';
+        let bitShiftMode = 'encrypt';
+        let modularMode = 'encrypt';
+
+        // Utility functions
+        function showMessage(message, type = 'success') {
+            const container = document.getElementById('messageContainer');
+            container.innerHTML = `<div class="${type}-message">${message}</div>`;
+            
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showMessage(`Copied "${text}" to clipboard!`);
+            }).catch(err => {
+                showMessage('Failed to copy to clipboard', 'error');
+            });
+        }
+
+        // Mode setting functions
+        function setHillMode(mode) {
+            hillMode = mode;
+            updateModeButtons('hill', mode);
+        }
+
+        function setOTPMode(mode) {
+            otpMode = mode;
+            updateModeButtons('otp', mode);
+        }
+
+        function setXORMode(mode) {
+            xorMode = mode;
+            updateModeButtons('xor', mode);
+        }
+
+        function setBitShiftMode(mode) {
+            bitShiftMode = mode;
+            updateModeButtons('bitShift', mode);
+        }
+
+        function setModularMode(mode) {
+            modularMode = mode;
+            updateModeButtons('modular', mode);
+        }
+
+        function updateModeButtons(cipher, mode) {
+            const card = document.querySelector(`[onclick*="${cipher}Mode"]`).closest('.cipher-card');
+            const buttons = card.querySelectorAll('.mode-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(mode)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Hill Cipher Implementation
+        function hillCipher() {
+            const message = document.getElementById('hillMessage').value.trim().toUpperCase();
+            const matrix = [
+                [parseInt(document.getElementById('hillMatrix00').value), parseInt(document.getElementById('hillMatrix01').value)],
+                [parseInt(document.getElementById('hillMatrix10').value), parseInt(document.getElementById('hillMatrix11').value)]
+            ];
+
+            if (!message) {
+                showMessage('Please enter a message', 'error');
+                return;
+            }
+
+            if (!message.match(/^[A-Z\s]+$/)) {
+                showMessage('Message must contain only letters and spaces', 'error');
+                return;
+            }
+
+            try {
+                let result;
+                if (hillMode === 'encrypt') {
+                    result = hillEncrypt(message, matrix);
+                } else {
+                    result = hillDecrypt(message, matrix);
+                }
+
+                displayHillResults(result, hillMode);
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function hillEncrypt(message, matrix) {
+            // Remove spaces and pad if necessary
+            const cleanMessage = message.replace(/\s/g, '');
+            const paddedMessage = cleanMessage.length % 2 === 0 ? cleanMessage : cleanMessage + 'X';
+            
+            let result = '';
+            for (let i = 0; i < paddedMessage.length; i += 2) {
+                const char1 = paddedMessage.charCodeAt(i) - 65;
+                const char2 = paddedMessage.charCodeAt(i + 1) - 65;
+                
+                const newChar1 = (matrix[0][0] * char1 + matrix[0][1] * char2) % 26;
+                const newChar2 = (matrix[1][0] * char1 + matrix[1][1] * char2) % 26;
+                
+                result += String.fromCharCode(newChar1 + 65) + String.fromCharCode(newChar2 + 65);
+            }
+            
+            return result;
+        }
+
+        function hillDecrypt(message, matrix) {
+            // Calculate determinant
+            const det = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+            if (det === 0) {
+                throw new Error('Matrix is not invertible');
+            }
+
+            // Find modular multiplicative inverse
+            let detInv = 0;
+            for (let i = 1; i < 26; i++) {
+                if ((det * i) % 26 === 1) {
+                    detInv = i;
+                    break;
+                }
+            }
+
+            if (detInv === 0) {
+                throw new Error('Matrix determinant has no modular inverse');
+            }
+
+            // Calculate inverse matrix
+            const invMatrix = [
+                [(matrix[1][1] * detInv) % 26, (-matrix[0][1] * detInv + 26) % 26],
+                [(-matrix[1][0] * detInv + 26) % 26, (matrix[0][0] * detInv) % 26]
+            ];
+
+            let result = '';
+            for (let i = 0; i < message.length; i += 2) {
+                const char1 = message.charCodeAt(i) - 65;
+                const char2 = message.charCodeAt(i + 1) - 65;
+                
+                const newChar1 = (invMatrix[0][0] * char1 + invMatrix[0][1] * char2) % 26;
+                const newChar2 = (invMatrix[1][0] * char1 + invMatrix[1][1] * char2) % 26;
+                
+                result += String.fromCharCode(newChar1 + 65) + String.fromCharCode(newChar2 + 65);
+            }
+            
+            return result;
+        }
+
+        function displayHillResults(result, mode) {
+            const container = document.getElementById('hillResults');
+            const content = document.getElementById('hillResultContent');
+            
+            content.innerHTML = `
+                <div class="result-item">
+                    <span class="result-label">${mode === 'encrypt' ? 'Encrypted' : 'Decrypted'} Text:</span>
+                    <span class="result-value" onclick="copyToClipboard('${result}')">${result}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Matrix Used:</span>
+                    <span class="result-value">[${document.getElementById('hillMatrix00').value}, ${document.getElementById('hillMatrix01').value}; ${document.getElementById('hillMatrix10').value}, ${document.getElementById('hillMatrix11').value}]</span>
+                </div>
+            `;
+            
+            container.style.display = 'block';
+        }
+
+        function clearHill() {
+            document.getElementById('hillMessage').value = '';
+            document.getElementById('hillResults').style.display = 'none';
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        function generateHillMatrix() {
+            // Generate a random invertible 2x2 matrix
+            let matrix;
+            do {
+                matrix = [
+                    [Math.floor(Math.random() * 26), Math.floor(Math.random() * 26)],
+                    [Math.floor(Math.random() * 26), Math.floor(Math.random() * 26)]
+                ];
+            } while (!isHillMatrixValid(matrix));
+
+            document.getElementById('hillMatrix00').value = matrix[0][0];
+            document.getElementById('hillMatrix01').value = matrix[0][1];
+            document.getElementById('hillMatrix10').value = matrix[1][0];
+            document.getElementById('hillMatrix11').value = matrix[1][1];
+        }
+
+        function isHillMatrixValid(matrix) {
+            const det = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+            if (det === 0) return false;
+            
+            // Check if determinant has modular inverse
+            for (let i = 1; i < 26; i++) {
+                if ((det * i) % 26 === 1) return true;
+            }
+            return false;
+        }
+
+        // One-Time Pad Implementation
+        function oneTimePad() {
+            const message = document.getElementById('otpMessage').value;
+            let key = document.getElementById('otpKey').value;
+
+            if (!message) {
+                showMessage('Please enter a message', 'error');
+                return;
+            }
+
+            if (!key) {
+                key = generateRandomKey(message.length);
+                document.getElementById('otpKey').value = key;
+            }
+
+            if (key.length !== message.length) {
+                showMessage('Key length must match message length', 'error');
+                return;
+            }
+
+            let result;
+            if (otpMode === 'encrypt') {
+                result = otpEncrypt(message, key);
+            } else {
+                result = otpDecrypt(message, key);
+            }
+
+            displayOTPResults(result, key, otpMode);
+        }
+
+        function otpEncrypt(message, key) {
+            let result = '';
+            for (let i = 0; i < message.length; i++) {
+                const messageChar = message.charCodeAt(i);
+                const keyChar = key.charCodeAt(i);
+                const encryptedChar = messageChar ^ keyChar;
+                result += String.fromCharCode(encryptedChar);
+            }
+            return result;
+        }
+
+        function otpDecrypt(message, key) {
+            // OTP decryption is the same as encryption
+            return otpEncrypt(message, key);
+        }
+
+        function displayOTPResults(result, key, mode) {
+            const container = document.getElementById('otpResults');
+            const content = document.getElementById('otpResultContent');
+            
+            content.innerHTML = `
+                <div class="result-item">
+                    <span class="result-label">${mode === 'encrypt' ? 'Encrypted' : 'Decrypted'} Text:</span>
+                    <span class="result-value" onclick="copyToClipboard('${result}')">${result}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Key Used:</span>
+                    <span class="result-value" onclick="copyToClipboard('${key}')">${key}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Key Length:</span>
+                    <span class="result-value">${key.length}</span>
+                </div>
+            `;
+            
+            container.style.display = 'block';
+        }
+
+        function clearOTP() {
+            document.getElementById('otpMessage').value = '';
+            document.getElementById('otpKey').value = '';
+            document.getElementById('otpResults').style.display = 'none';
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        function generateOTPKey() {
+            const messageLength = document.getElementById('otpMessage').value.length;
+            if (messageLength === 0) {
+                showMessage('Please enter a message first', 'error');
+                return;
+            }
+            const key = generateRandomKey(messageLength);
+            document.getElementById('otpKey').value = key;
+        }
+
+        function generateRandomKey(length) {
+            let key = '';
+            for (let i = 0; i < length; i++) {
+                key += String.fromCharCode(Math.floor(Math.random() * 256));
+            }
+            return key;
+        }
+
+        // XOR Cipher Implementation
+        function xorCipher() {
+            const message = document.getElementById('xorMessage').value;
+            const key = document.getElementById('xorKey').value;
+
+            if (!message) {
+                showMessage('Please enter a message', 'error');
+                return;
+            }
+
+            if (!key) {
+                showMessage('Please enter a key', 'error');
+                return;
+            }
+
+            let result;
+            if (xorMode === 'encrypt') {
+                result = xorEncrypt(message, key);
+            } else {
+                result = xorDecrypt(message, key);
+            }
+
+            displayXORResults(result, key, xorMode);
+        }
+
+        function xorEncrypt(message, key) {
+            let result = '';
+            for (let i = 0; i < message.length; i++) {
+                const messageChar = message.charCodeAt(i);
+                const keyChar = key.charCodeAt(i % key.length);
+                const encryptedChar = messageChar ^ keyChar;
+                result += String.fromCharCode(encryptedChar);
+            }
+            return result;
+        }
+
+        function xorDecrypt(message, key) {
+            // XOR decryption is the same as encryption
+            return xorEncrypt(message, key);
+        }
+
+        function displayXORResults(result, key, mode) {
+            const container = document.getElementById('xorResults');
+            const content = document.getElementById('xorResultContent');
+            
+            content.innerHTML = `
+                <div class="result-item">
+                    <span class="result-label">${mode === 'encrypt' ? 'Encrypted' : 'Decrypted'} Text:</span>
+                    <span class="result-value" onclick="copyToClipboard('${result}')">${result}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Key Used:</span>
+                    <span class="result-value" onclick="copyToClipboard('${key}')">${key}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Key Length:</span>
+                    <span class="result-value">${key.length}</span>
+                </div>
+            `;
+            
+            container.style.display = 'block';
+        }
+
+        function clearXOR() {
+            document.getElementById('xorMessage').value = '';
+            document.getElementById('xorKey').value = '';
+            document.getElementById('xorResults').style.display = 'none';
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        function generateXORKey() {
+            const key = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            document.getElementById('xorKey').value = key;
+        }
+
+        // Bit Shifting Cipher Implementation
+        function bitShiftCipher() {
+            const message = document.getElementById('bitShiftMessage').value;
+            const shiftAmount = parseInt(document.getElementById('bitShiftAmount').value);
+            const direction = document.getElementById('bitShiftDirection').value;
+
+            if (!message) {
+                showMessage('Please enter a message', 'error');
+                return;
+            }
+
+            if (shiftAmount < 1 || shiftAmount > 7) {
+                showMessage('Shift amount must be between 1 and 7', 'error');
+                return;
+            }
+
+            let result;
+            if (bitShiftMode === 'encrypt') {
+                result = bitShiftEncrypt(message, shiftAmount, direction);
+            } else {
+                result = bitShiftDecrypt(message, shiftAmount, direction);
+            }
+
+            displayBitShiftResults(result, shiftAmount, direction, bitShiftMode);
+        }
+
+        function bitShiftEncrypt(message, shiftAmount, direction) {
+            let result = '';
+            for (let i = 0; i < message.length; i++) {
+                const charCode = message.charCodeAt(i);
+                let shiftedChar;
+                
+                if (direction === 'left') {
+                    shiftedChar = ((charCode << shiftAmount) | (charCode >> (8 - shiftAmount))) & 0xFF;
+                } else {
+                    shiftedChar = ((charCode >> shiftAmount) | (charCode << (8 - shiftAmount))) & 0xFF;
+                }
+                
+                result += String.fromCharCode(shiftedChar);
+            }
+            return result;
+        }
+
+        function bitShiftDecrypt(message, shiftAmount, direction) {
+            // For decryption, we reverse the direction
+            const reverseDirection = direction === 'left' ? 'right' : 'left';
+            return bitShiftEncrypt(message, shiftAmount, reverseDirection);
+        }
+
+        function displayBitShiftResults(result, shiftAmount, direction, mode) {
+            const container = document.getElementById('bitShiftResults');
+            const content = document.getElementById('bitShiftResultContent');
+            
+            content.innerHTML = `
+                <div class="result-item">
+                    <span class="result-label">${mode === 'encrypt' ? 'Encrypted' : 'Decrypted'} Text:</span>
+                    <span class="result-value" onclick="copyToClipboard('${result}')">${result}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Shift Amount:</span>
+                    <span class="result-value">${shiftAmount}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Direction:</span>
+                    <span class="result-value">${direction}</span>
+                </div>
+            `;
+            
+            container.style.display = 'block';
+        }
+
+        function clearBitShift() {
+            document.getElementById('bitShiftMessage').value = '';
+            document.getElementById('bitShiftResults').style.display = 'none';
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        // Modular Arithmetic Cipher Implementation
+        function modularCipher() {
+            const message = document.getElementById('modularMessage').value.trim();
+            const modulus = parseInt(document.getElementById('modularModulus').value);
+            const key = parseInt(document.getElementById('modularKey').value);
+
+            if (!message) {
+                showMessage('Please enter a message', 'error');
+                return;
+            }
+
+            if (!message.match(/^[\d\s]+$/)) {
+                showMessage('Message must contain only numbers and spaces', 'error');
+                return;
+            }
+
+            if (modulus < 2 || modulus > 100) {
+                showMessage('Modulus must be between 2 and 100', 'error');
+                return;
+            }
+
+            if (key < 1) {
+                showMessage('Key must be positive', 'error');
+                return;
+            }
+
+            try {
+                let result;
+                if (modularMode === 'encrypt') {
+                    result = modularEncrypt(message, modulus, key);
+                } else {
+                    result = modularDecrypt(message, modulus, key);
+                }
+
+                displayModularResults(result, modulus, key, modularMode);
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function modularEncrypt(message, modulus, key) {
+            const numbers = message.split(/\s+/).map(num => parseInt(num));
+            const result = numbers.map(num => (num * key) % modulus);
+            return result.join(' ');
+        }
+
+        function modularDecrypt(message, modulus, key) {
+            // Find modular multiplicative inverse of key
+            let keyInv = 0;
+            for (let i = 1; i < modulus; i++) {
+                if ((key * i) % modulus === 1) {
+                    keyInv = i;
+                    break;
+                }
+            }
+
+            if (keyInv === 0) {
+                throw new Error('Key has no modular inverse');
+            }
+
+            const numbers = message.split(/\s+/).map(num => parseInt(num));
+            const result = numbers.map(num => (num * keyInv) % modulus);
+            return result.join(' ');
+        }
+
+        function displayModularResults(result, modulus, key, mode) {
+            const container = document.getElementById('modularResults');
+            const content = document.getElementById('modularResultContent');
+            
+            content.innerHTML = `
+                <div class="result-item">
+                    <span class="result-label">${mode === 'encrypt' ? 'Encrypted' : 'Decrypted'} Numbers:</span>
+                    <span class="result-value" onclick="copyToClipboard('${result}')">${result}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Modulus:</span>
+                    <span class="result-value">${modulus}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Key:</span>
+                    <span class="result-value">${key}</span>
+                </div>
+            `;
+            
+            container.style.display = 'block';
+        }
+
+        function clearModular() {
+            document.getElementById('modularMessage').value = '';
+            document.getElementById('modularResults').style.display = 'none';
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        function generateModularKey() {
+            const modulus = parseInt(document.getElementById('modularModulus').value);
+            let key;
+            do {
+                key = Math.floor(Math.random() * (modulus - 1)) + 1;
+            } while (!hasModularInverse(key, modulus));
+            document.getElementById('modularKey').value = key;
+        }
+
+        function hasModularInverse(key, modulus) {
+            for (let i = 1; i < modulus; i++) {
+                if ((key * i) % modulus === 1) return true;
+            }
+            return false;
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add tooltips to result values
+            const resultValues = document.querySelectorAll('.result-value');
+            resultValues.forEach(el => {
+                el.title = 'Click to copy';
+            });
+
+            // Auto-focus first input
+            document.getElementById('hillMessage').focus();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Encoding Methods - A.Insiders</title>
+  
+  <!-- Favicon Setup -->
+  <link rel="icon" type="image/png" href="ainsiders-logo.png" id="main-favicon">
+  <link rel="apple-touch-icon" href="ainsiders-logo.png">
+  <meta name="description" content="Professional encoding and obfuscation tools for data transformation. Support for Base64, Base32, Base58, Base85, Hexadecimal, Binary, ASCII, Unicode, and URL encoding.">
+  <meta name="keywords" content="encoding, obfuscation, base64, base32, base58, base85, hexadecimal, binary, ascii, unicode, url encoding">
+  
+  <!-- Security Headers -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+  
+  <!-- Enhanced Cache Control Headers for Cloudflare -->
+  <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable, stale-while-revalidate=86400">
+  <meta http-equiv="Expires" content="31536000">
+  <meta http-equiv="ETag" content="encoding-v1.0">
+  <meta http-equiv="Last-Modified" content="2023-12-31T00:00:00Z">
+  
+  <!-- Optimized Asset Caching System with Cloudflare Headers -->
+  <link rel="stylesheet" href="brain-styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome with CDN and Fallback -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  
+  <!-- Encoding Methods Page Specific Styles -->
+  <style>
+    /* Mobile-First Responsive Navigation */
+    .nav-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 100%;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(20px);
+      z-index: 1000;
+      transition: right 0.3s ease;
+      overflow-y: auto;
+      padding: 80px 20px 20px 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+
+    .nav-menu.active {
+      right: 0 !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+
+    .nav-menu li {
+      width: 100%;
+      margin: 15px 0;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-menu .nav-link {
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 500;
+      display: block;
+      padding: 15px 0;
+      text-decoration: none;
+      width: 100%;
+    }
+
+    .nav-toggle {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      background: #333;
+      padding: 12px;
+      border-radius: 6px;
+      z-index: 1001;
+      position: relative;
+    }
+
+    .nav-toggle span {
+      width: 28px;
+      height: 3px;
+      background: #fff;
+      margin: 3px 0;
+      transition: 0.3s;
+      display: block;
+    }
+
+    /* Encoding Methods Specific Styles */
+    .encoding-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .encoding-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .encoding-header h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .encoding-header p {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .encoding-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .encoding-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .encoding-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-blue));
+    }
+
+    .encoding-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-glow);
+      border-color: var(--accent-primary);
+    }
+
+    .encoding-card h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .encoding-card p {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .encoding-input {
+      width: 100%;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      color: var(--text-primary);
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .encoding-input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+    }
+
+    .encoding-output {
+      width: 100%;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      color: var(--text-primary);
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      min-height: 100px;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+
+    .encoding-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-encode {
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-encode:hover {
+      background: var(--accent-secondary);
+      transform: translateY(-2px);
+    }
+
+    .btn-clear {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-clear:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--accent-primary);
+      color: var(--text-primary);
+    }
+
+    .encoding-info {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .encoding-info h4 {
+      color: var(--accent-primary);
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .encoding-info ul {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .encoding-info li {
+      margin-bottom: 0.25rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .encoding-container {
+        padding: 1rem;
+      }
+
+      .encoding-header h1 {
+        font-size: 2rem;
+      }
+
+      .encoding-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .encoding-buttons {
+        flex-direction: column;
+      }
+
+      .btn-encode, .btn-clear {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Copy to Clipboard Animation */
+    .copy-success {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #00ff88;
+      color: #000;
+      padding: 1rem 2rem;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      z-index: 10000;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="ainsiders-logo.png" alt="A.Insiders Logo" class="logo-image" width="40" height="40">
+        <span class="logo-text">A.I</span>
+        <span class="logo-accent">NSIDERS</span>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="software.html" class="nav-link">Software</a></li>
+        <li class="nav-dropdown">
+          <div class="nav-link-container">
+            <a href="about.html" class="nav-link">About</a>
+            <span class="dropdown-arrow">▼</span>
+          </div>
+          <ul class="dropdown-menu">
+            <li><a href="about.html" class="dropdown-link">About Company</a></li>
+            <li><a href="blake-zimmerman.html" class="dropdown-link">Blake Zimmerman</a></li>
+            <li><a href="babu-narayana.html" class="dropdown-link">Babu Narayana</a></li>
+          </ul>
+        </li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+        <li class="auth-nav-item">
+          <a href="login.html" class="nav-link auth-link" id="authLink">
+            <i class="fas fa-user"></i>
+            <span id="authText">Login</span>
+          </a>
+        </li>
+      </ul>
+      <div class="nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="encoding-container">
+      <!-- Header -->
+      <div class="encoding-header">
+        <h1>🧬 Encoding Methods</h1>
+        <p>Professional encoding and obfuscation tools for data transformation. These methods are used for obfuscation, not encryption.</p>
+      </div>
+
+      <!-- Encoding Tools Grid -->
+      <div class="encoding-grid">
+        <!-- Base64 Encoding -->
+        <div class="encoding-card">
+          <h3><i class="fas fa-code"></i> Base64 Encoding</h3>
+          <p>Convert binary data to ASCII text using Base64 encoding. Widely used for data transmission and storage.</p>
+          
+          <textarea class="encoding-input" id="base64-input" placeholder="Enter text to encode/decode..."></textarea>
+          
+          <div class="encoding-buttons">
+            <button class="btn-encode" onclick="encodeBase64()">
+              <i class="fas fa-arrow-down"></i> Encode
+            </button>
+            <button class="btn-encode" onclick="decodeBase64()">
+              <i class="fas fa-arrow-up"></i> Decode
+            </button>
+            <button class="btn-clear" onclick="clearEncoding('base64')">
+              <i class="fas fa-trash"></i> Clear
+            </button>
+          </div>
+          
+          <div class="encoding-output" id="base64-output"></div>
+          
+          <div class="encoding-info">
+            <h4>About Base64:</h4>
+            <ul>
+              <li>Uses 64 characters: A-Z, a-z, 0-9, +, /</li>
+              <li>Padding with = characters if needed</li>
+              <li>33% size increase compared to original</li>
+              <li>Commonly used in email, HTTP, and file attachments</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Base32 Encoding -->
+        <div class="encoding-card">
+          <h3><i class="fas fa-hashtag"></i> Base32 Encoding</h3>
+          <p>Encode data using 32 characters (A-Z, 2-7). More compact than Base64 but case-sensitive.</p>
+          
+          <textarea class="encoding-input" id="base32-input" placeholder="Enter text to encode/decode..."></textarea>
+          
+          <div class="encoding-buttons">
+            <button class="btn-encode" onclick="encodeBase32()">
+              <i class="fas fa-arrow-down"></i> Encode
+            </button>
+            <button class="btn-encode" onclick="decodeBase32()">
+              <i class="fas fa-arrow-up"></i> Decode
+            </button>
+            <button class="btn-clear" onclick="clearEncoding('base32')">
+              <i class="fas fa-trash"></i> Clear
+            </button>
+          </div>
+          
+          <div class="encoding-output" id="base32-output"></div>
+          
+          <div class="encoding-info">
+            <h4>About Base32:</h4>
+            <ul>
+              <li>Uses 32 characters: A-Z, 2-7</li>
+              <li>Case-insensitive and human-readable</li>
+              <li>40% size increase compared to original</li>
+              <li>Used in DNS, file systems, and certificates</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Base58 Encoding -->
+        <div class="encoding-card">
+          <h3><i class="fas fa-bitcoin"></i> Base58 Encoding</h3>
+          <p>Bitcoin-style encoding using 58 characters. Eliminates similar-looking characters for better readability.</p>
+          
+          <textarea class="encoding-input" id="base58-input" placeholder="Enter text to encode/decode..."></textarea>
+          
+          <div class="encoding-buttons">
+            <button class="btn-encode" onclick="encodeBase58()">
+              <i class="fas fa-arrow-down"></i> Encode
+            </button>
+            <button class="btn-encode" onclick="decodeBase58()">
+              <i class="fas fa-arrow-up"></i> Decode
+            </button>
+            <button class="btn-clear" onclick="clearEncoding('base58')">
+              <i class="fas fa-trash"></i> Clear
+            </button>
+          </div>
+          
+          <div class="encoding-output" id="base58-output"></div>
+          
+          <div class="encoding-info">
+            <h4>About Base58:</h4>
+            <ul>
+              <li>Uses 58 characters: 1-9, A-H, J-N, P-Z, a-k, m-z</li>
+              <li>Excludes 0, O, I, l to avoid confusion</li>
+              <li>Popular in cryptocurrency addresses</li>
+              <li>Compact and human-readable format</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Base85 Encoding -->
+        <div class="encoding-card">
+          <h3><i class="fas fa-compress"></i> Base85 Encoding</h3>
+          <p>High-efficiency encoding using 85 characters. More compact than Base64 but less widely supported.</p>
+          
+          <textarea class="encoding-input" id="base85-input" placeholder="Enter text to encode/decode..."></textarea>
+          
+          <div class="encoding-buttons">
+            <button class="btn-encode" onclick="encodeBase85()">
+              <i class="fas fa-arrow-down"></i> Encode
+            </button>
+            <button class="btn-encode" onclick="decodeBase85()">
+              <i class="fas fa-arrow-up"></i> Decode
+            </button>
+            <button class="btn-clear" onclick="clearEncoding('base85')">
+              <i class="fas fa-trash"></i> Clear
+            </button>
+          </div>
+          
+          <div class="encoding-output" id="base85-output"></div>
+          
+          <div class="encoding-info">
+            <h4>About Base85:</h4>
+            <ul>
+              <li>Uses 85 printable ASCII characters</li>
+              <li>25% size increase (more efficient than Base64)</li>
+              <li>Used in PDF, PostScript, and Adobe products</li>
+              <li>Also known as Ascii85 encoding</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Hexadecimal Encoding -->
+        <div class="encoding-card">
+          <h3><i class="fas fa-hashtag"></i> Hexadecimal Encoding</h3>
+          <p>Convert data to hexadecimal representation using 16 characters (0-9, A-F). Standard for binary data display.</p>
+          
+          <textarea class="encoding-input" id="hex-input" placeholder="Enter text to encode/decode..."></textarea>
+          
+          <div class="encoding-buttons">
+            <button class="btn-encode" onclick="encodeHex()">
+              <i class="fas fa-arrow-down"></i> Encode
+            </button>
+            <button class="btn-encode" onclick="decodeHex()">
+              <i class="fas fa-arrow-up"></i> Decode
+            </button>
+            <button class="btn-clear" onclick="clearEncoding('hex')">
+              <i class="fas fa-trash"></i> Clear
+            </button>
+          </div>
+          
+          <div class="encoding-output" id="hex-output"></div>
+          
+          <div class="encoding-info">
+            <h4>About Hexadecimal:</h4>
+            <ul>
+              <li>Uses 16 characters: 0-9, A-F</li>
+              <li>100% size increase (2x original size)</li>
+              <li>Standard for binary data representation</li>
+              <li>Commonly used in programming and debugging</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Binary Encoding -->
+        <div class="encoding-card">
+          <h3><i class="fas fa-binary"></i> Binary Encoding</h3>
+          <p>Convert text to binary representation using 0s and 1s. Most verbose encoding but fundamental to computing.</p>
+          
+          <textarea class="encoding-input" id="binary-input" placeholder="Enter text to encode/decode..."></textarea>
+          
+          <div class="encoding-buttons">
+            <button class="btn-encode" onclick="encodeBinary()">
+              <i class="fas fa-arrow-down"></i> Encode
+            </button>
+            <button class="btn-encode" onclick="decodeBinary()">
+              <i class="fas fa-arrow-up"></i> Decode
+            </button>
+            <button class="btn-clear" onclick="clearEncoding('binary')">
+              <i class="fas fa-trash"></i> Clear
+            </button>
+          </div>
+          
+          <div class="encoding-output" id="binary-output"></div>
+          
+          <div class="encoding-info">
+            <h4>About Binary:</h4>
+            <ul>
+              <li>Uses only 0 and 1 characters</li>
+              <li>800% size increase (8x original size)</li>
+              <li>Fundamental to all digital systems</li>
+              <li>Each character represented by 8 bits</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ASCII Code Representation -->
+        <div class="encoding-card">
+          <h3><i class="fas fa-font"></i> ASCII Code Representation</h3>
+          <p>Convert text to ASCII code values. Each character is represented by its decimal ASCII value.</p>
+          
+          <textarea class="encoding-input" id="ascii-input" placeholder="Enter text to encode/decode..."></textarea>
+          
+          <div class="encoding-buttons">
+            <button class="btn-encode" onclick="encodeAscii()">
+              <i class="fas fa-arrow-down"></i> Encode
+            </button>
+            <button class="btn-encode" onclick="decodeAscii()">
+              <i class="fas fa-arrow-up"></i> Decode
+            </button>
+            <button class="btn-clear" onclick="clearEncoding('ascii')">
+              <i class="fas fa-trash"></i> Clear
+            </button>
+          </div>
+          
+          <div class="encoding-output" id="ascii-output"></div>
+          
+          <div class="encoding-info">
+            <h4>About ASCII:</h4>
+            <ul>
+              <li>Uses decimal numbers 0-127</li>
+              <li>Standard character encoding for English</li>
+              <li>Each character has a unique code value</li>
+              <li>Foundation for modern character encodings</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Unicode Code Points -->
+        <div class="encoding-card">
+          <h3><i class="fas fa-globe"></i> Unicode Code Points</h3>
+          <p>Convert text to Unicode code points. Supports all languages and special characters worldwide.</p>
+          
+          <textarea class="encoding-input" id="unicode-input" placeholder="Enter text to encode/decode..."></textarea>
+          
+          <div class="encoding-buttons">
+            <button class="btn-encode" onclick="encodeUnicode()">
+              <i class="fas fa-arrow-down"></i> Encode
+            </button>
+            <button class="btn-encode" onclick="decodeUnicode()">
+              <i class="fas fa-arrow-up"></i> Decode
+            </button>
+            <button class="btn-clear" onclick="clearEncoding('unicode')">
+              <i class="fas fa-trash"></i> Clear
+            </button>
+          </div>
+          
+          <div class="encoding-output" id="unicode-output"></div>
+          
+          <div class="encoding-info">
+            <h4>About Unicode:</h4>
+            <ul>
+              <li>Supports over 1 million characters</li>
+              <li>Universal character encoding standard</li>
+              <li>Includes emojis, symbols, and all languages</li>
+              <li>Code points range from U+0000 to U+10FFFF</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- URL Encoding -->
+        <div class="encoding-card">
+          <h3><i class="fas fa-link"></i> URL Encoding (%-encoding)</h3>
+          <p>Encode special characters for safe transmission in URLs. Replaces unsafe characters with percent-encoded equivalents.</p>
+          
+          <textarea class="encoding-input" id="url-input" placeholder="Enter text to encode/decode..."></textarea>
+          
+          <div class="encoding-buttons">
+            <button class="btn-encode" onclick="encodeUrl()">
+              <i class="fas fa-arrow-down"></i> Encode
+            </button>
+            <button class="btn-encode" onclick="decodeUrl()">
+              <i class="fas fa-arrow-up"></i> Decode
+            </button>
+            <button class="btn-clear" onclick="clearEncoding('url')">
+              <i class="fas fa-trash"></i> Clear
+            </button>
+          </div>
+          
+          <div class="encoding-output" id="url-output"></div>
+          
+          <div class="encoding-info">
+            <h4>About URL Encoding:</h4>
+            <ul>
+              <li>Uses % followed by two hex digits</li>
+              <li>Safe for transmission in URLs and HTTP</li>
+              <li>Preserves special characters and spaces</li>
+              <li>Standard for web applications</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="software.html">Software</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Connect With Us</h4>
+          <div class="social-links">
+            <a href="https://www.linkedin.com/in/blake-zimmerman-a59575342/" class="social-link" title="LinkedIn" target="_blank" rel="noopener">
+              <i class="fab fa-linkedin"></i>
+              <span>LinkedIn</span>
+            </a>
+            <a href="https://github.com/AInsiders" class="social-link" title="GitHub" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+              <span>GitHub</span>
+            </a>
+            <a href="https://www.youtube.com/@A.Insiders01" class="social-link" title="YouTube" target="_blank" rel="noopener">
+              <i class="fab fa-youtube"></i>
+              <span>YouTube</span>
+            </a>
+            <a href="https://discord.gg/Y4kCtaBZFM" class="social-link" title="Discord" target="_blank" rel="noopener">
+              <i class="fab fa-discord"></i>
+              <span>Discord</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 A.Insiders Network. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms-of-service.html">Terms of Service</a>
+          <a href="cookie-policy.html">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Mobile Navigation
+    document.addEventListener('DOMContentLoaded', function() {
+      const navToggle = document.querySelector('.nav-toggle');
+      const navMenu = document.querySelector('.nav-menu');
+      
+      if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+          navMenu.classList.toggle('active');
+          navToggle.classList.toggle('active');
+        });
+      }
+    });
+
+    // Base64 Encoding/Decoding
+    function encodeBase64() {
+      const input = document.getElementById('base64-input').value;
+      try {
+        const encoded = btoa(input);
+        document.getElementById('base64-output').textContent = encoded;
+      } catch (error) {
+        document.getElementById('base64-output').textContent = 'Error: Invalid input for Base64 encoding';
+      }
+    }
+
+    function decodeBase64() {
+      const input = document.getElementById('base64-input').value;
+      try {
+        const decoded = atob(input);
+        document.getElementById('base64-output').textContent = decoded;
+      } catch (error) {
+        document.getElementById('base64-output').textContent = 'Error: Invalid Base64 string';
+      }
+    }
+
+    // Base32 Encoding/Decoding
+    function encodeBase32() {
+      const input = document.getElementById('base32-input').value;
+      try {
+        const encoded = base32Encode(input);
+        document.getElementById('base32-output').textContent = encoded;
+      } catch (error) {
+        document.getElementById('base32-output').textContent = 'Error: Invalid input for Base32 encoding';
+      }
+    }
+
+    function decodeBase32() {
+      const input = document.getElementById('base32-input').value;
+      try {
+        const decoded = base32Decode(input);
+        document.getElementById('base32-output').textContent = decoded;
+      } catch (error) {
+        document.getElementById('base32-output').textContent = 'Error: Invalid Base32 string';
+      }
+    }
+
+    // Base58 Encoding/Decoding
+    function encodeBase58() {
+      const input = document.getElementById('base58-input').value;
+      try {
+        const encoded = base58Encode(input);
+        document.getElementById('base58-output').textContent = encoded;
+      } catch (error) {
+        document.getElementById('base58-output').textContent = 'Error: Invalid input for Base58 encoding';
+      }
+    }
+
+    function decodeBase58() {
+      const input = document.getElementById('base58-input').value;
+      try {
+        const decoded = base58Decode(input);
+        document.getElementById('base58-output').textContent = decoded;
+      } catch (error) {
+        document.getElementById('base58-output').textContent = 'Error: Invalid Base58 string';
+      }
+    }
+
+    // Base85 Encoding/Decoding
+    function encodeBase85() {
+      const input = document.getElementById('base85-input').value;
+      try {
+        const encoded = base85Encode(input);
+        document.getElementById('base85-output').textContent = encoded;
+      } catch (error) {
+        document.getElementById('base85-output').textContent = 'Error: Invalid input for Base85 encoding';
+      }
+    }
+
+    function decodeBase85() {
+      const input = document.getElementById('base85-input').value;
+      try {
+        const decoded = base85Decode(input);
+        document.getElementById('base85-output').textContent = decoded;
+      } catch (error) {
+        document.getElementById('base85-output').textContent = 'Error: Invalid Base85 string';
+      }
+    }
+
+    // Hexadecimal Encoding/Decoding
+    function encodeHex() {
+      const input = document.getElementById('hex-input').value;
+      try {
+        const encoded = hexEncode(input);
+        document.getElementById('hex-output').textContent = encoded;
+      } catch (error) {
+        document.getElementById('hex-output').textContent = 'Error: Invalid input for hex encoding';
+      }
+    }
+
+    function decodeHex() {
+      const input = document.getElementById('hex-input').value;
+      try {
+        const decoded = hexDecode(input);
+        document.getElementById('hex-output').textContent = decoded;
+      } catch (error) {
+        document.getElementById('hex-output').textContent = 'Error: Invalid hex string';
+      }
+    }
+
+    // Binary Encoding/Decoding
+    function encodeBinary() {
+      const input = document.getElementById('binary-input').value;
+      try {
+        const encoded = binaryEncode(input);
+        document.getElementById('binary-output').textContent = encoded;
+      } catch (error) {
+        document.getElementById('binary-output').textContent = 'Error: Invalid input for binary encoding';
+      }
+    }
+
+    function decodeBinary() {
+      const input = document.getElementById('binary-input').value;
+      try {
+        const decoded = binaryDecode(input);
+        document.getElementById('binary-output').textContent = decoded;
+      } catch (error) {
+        document.getElementById('binary-output').textContent = 'Error: Invalid binary string';
+      }
+    }
+
+    // ASCII Encoding/Decoding
+    function encodeAscii() {
+      const input = document.getElementById('ascii-input').value;
+      try {
+        const encoded = asciiEncode(input);
+        document.getElementById('ascii-output').textContent = encoded;
+      } catch (error) {
+        document.getElementById('ascii-output').textContent = 'Error: Invalid input for ASCII encoding';
+      }
+    }
+
+    function decodeAscii() {
+      const input = document.getElementById('ascii-input').value;
+      try {
+        const decoded = asciiDecode(input);
+        document.getElementById('ascii-output').textContent = decoded;
+      } catch (error) {
+        document.getElementById('ascii-output').textContent = 'Error: Invalid ASCII codes';
+      }
+    }
+
+    // Unicode Encoding/Decoding
+    function encodeUnicode() {
+      const input = document.getElementById('unicode-input').value;
+      try {
+        const encoded = unicodeEncode(input);
+        document.getElementById('unicode-output').textContent = encoded;
+      } catch (error) {
+        document.getElementById('unicode-output').textContent = 'Error: Invalid input for Unicode encoding';
+      }
+    }
+
+    function decodeUnicode() {
+      const input = document.getElementById('unicode-input').value;
+      try {
+        const decoded = unicodeDecode(input);
+        document.getElementById('unicode-output').textContent = decoded;
+      } catch (error) {
+        document.getElementById('unicode-output').textContent = 'Error: Invalid Unicode codes';
+      }
+    }
+
+    // URL Encoding/Decoding
+    function encodeUrl() {
+      const input = document.getElementById('url-input').value;
+      try {
+        const encoded = encodeURIComponent(input);
+        document.getElementById('url-output').textContent = encoded;
+      } catch (error) {
+        document.getElementById('url-output').textContent = 'Error: Invalid input for URL encoding';
+      }
+    }
+
+    function decodeUrl() {
+      const input = document.getElementById('url-input').value;
+      try {
+        const decoded = decodeURIComponent(input);
+        document.getElementById('url-output').textContent = decoded;
+      } catch (error) {
+        document.getElementById('url-output').textContent = 'Error: Invalid URL encoded string';
+      }
+    }
+
+    // Clear function
+    function clearEncoding(type) {
+      document.getElementById(`${type}-input`).value = '';
+      document.getElementById(`${type}-output`).textContent = '';
+    }
+
+    // Encoding Implementation Functions
+    function base32Encode(str) {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+      let bits = 0;
+      let value = 0;
+      let output = '';
+      
+      for (let i = 0; i < str.length; i++) {
+        value = (value << 8) | str.charCodeAt(i);
+        bits += 8;
+        
+        while (bits >= 5) {
+          output += alphabet[(value >>> (bits - 5)) & 31];
+          bits -= 5;
+        }
+      }
+      
+      if (bits > 0) {
+        output += alphabet[(value << (5 - bits)) & 31];
+      }
+      
+      return output;
+    }
+
+    function base32Decode(str) {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+      let bits = 0;
+      let value = 0;
+      let output = '';
+      
+      for (let i = 0; i < str.length; i++) {
+        const char = str[i].toUpperCase();
+        const index = alphabet.indexOf(char);
+        if (index === -1) continue;
+        
+        value = (value << 5) | index;
+        bits += 5;
+        
+        while (bits >= 8) {
+          output += String.fromCharCode((value >>> (bits - 8)) & 255);
+          bits -= 8;
+        }
+      }
+      
+      return output;
+    }
+
+    function base58Encode(str) {
+      const alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+      let num = 0;
+      for (let i = 0; i < str.length; i++) {
+        num = num * 256 + str.charCodeAt(i);
+      }
+      
+      let output = '';
+      while (num > 0) {
+        output = alphabet[num % 58] + output;
+        num = Math.floor(num / 58);
+      }
+      
+      return output;
+    }
+
+    function base58Decode(str) {
+      const alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+      let num = 0;
+      for (let i = 0; i < str.length; i++) {
+        num = num * 58 + alphabet.indexOf(str[i]);
+      }
+      
+      let output = '';
+      while (num > 0) {
+        output = String.fromCharCode(num % 256) + output;
+        num = Math.floor(num / 256);
+      }
+      
+      return output;
+    }
+
+    function base85Encode(str) {
+      // Simplified Base85 implementation
+      let output = '';
+      for (let i = 0; i < str.length; i += 4) {
+        let chunk = 0;
+        for (let j = 0; j < 4 && i + j < str.length; j++) {
+          chunk = (chunk << 8) | str.charCodeAt(i + j);
+        }
+        
+        for (let k = 4; k >= 0; k--) {
+          output += String.fromCharCode((chunk % 85) + 33);
+          chunk = Math.floor(chunk / 85);
+        }
+      }
+      return output;
+    }
+
+    function base85Decode(str) {
+      // Simplified Base85 implementation
+      let output = '';
+      for (let i = 0; i < str.length; i += 5) {
+        let chunk = 0;
+        for (let j = 0; j < 5 && i + j < str.length; j++) {
+          chunk = chunk * 85 + (str.charCodeAt(i + j) - 33);
+        }
+        
+        for (let k = 3; k >= 0; k--) {
+          output += String.fromCharCode((chunk >> (k * 8)) & 255);
+        }
+      }
+      return output;
+    }
+
+    function hexEncode(str) {
+      let output = '';
+      for (let i = 0; i < str.length; i++) {
+        output += str.charCodeAt(i).toString(16).padStart(2, '0');
+      }
+      return output;
+    }
+
+    function hexDecode(str) {
+      let output = '';
+      for (let i = 0; i < str.length; i += 2) {
+        output += String.fromCharCode(parseInt(str.substr(i, 2), 16));
+      }
+      return output;
+    }
+
+    function binaryEncode(str) {
+      let output = '';
+      for (let i = 0; i < str.length; i++) {
+        output += str.charCodeAt(i).toString(2).padStart(8, '0') + ' ';
+      }
+      return output.trim();
+    }
+
+    function binaryDecode(str) {
+      const binaryArray = str.split(' ').filter(bit => bit.length === 8);
+      let output = '';
+      for (let i = 0; i < binaryArray.length; i++) {
+        output += String.fromCharCode(parseInt(binaryArray[i], 2));
+      }
+      return output;
+    }
+
+    function asciiEncode(str) {
+      let output = '';
+      for (let i = 0; i < str.length; i++) {
+        output += str.charCodeAt(i) + ' ';
+      }
+      return output.trim();
+    }
+
+    function asciiDecode(str) {
+      const asciiArray = str.split(' ').filter(code => !isNaN(code));
+      let output = '';
+      for (let i = 0; i < asciiArray.length; i++) {
+        output += String.fromCharCode(parseInt(asciiArray[i]));
+      }
+      return output;
+    }
+
+    function unicodeEncode(str) {
+      let output = '';
+      for (let i = 0; i < str.length; i++) {
+        output += 'U+' + str.charCodeAt(i).toString(16).toUpperCase().padStart(4, '0') + ' ';
+      }
+      return output.trim();
+    }
+
+    function unicodeDecode(str) {
+      const unicodeArray = str.match(/U\+[0-9A-Fa-f]{4}/g) || [];
+      let output = '';
+      for (let i = 0; i < unicodeArray.length; i++) {
+        output += String.fromCharCode(parseInt(unicodeArray[i].substring(2), 16));
+      }
+      return output;
+    }
+  </script>
+</body>
+</html>

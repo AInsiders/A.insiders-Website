@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Converter - A.Insiders Tools</title>
+    
+    <!-- Favicon Setup -->
+    <link rel="icon" type="image/png" href="ainsiders-logo.png" id="main-favicon">
+    <link rel="apple-touch-icon" href="ainsiders-logo.png">
+    <meta name="description" content="Advanced binary converter tool for converting between binary, decimal, hexadecimal, and octal number systems. Free, secure, and browser-based.">
+    <meta name="keywords" content="binary converter, hex converter, decimal converter, octal converter, number system converter, A.Insiders tools">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    
+    <!-- Enhanced Cache Control Headers for Cloudflare -->
+    <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable, stale-while-revalidate=86400">
+    <meta http-equiv="Expires" content="31536000">
+    <meta http-equiv="ETag" content="binary-converter-v1.0">
+    <meta http-equiv="Last-Modified" content="2023-12-31T00:00:00Z">
+    
+    <!-- Optimized Asset Caching System with Cloudflare Headers -->
+    <link rel="stylesheet" href="brain-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Preload critical assets with Cloudflare caching -->
+    <link rel="preload" href="brain-script.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="shared-loader.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="mobile-nav.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="sphere-loader.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="ainsiders-logo.png?v=1.0" as="image" type="image/png">
+    <link rel="preload" href="logo.svg?v=1.0" as="image" type="image/svg+xml">
+    
+    <!-- Cache Manager and Asset Preloader with Cloudflare caching -->
+    <script src="browser-cache-manager.js"></script>
+    <script src="asset-preloader.js"></script>
+    
+    <!-- Optimized Background System -->
+    <script src="brain-script.js"></script>
+    
+    <!-- Font Awesome with CDN and Fallback -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    
+    <!-- Favicon Animation Script -->
+    <script src="favicon-animation.js"></script>
+    
+    <style>
+        /* Binary Converter Specific Styles */
+        .converter-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+            box-shadow: var(--shadow-dark);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Neural Background Canvas - Full Page Coverage */
+        #aiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        /* Page Hero Section with Neural Background */
+        .page-hero {
+            position: relative;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(17, 17, 17, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00ff88, #00ccff, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Converter Grid Layout */
+        .converter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .converter-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .converter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.2);
+            border-color: rgba(0, 102, 255, 0.4);
+        }
+
+        .converter-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0, 102, 255, 0.2);
+        }
+
+        .converter-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            color: #000;
+        }
+
+        .converter-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .converter-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .converter-input:focus {
+            outline: none;
+            border-color: #00ccff;
+            box-shadow: 0 0 0 3px rgba(0, 204, 255, 0.1);
+        }
+
+        .converter-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Binary-specific styling */
+        .binary-input {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        .hex-input {
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+        }
+
+        /* Results Display */
+        .results-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 102, 255, 0.2);
+        }
+
+        .results-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .results-title i {
+            margin-right: 0.5rem;
+            color: #00ff88;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(0, 102, 255, 0.1);
+        }
+
+        .result-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .result-value {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .result-value:hover {
+            background: rgba(0, 255, 136, 0.2);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(0, 102, 255, 0.2);
+            color: var(--text-primary);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 102, 255, 0.3);
+            border-color: rgba(0, 102, 255, 0.5);
+        }
+
+        /* Binary Visualization */
+        .binary-visualization {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 102, 255, 0.2);
+        }
+
+        .binary-bits {
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .bit {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .bit-1 {
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+            color: #000;
+        }
+
+        .bit-0 {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Error Messages */
+        .error-message {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Success Messages */
+        .success-message {
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .converter-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                justify-content: center;
+            }
+            
+            .binary-bits {
+                gap: 0.15rem;
+            }
+            
+            .bit {
+                width: 25px;
+                height: 25px;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 255, 136, 0.3);
+            border-radius: 50%;
+            border-top-color: #00ff88;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Copy Animation */
+        .copy-animation {
+            animation: copyPulse 0.5s ease-in-out;
+        }
+
+        @keyframes copyPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Neural Background Canvas -->
+    <canvas id="aiCanvas"></canvas>
+
+    <!-- Page Hero Section -->
+    <section class="page-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <i class="fas fa-calculator"></i>
+                Binary Converter
+            </h1>
+            <p class="hero-subtitle">
+                Advanced number system converter supporting binary, decimal, hexadecimal, and octal conversions with real-time visualization
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Converter Container -->
+    <div class="converter-container">
+        <!-- Converter Grid -->
+        <div class="converter-grid">
+            <!-- Binary Input -->
+            <div class="converter-card">
+                <div class="converter-header">
+                    <div class="converter-icon">
+                        <i class="fas fa-1"></i>
+                    </div>
+                    <div class="converter-title">Binary</div>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Binary Number (Base-2)</label>
+                    <input type="text" id="binaryInput" class="converter-input binary-input" placeholder="e.g., 10101010" maxlength="64">
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="convertFromBinary()">
+                        <i class="fas fa-exchange-alt"></i>
+                        Convert
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearInput('binaryInput')">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Decimal Input -->
+            <div class="converter-card">
+                <div class="converter-header">
+                    <div class="converter-icon">
+                        <i class="fas fa-0"></i>
+                    </div>
+                    <div class="converter-title">Decimal</div>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Decimal Number (Base-10)</label>
+                    <input type="text" id="decimalInput" class="converter-input" placeholder="e.g., 170" maxlength="20">
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="convertFromDecimal()">
+                        <i class="fas fa-exchange-alt"></i>
+                        Convert
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearInput('decimalInput')">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hexadecimal Input -->
+            <div class="converter-card">
+                <div class="converter-header">
+                    <div class="converter-icon">
+                        <i class="fas fa-hashtag"></i>
+                    </div>
+                    <div class="converter-title">Hexadecimal</div>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Hexadecimal Number (Base-16)</label>
+                    <input type="text" id="hexInput" class="converter-input hex-input" placeholder="e.g., AA" maxlength="16">
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="convertFromHex()">
+                        <i class="fas fa-exchange-alt"></i>
+                        Convert
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearInput('hexInput')">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Octal Input -->
+            <div class="converter-card">
+                <div class="converter-header">
+                    <div class="converter-icon">
+                        <i class="fas fa-circle"></i>
+                    </div>
+                    <div class="converter-title">Octal</div>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Octal Number (Base-8)</label>
+                    <input type="text" id="octalInput" class="converter-input" placeholder="e.g., 252" maxlength="22">
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="convertFromOctal()">
+                        <i class="fas fa-exchange-alt"></i>
+                        Convert
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearInput('octalInput')">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Display -->
+        <div class="results-container" id="resultsContainer" style="display: none;">
+            <div class="results-title">
+                <i class="fas fa-chart-line"></i>
+                Conversion Results
+            </div>
+            <div id="resultsContent"></div>
+        </div>
+
+        <!-- Binary Visualization -->
+        <div class="binary-visualization" id="binaryVisualization" style="display: none;">
+            <div class="results-title">
+                <i class="fas fa-eye"></i>
+                Binary Visualization
+            </div>
+            <div class="binary-bits" id="binaryBits"></div>
+        </div>
+
+        <!-- Error/Success Messages -->
+        <div id="messageContainer"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="shared-loader.js"></script>
+    <script src="mobile-nav.js"></script>
+    <script src="sphere-loader.js"></script>
+
+    <script>
+        // Binary Converter Logic
+        class BinaryConverter {
+            constructor() {
+                this.results = {};
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                // Auto-convert on input change
+                const inputs = ['binaryInput', 'decimalInput', 'hexInput', 'octalInput'];
+                inputs.forEach(id => {
+                    const input = document.getElementById(id);
+                    input.addEventListener('input', (e) => {
+                        this.handleInputChange(e.target);
+                    });
+                    input.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            this.handleInputChange(e.target);
+                        }
+                    });
+                });
+            }
+
+            handleInputChange(input) {
+                const value = input.value.trim();
+                if (!value) {
+                    this.hideResults();
+                    return;
+                }
+
+                const inputId = input.id;
+                let isValid = false;
+                let decimalValue = null;
+
+                try {
+                    switch (inputId) {
+                        case 'binaryInput':
+                            if (this.isValidBinary(value)) {
+                                decimalValue = parseInt(value, 2);
+                                isValid = true;
+                            }
+                            break;
+                        case 'decimalInput':
+                            if (this.isValidDecimal(value)) {
+                                decimalValue = parseInt(value, 10);
+                                isValid = true;
+                            }
+                            break;
+                        case 'hexInput':
+                            if (this.isValidHex(value)) {
+                                decimalValue = parseInt(value, 16);
+                                isValid = true;
+                            }
+                            break;
+                        case 'octalInput':
+                            if (this.isValidOctal(value)) {
+                                decimalValue = parseInt(value, 8);
+                                isValid = true;
+                            }
+                            break;
+                    }
+
+                    if (isValid && decimalValue !== null) {
+                        this.convertAll(decimalValue);
+                        this.showSuccessMessage('Conversion successful!');
+                    } else {
+                        this.showErrorMessage('Invalid input format. Please check your input.');
+                    }
+                } catch (error) {
+                    this.showErrorMessage('Conversion error: ' + error.message);
+                }
+            }
+
+            isValidBinary(value) {
+                return /^[01]+$/.test(value);
+            }
+
+            isValidDecimal(value) {
+                return /^\d+$/.test(value) && parseInt(value) >= 0;
+            }
+
+            isValidHex(value) {
+                return /^[0-9A-Fa-f]+$/.test(value);
+            }
+
+            isValidOctal(value) {
+                return /^[0-7]+$/.test(value);
+            }
+
+            convertAll(decimalValue) {
+                this.results = {
+                    decimal: decimalValue.toString(),
+                    binary: decimalValue.toString(2),
+                    hex: decimalValue.toString(16).toUpperCase(),
+                    octal: decimalValue.toString(8)
+                };
+
+                this.displayResults();
+                this.updateInputs();
+                this.createBinaryVisualization();
+            }
+
+            displayResults() {
+                const container = document.getElementById('resultsContainer');
+                const content = document.getElementById('resultsContent');
+                
+                content.innerHTML = `
+                    <div class="result-item">
+                        <span class="result-label">Decimal (Base-10):</span>
+                        <span class="result-value" onclick="copyToClipboard('${this.results.decimal}')">${this.results.decimal}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Binary (Base-2):</span>
+                        <span class="result-value" onclick="copyToClipboard('${this.results.binary}')">${this.results.binary}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Hexadecimal (Base-16):</span>
+                        <span class="result-value" onclick="copyToClipboard('${this.results.hex}')">${this.results.hex}</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Octal (Base-8):</span>
+                        <span class="result-value" onclick="copyToClipboard('${this.results.octal}')">${this.results.octal}</span>
+                    </div>
+                `;
+                
+                container.style.display = 'block';
+            }
+
+            updateInputs() {
+                document.getElementById('binaryInput').value = this.results.binary;
+                document.getElementById('decimalInput').value = this.results.decimal;
+                document.getElementById('hexInput').value = this.results.hex;
+                document.getElementById('octalInput').value = this.results.octal;
+            }
+
+            createBinaryVisualization() {
+                const container = document.getElementById('binaryVisualization');
+                const bitsContainer = document.getElementById('binaryBits');
+                
+                // Pad binary to 8 bits for better visualization
+                let binary = this.results.binary;
+                while (binary.length < 8) {
+                    binary = '0' + binary;
+                }
+                
+                // Limit to 32 bits for display
+                if (binary.length > 32) {
+                    binary = binary.slice(-32);
+                }
+
+                bitsContainer.innerHTML = '';
+                
+                for (let i = 0; i < binary.length; i++) {
+                    const bit = document.createElement('div');
+                    bit.className = `bit bit-${binary[i]}`;
+                    bit.textContent = binary[i];
+                    bit.title = `Bit ${binary.length - 1 - i} (${binary[i]})`;
+                    bitsContainer.appendChild(bit);
+                }
+                
+                container.style.display = 'block';
+            }
+
+            hideResults() {
+                document.getElementById('resultsContainer').style.display = 'none';
+                document.getElementById('binaryVisualization').style.display = 'none';
+            }
+
+            showSuccessMessage(message) {
+                this.showMessage(message, 'success');
+            }
+
+            showErrorMessage(message) {
+                this.showMessage(message, 'error');
+            }
+
+            showMessage(message, type) {
+                const container = document.getElementById('messageContainer');
+                container.innerHTML = `<div class="${type}-message">${message}</div>`;
+                
+                setTimeout(() => {
+                    container.innerHTML = '';
+                }, 5000);
+            }
+        }
+
+        // Global converter instance
+        const converter = new BinaryConverter();
+
+        // Global functions for button clicks
+        function convertFromBinary() {
+            const input = document.getElementById('binaryInput');
+            converter.handleInputChange(input);
+        }
+
+        function convertFromDecimal() {
+            const input = document.getElementById('decimalInput');
+            converter.handleInputChange(input);
+        }
+
+        function convertFromHex() {
+            const input = document.getElementById('hexInput');
+            converter.handleInputChange(input);
+        }
+
+        function convertFromOctal() {
+            const input = document.getElementById('octalInput');
+            converter.handleInputChange(input);
+        }
+
+        function clearInput(inputId) {
+            document.getElementById(inputId).value = '';
+            converter.hideResults();
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Visual feedback
+                const elements = document.querySelectorAll('.result-value');
+                elements.forEach(el => {
+                    if (el.textContent === text) {
+                        el.classList.add('copy-animation');
+                        setTimeout(() => {
+                            el.classList.remove('copy-animation');
+                        }, 500);
+                    }
+                });
+                
+                converter.showSuccessMessage(`Copied "${text}" to clipboard!`);
+            }).catch(err => {
+                converter.showErrorMessage('Failed to copy to clipboard');
+            });
+        }
+
+        // Additional utility functions
+        function clearAll() {
+            ['binaryInput', 'decimalInput', 'hexInput', 'octalInput'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            converter.hideResults();
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'k':
+                        e.preventDefault();
+                        clearAll();
+                        break;
+                    case 'Enter':
+                        e.preventDefault();
+                        const activeElement = document.activeElement;
+                        if (activeElement && activeElement.classList.contains('converter-input')) {
+                            converter.handleInputChange(activeElement);
+                        }
+                        break;
+                }
+            }
+        });
+
+        // Initialize tooltips and additional features
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add tooltips to result values
+            const resultValues = document.querySelectorAll('.result-value');
+            resultValues.forEach(el => {
+                el.title = 'Click to copy';
+            });
+
+            // Auto-focus first input
+            document.getElementById('binaryInput').focus();
+        });
+    </script>
+</body>
+</html>
