@@ -318,9 +318,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function shouldShowOrb() {
             const currentPath = window.location.pathname;
             const isToolsPage = currentPath.includes('software.html');
-            const isIpCheckerPage = currentPath.includes('ip-checker.html');
             const isUrlCheckerPage = currentPath.includes('url-redirect-checker.html');
-            const isIpBlacklistPage = currentPath.includes('ip-blacklist-checker.html');
             const isAiTextDetectionPage = currentPath.includes('ai-text-detection.html');
             const isAppsPage = currentPath.includes('apps.html');
             const isAboutPage = currentPath.includes('about.html');
@@ -328,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             
             // Exclude tools page and IP ban tester from interactive background to prevent mouse issues
-            return isHomePage || isStartingScreen || isIpCheckerPage || isUrlCheckerPage || isAiTextDetectionPage || isAppsPage || isAboutPage || isContactPage;
+            return isHomePage || isStartingScreen || isUrlCheckerPage || isAiTextDetectionPage || isAppsPage || isAboutPage || isContactPage;
         }
         const mouse = { 
             x: 0, 

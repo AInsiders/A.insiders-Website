@@ -25,9 +25,7 @@ const STATIC_ASSETS = [
     '/logo.svg',
     '/entropy-calculator.html',
     '/advanced-entropy-simulator.html',
-    '/ip-checker.html',
     '/url-redirect-checker.html',
-    '/ip-blacklist-checker.html',
     '/ai-text-detection.html',
     '/password-checker.html'
 ];
