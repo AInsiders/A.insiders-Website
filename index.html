@@ -643,7 +643,7 @@
           if (isDeleting) {
             currentCharIndex--;
             const suffix = currentText.substring(12, currentCharIndex);
-            titleElement.innerHTML = `Welcome To <span class="ai-part">A</span>${suffix}`;
+            titleElement.innerHTML = `Welcome To <span class="ai-part">A.I</span>${suffix}`;
             
             if (currentCharIndex === 12) {
               isDeleting = false;
@@ -656,7 +656,7 @@
           } else {
             currentCharIndex++;
             const suffix = currentText.substring(12, currentCharIndex);
-            titleElement.innerHTML = `Welcome To <span class="ai-part">A</span>${suffix}`;
+            titleElement.innerHTML = `Welcome To <span class="ai-part">A.I</span>${suffix}`;
             
             if (currentCharIndex === currentText.length) {
               if (currentTextIndex === texts.length - 1) {
