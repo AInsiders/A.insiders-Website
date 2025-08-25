@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuro Background Reset Test</title>
+    <link rel="stylesheet" href="brain-styles.css">
+    <style>
+        /* Test page specific styles */
+        .test-container {
+            position: relative;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            z-index: 10;
+        }
+
+        .test-content {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .test-title {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .test-description {
+            color: #ccc;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .test-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .test-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 102, 255, 0.2);
+            border: 1px solid rgba(0, 102, 255, 0.4);
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .test-btn:hover {
+            background: rgba(0, 102, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .test-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 2rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #ccc;
+            text-align: left;
+        }
+
+        .test-info h4 {
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .test-info p {
+            margin: 0.25rem 0;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .status-active {
+            background: #00ff00;
+            animation: pulse 2s infinite;
+        }
+
+        .status-inactive {
+            background: #ff0000;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .test-content {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            .test-title {
+                font-size: 1.5rem;
+            }
+
+            .test-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .test-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body class="home-page">
+    <!-- Neuro Background Canvas -->
+    <canvas id="aiCanvas"></canvas>
+
+    <!-- Test Content -->
+    <div class="test-container">
+        <div class="test-content">
+            <h1 class="test-title">🧠 Neuro Background Reset Test</h1>
+            <p class="test-description">
+                This page demonstrates the responsive neuro background reset functionality. 
+                Try resizing your browser window, rotating your device, or using the controls below 
+                to see how the neuro background adapts to different screen ratios and orientations.
+            </p>
+
+            <div class="test-controls">
+                <button class="test-btn" onclick="testReset()">Reset Background</button>
+                <button class="test-btn" onclick="testResetSlow()">Slow Reset</button>
+                <button class="test-btn" onclick="testResetFast()">Fast Reset</button>
+                <button class="test-btn" onclick="testError()">Simulate Error</button>
+                <button class="test-btn" onclick="testDisable()">Disable Background</button>
+                <button class="test-btn" onclick="testEnable()">Enable Background</button>
+            </div>
+
+            <div class="test-info">
+                <h4>Current Status:</h4>
+                <p><span class="status-indicator status-active"></span>Neuro Background: <span id="status">Active</span></p>
+                <p>Screen Size: <span id="screen-size">Loading...</span></p>
+                <p>Screen Ratio: <span id="screen-ratio">Loading...</span></p>
+                <p>Orientation: <span id="orientation">Loading...</span></p>
+                <p>Device Type: <span id="device-type">Loading...</span></p>
+                <p>Pixel Ratio: <span id="pixel-ratio">Loading...</span></p>
+                <p>Touch Support: <span id="touch-support">Loading...</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simple Neuro Background Animation -->
+    <script>
+        // Simple neuro background animation
+        const canvas = document.getElementById('aiCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function createNeuroBackground() {
+            resizeCanvas();
+            
+            const particles = [];
+            const particleCount = Math.min(100, Math.floor((canvas.width * canvas.height) / 10000));
+
+            // Create particles
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2,
+                    size: Math.random() * 3 + 1,
+                    opacity: Math.random() * 0.5 + 0.2
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Update and draw particles
+                particles.forEach(particle => {
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    
+                    // Wrap around edges
+                    if (particle.x < 0) particle.x = canvas.width;
+                    if (particle.x > canvas.width) particle.x = 0;
+                    if (particle.y < 0) particle.y = canvas.height;
+                    if (particle.y > canvas.height) particle.y = 0;
+                    
+                    // Draw particle
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(0, 102, 255, ${particle.opacity})`;
+                    ctx.fill();
+                });
+                
+                // Draw connections
+                particles.forEach((particle, i) => {
+                    particles.slice(i + 1).forEach(otherParticle => {
+                        const distance = Math.sqrt(
+                            Math.pow(particle.x - otherParticle.x, 2) + 
+                            Math.pow(particle.y - otherParticle.y, 2)
+                        );
+                        
+                        if (distance < 100) {
+                            ctx.beginPath();
+                            ctx.moveTo(particle.x, particle.y);
+                            ctx.lineTo(otherParticle.x, otherParticle.y);
+                            ctx.strokeStyle = `rgba(0, 102, 255, ${0.1 * (1 - distance / 100)})`;
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                        }
+                    });
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+
+        // Initialize neuro background
+        window.addEventListener('load', createNeuroBackground);
+        window.addEventListener('resize', createNeuroBackground);
+
+        // Test functions
+        function testReset() {
+            if (window.neuroBackgroundReset) {
+                window.neuroBackgroundReset.reset();
+                updateStatus('Resetting...');
+            }
+        }
+
+        function testResetSlow() {
+            if (window.neuroBackgroundReset) {
+                window.neuroBackgroundReset.resetSlow();
+                updateStatus('Slow Reset...');
+            }
+        }
+
+        function testResetFast() {
+            if (window.neuroBackgroundReset) {
+                window.neuroBackgroundReset.resetFast();
+                updateStatus('Fast Reset...');
+            }
+        }
+
+        function testError() {
+            if (window.neuroBackgroundReset) {
+                window.neuroBackgroundReset.setError();
+                updateStatus('Error State');
+            }
+        }
+
+        function testDisable() {
+            if (window.neuroBackgroundReset) {
+                window.neuroBackgroundReset.disable();
+                updateStatus('Disabled');
+            }
+        }
+
+        function testEnable() {
+            if (window.neuroBackgroundReset) {
+                window.neuroBackgroundReset.enable();
+                updateStatus('Active');
+            }
+        }
+
+        function updateStatus(status) {
+            document.getElementById('status').textContent = status;
+        }
+
+        function updateInfo() {
+            document.getElementById('screen-size').textContent = `${window.innerWidth} × ${window.innerHeight}`;
+            document.getElementById('screen-ratio').textContent = (window.innerWidth / window.innerHeight).toFixed(2);
+            document.getElementById('orientation').textContent = window.orientation || '0°';
+            document.getElementById('device-type').textContent = 'ontouchstart' in window ? 'Touch Device' : 'Desktop';
+            document.getElementById('pixel-ratio').textContent = window.devicePixelRatio || '1';
+            document.getElementById('touch-support').textContent = 'ontouchstart' in window ? 'Yes' : 'No';
+        }
+
+        // Update info periodically
+        setInterval(updateInfo, 1000);
+        updateInfo();
+
+        // Update status when neuro background changes
+        if (window.neuroBackgroundReset) {
+            setInterval(() => {
+                const state = window.neuroBackgroundReset.getState();
+                if (state.isResetting) {
+                    updateStatus('Resetting...');
+                } else {
+                    updateStatus('Active');
+                }
+            }, 100);
+        }
+    </script>
+
+    <!-- Load neuro background reset handler -->
+    <script src="neuro-background-reset.js"></script>
+</body>
+</html>

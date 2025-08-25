@@ -67,16 +67,10 @@
 
     /* Page Hero Section with Neural Background */
     .page-hero {
-      position: relative;
-      min-height: 60vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(10, 10, 10, 0.9));
+      padding: 1.5rem 0;
       text-align: center;
-      padding: 6rem 2rem 4rem;
-      background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(17, 17, 17, 0.4) 100%);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      position: relative;
       overflow: hidden;
     }
 
@@ -87,21 +81,21 @@
     }
 
     .hero-title {
-      font-size: 3.5rem;
-      font-weight: 800;
+      font-size: 2.5rem;
+      font-weight: 700;
       background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 1rem;
-      text-shadow: 0 0 30px rgba(0, 102, 255, 0.3);
+      margin-bottom: 0.75rem;
+      text-shadow: 0 0 20px rgba(0, 102, 255, 0.3);
     }
 
     .hero-subtitle {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       color: var(--text-secondary);
-      margin-bottom: 2rem;
-      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
     }
 
     /* Encoding Methods Specific Styles */
@@ -117,6 +111,117 @@
       border: 1px solid rgba(0, 102, 255, 0.2);
       position: relative;
       z-index: 1;
+    }
+
+    /* Tool Selector Styles */
+    .tool-selector-container {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .tool-selector-header h3 {
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .tool-selector-header p {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+
+    .tool-selector-wrapper {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .tool-selector {
+      min-width: 300px;
+      padding: 0.75rem 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      color: var(--text-primary);
+      font-family: var(--font-primary);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .tool-selector:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+    }
+
+    .tool-selector option {
+      background: rgba(0, 0, 0, 0.9);
+      color: var(--text-primary);
+      padding: 0.5rem;
+    }
+
+    .tool-selector option[value=""] {
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+    }
+
+    .tool-selector option {
+      text-align: center;
+      padding: 0.75rem 0.5rem;
+    }
+
+    /* Enhanced tooltip styles */
+    .tool-selector {
+      position: relative;
+    }
+
+    .tool-selector:hover::after {
+      content: attr(title);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      z-index: 1000;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .tool-selector:hover:hover::after {
+      opacity: 1;
+    }
+
+    /* Encoding Card Visibility */
+    .encoding-card {
+      transition: all 0.3s ease;
+    }
+
+    .encoding-card.hidden {
+      display: none;
+    }
+
+    .encoding-card.visible {
+      display: block;
     }
 
     .encoding-header {
@@ -291,12 +396,31 @@
 
     /* Responsive Design */
     @media (max-width: 768px) {
+      .tool-selector-container {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .tool-selector-header h3 {
+        font-size: 1.25rem;
+      }
+
+      .tool-selector-wrapper {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .tool-selector {
+        min-width: 100%;
+        max-width: 300px;
+      }
+
       .encoding-container {
         padding: 1rem;
       }
 
       .hero-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
       }
 
       .encoding-header h1 {
@@ -405,10 +529,32 @@
   <main class="main-content">
     <div class="encoding-container">
 
+      <!-- Tool Selector Dropdown -->
+      <div class="tool-selector-container">
+        <div class="tool-selector-header">
+          <h3><i class="fas fa-tools"></i> Select Encoding Tool</h3>
+          <p>Choose a specific tool to begin working with encoding methods</p>
+        </div>
+        <div class="tool-selector-wrapper">
+                          <select id="toolSelector" class="tool-selector" onchange="filterTools()">
+                    <option value="">Select Tool</option>
+                    <option value="base64" title="Convert binary data to ASCII text using Base64 encoding. Widely used for data transmission and storage.">Base64 Encoding</option>
+                    <option value="base32" title="Encode data using 32 characters (A-Z, 2-7). More compact than Base64 but case-sensitive.">Base32 Encoding</option>
+                    <option value="base58" title="Bitcoin-style encoding using 58 characters. Eliminates similar-looking characters for better readability.">Base58 Encoding</option>
+                    <option value="base85" title="High-efficiency encoding using 85 characters. More compact than Base64 but less widely supported.">Base85 Encoding</option>
+                    <option value="hex" title="Convert data to hexadecimal representation using 16 characters (0-9, A-F). Standard for binary data display.">Hexadecimal Encoding</option>
+                    <option value="binary" title="Convert text to binary representation using 0s and 1s. Most verbose encoding but fundamental to computing.">Binary Encoding</option>
+                    <option value="ascii" title="Convert text to ASCII code values. Each character is represented by its decimal ASCII value.">ASCII Code Representation</option>
+                    <option value="unicode" title="Convert text to Unicode code points. Supports all languages and special characters worldwide.">Unicode Code Points</option>
+                    <option value="url" title="Encode special characters for safe transmission in URLs. Replaces unsafe characters with percent-encoded equivalents.">URL Encoding</option>
+                </select>
+        </div>
+      </div>
+
       <!-- Encoding Tools Grid -->
-      <div class="encoding-grid">
+      <div class="encoding-grid" id="encodingGrid">
         <!-- Base64 Encoding -->
-        <div class="encoding-card">
+        <div class="encoding-card" data-encoding="base64">
           <h3><i class="fas fa-code"></i> Base64 Encoding</h3>
           <p>Convert binary data to ASCII text using Base64 encoding. Widely used for data transmission and storage.</p>
           
@@ -440,7 +586,7 @@
         </div>
 
         <!-- Base32 Encoding -->
-        <div class="encoding-card">
+        <div class="encoding-card" data-encoding="base32">
           <h3><i class="fas fa-hashtag"></i> Base32 Encoding</h3>
           <p>Encode data using 32 characters (A-Z, 2-7). More compact than Base64 but case-sensitive.</p>
           
@@ -472,7 +618,7 @@
         </div>
 
         <!-- Base58 Encoding -->
-        <div class="encoding-card">
+        <div class="encoding-card" data-encoding="base58">
           <h3><i class="fas fa-bitcoin"></i> Base58 Encoding</h3>
           <p>Bitcoin-style encoding using 58 characters. Eliminates similar-looking characters for better readability.</p>
           
@@ -504,7 +650,7 @@
         </div>
 
         <!-- Base85 Encoding -->
-        <div class="encoding-card">
+        <div class="encoding-card" data-encoding="base85">
           <h3><i class="fas fa-compress"></i> Base85 Encoding</h3>
           <p>High-efficiency encoding using 85 characters. More compact than Base64 but less widely supported.</p>
           
@@ -536,7 +682,7 @@
         </div>
 
         <!-- Hexadecimal Encoding -->
-        <div class="encoding-card">
+        <div class="encoding-card" data-encoding="hex">
           <h3><i class="fas fa-hashtag"></i> Hexadecimal Encoding</h3>
           <p>Convert data to hexadecimal representation using 16 characters (0-9, A-F). Standard for binary data display.</p>
           
@@ -568,7 +714,7 @@
         </div>
 
         <!-- Binary Encoding -->
-        <div class="encoding-card">
+        <div class="encoding-card" data-encoding="binary">
           <h3><i class="fas fa-binary"></i> Binary Encoding</h3>
           <p>Convert text to binary representation using 0s and 1s. Most verbose encoding but fundamental to computing.</p>
           
@@ -600,7 +746,7 @@
         </div>
 
         <!-- ASCII Code Representation -->
-        <div class="encoding-card">
+        <div class="encoding-card" data-encoding="ascii">
           <h3><i class="fas fa-font"></i> ASCII Code Representation</h3>
           <p>Convert text to ASCII code values. Each character is represented by its decimal ASCII value.</p>
           
@@ -632,7 +778,7 @@
         </div>
 
         <!-- Unicode Code Points -->
-        <div class="encoding-card">
+        <div class="encoding-card" data-encoding="unicode">
           <h3><i class="fas fa-globe"></i> Unicode Code Points</h3>
           <p>Convert text to Unicode code points. Supports all languages and special characters worldwide.</p>
           
@@ -664,7 +810,7 @@
         </div>
 
         <!-- URL Encoding -->
-        <div class="encoding-card">
+        <div class="encoding-card" data-encoding="url">
           <h3><i class="fas fa-link"></i> URL Encoding (%-encoding)</h3>
           <p>Encode special characters for safe transmission in URLs. Replaces unsafe characters with percent-encoded equivalents.</p>
           
@@ -753,6 +899,63 @@
   
   <!-- JavaScript -->
   <script>
+    // Tool filtering functions
+    function filterTools() {
+      const selectedTool = document.getElementById('toolSelector').value;
+      const encodingCards = document.querySelectorAll('.encoding-card');
+      
+      // Hide all tools by default
+      encodingCards.forEach(card => {
+        card.classList.add('hidden');
+        card.classList.remove('visible');
+      });
+
+      // Show only the selected tool
+      if (selectedTool && selectedTool !== '') {
+        const selectedCard = document.querySelector(`[data-encoding="${selectedTool}"]`);
+        if (selectedCard) {
+          selectedCard.classList.remove('hidden');
+          selectedCard.classList.add('visible');
+        }
+
+        // Update grid layout for single tool view
+        const encodingGrid = document.getElementById('encodingGrid');
+        encodingGrid.style.gridTemplateColumns = '1fr';
+        encodingGrid.style.maxWidth = '800px';
+        encodingGrid.style.margin = '0 auto';
+
+        // Hide the "Select Tool" option once a tool is selected
+        hideSelectToolOption();
+
+        // Show success message
+        const toolName = document.getElementById('toolSelector').options[document.getElementById('toolSelector').selectedIndex].text;
+        showMessage(`Selected ${toolName} tool`, 'success');
+      } else {
+        // No tool selected - show message
+        showMessage('Please select a tool to begin', 'info');
+      }
+    }
+
+    function hideSelectToolOption() {
+      const toolSelector = document.getElementById('toolSelector');
+      const selectToolOption = toolSelector.querySelector('option[value=""]');
+      if (selectToolOption) {
+        selectToolOption.style.display = 'none';
+      }
+    }
+
+    function showMessage(message, type = 'success') {
+      // Create a temporary message display
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `copy-success ${type}`;
+      messageDiv.textContent = message;
+      document.body.appendChild(messageDiv);
+      
+      setTimeout(() => {
+        messageDiv.remove();
+      }, 3000);
+    }
+
     // Mobile Navigation
     document.addEventListener('DOMContentLoaded', function() {
       const navToggle = document.querySelector('.nav-toggle');
@@ -764,7 +967,61 @@
           navToggle.classList.toggle('active');
         });
       }
+
+      // Initialize tool filtering - hide all tools by default
+      const encodingCards = document.querySelectorAll('.encoding-card');
+      encodingCards.forEach(card => {
+        card.classList.add('hidden');
+        card.classList.remove('visible');
+      });
+
+      // Add tooltip functionality
+      const toolSelector = document.getElementById('toolSelector');
+      if (toolSelector) {
+        toolSelector.addEventListener('mouseover', function(e) {
+          const option = e.target;
+          if (option.tagName === 'OPTION' && option.value) {
+            showTooltip(option.title, e);
+          }
+        });
+
+        toolSelector.addEventListener('mouseout', function() {
+          hideTooltip();
+        });
+      }
+
+      // Show welcome message
+      showMessage('Welcome to the Encoding Methods Tool! Please select a tool to begin.', 'info');
     });
+
+    // Tooltip functions
+    function showTooltip(text, event) {
+      const tooltip = document.createElement('div');
+      tooltip.className = 'custom-tooltip';
+      tooltip.textContent = text;
+      tooltip.style.cssText = `
+        position: fixed;
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        z-index: 10000;
+        pointer-events: none;
+        left: ${event.pageX + 10}px;
+        top: ${event.pageY - 40}px;
+        max-width: 300px;
+        word-wrap: break-word;
+        white-space: normal;
+      `;
+      document.body.appendChild(tooltip);
+    }
+
+    function hideTooltip() {
+      const tooltips = document.querySelectorAll('.custom-tooltip');
+      tooltips.forEach(tooltip => tooltip.remove());
+    }
 
     // Base64 Encoding/Decoding
     function encodeBase64() {

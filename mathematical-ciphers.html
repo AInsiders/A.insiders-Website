@@ -67,13 +67,13 @@
         /* Page Hero Section with Neural Background */
         .page-hero {
             position: relative;
-            min-height: 60vh;
+            min-height: auto;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 6rem 2rem 4rem;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(17, 17, 17, 0.4) 100%);
+            padding: 1.5rem 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(10, 10, 10, 0.9));
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             overflow: hidden;
@@ -86,21 +86,21 @@
         }
 
         .hero-title {
-            font-size: 3.5rem;
-            font-weight: 800;
+            font-size: 2.5rem;
+            font-weight: 700;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 30px rgba(0, 102, 255, 0.3);
+            margin-bottom: 0.75rem;
+            text-shadow: 0 0 20px rgba(0, 102, 255, 0.3);
         }
 
         .hero-subtitle {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
         }
 
         /* Mathematical Ciphers Specific Styles */
@@ -116,6 +116,90 @@
             border: 1px solid rgba(0, 102, 255, 0.2);
             position: relative;
             z-index: 1;
+        }
+
+        /* Tool Selector Styles */
+        .tool-selector-container {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .tool-selector-header h3 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .tool-selector-header p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .tool-selector-wrapper {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .tool-selector {
+            min-width: 300px;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            font-family: var(--font-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .tool-selector:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+        }
+
+        .tool-selector option {
+            background: rgba(0, 0, 0, 0.9);
+            color: var(--text-primary);
+            padding: 0.5rem;
+        }
+
+        .tool-selector option[value=""] {
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+        }
+
+        .tool-selector option {
+            text-align: center;
+            padding: 0.75rem 0.5rem;
+        }
+
+        /* Cipher Card Visibility */
+        .cipher-card {
+            transition: all 0.3s ease;
+        }
+
+        .cipher-card.hidden {
+            display: none;
+        }
+
+        .cipher-card.visible {
+            display: block;
         }
 
         /* Cipher Grid Layout */
@@ -407,8 +491,27 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
+            .tool-selector-container {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .tool-selector-header h3 {
+                font-size: 1.25rem;
+            }
+
+            .tool-selector-wrapper {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .tool-selector {
+                min-width: 100%;
+                max-width: 300px;
+            }
+
             .hero-title {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
             
             .cipher-grid {
@@ -548,10 +651,28 @@
 
     <!-- Main Cipher Container -->
     <div class="cipher-container">
+        <!-- Tool Selector Dropdown -->
+        <div class="tool-selector-container">
+            <div class="tool-selector-header">
+                <h3><i class="fas fa-tools"></i> Select Mathematical Cipher Tool</h3>
+                <p>Choose a specific tool to begin working with mathematical ciphers</p>
+            </div>
+            <div class="tool-selector-wrapper">
+                <select id="toolSelector" class="tool-selector" onchange="filterTools()">
+                    <option value="">Select Tool</option>
+                    <option value="hill" title="Matrix-based encryption using 2x2 matrices. Each letter pair is encrypted using matrix multiplication.">Hill Cipher</option>
+                    <option value="otp" title="Unbreakable encryption using random keys. Each character is XORed with a random key of the same length.">One-Time Pad</option>
+                    <option value="xor" title="Bitwise XOR encryption. Each character is XORed with a repeating key pattern.">XOR Cipher</option>
+                    <option value="bitshift" title="Bit shifting encryption. Characters are encrypted by shifting their binary representation left or right.">Bit Shifting Cipher</option>
+                    <option value="modular" title="Modular arithmetic encryption. Numbers are encrypted using modular multiplication with a key.">Modular Arithmetic Cipher</option>
+                </select>
+            </div>
+        </div>
+
         <!-- Cipher Grid -->
-        <div class="cipher-grid">
+        <div class="cipher-grid" id="cipherGrid">
             <!-- Hill Cipher -->
-            <div class="cipher-card">
+            <div class="cipher-card" data-cipher="hill">
                 <div class="cipher-header">
                     <div class="cipher-icon">
                         <i class="fas fa-th"></i>
@@ -604,7 +725,7 @@
             </div>
 
             <!-- One-Time Pad -->
-            <div class="cipher-card">
+            <div class="cipher-card" data-cipher="otp">
                 <div class="cipher-header">
                     <div class="cipher-icon">
                         <i class="fas fa-key"></i>
@@ -652,7 +773,7 @@
             </div>
 
             <!-- XOR Cipher -->
-            <div class="cipher-card">
+            <div class="cipher-card" data-cipher="xor">
                 <div class="cipher-header">
                     <div class="cipher-icon">
                         <i class="fas fa-xmark"></i>
@@ -700,7 +821,7 @@
             </div>
 
             <!-- Bit Shifting Cipher -->
-            <div class="cipher-card">
+            <div class="cipher-card" data-cipher="bitshift">
                 <div class="cipher-header">
                     <div class="cipher-icon">
                         <i class="fas fa-arrows-alt-h"></i>
@@ -752,7 +873,7 @@
             </div>
 
             <!-- Modular Arithmetic Cipher -->
-            <div class="cipher-card">
+            <div class="cipher-card" data-cipher="modular">
                 <div class="cipher-header">
                     <div class="cipher-icon">
                         <i class="fas fa-percentage"></i>
@@ -1441,6 +1562,51 @@
             return false;
         }
 
+        // Tool filtering functions
+        function filterTools() {
+            const selectedTool = document.getElementById('toolSelector').value;
+            const cipherCards = document.querySelectorAll('.cipher-card');
+            
+            // Hide all tools by default
+            cipherCards.forEach(card => {
+                card.classList.add('hidden');
+                card.classList.remove('visible');
+            });
+
+            // Show only the selected tool
+            if (selectedTool && selectedTool !== '') {
+                const selectedCard = document.querySelector(`[data-cipher="${selectedTool}"]`);
+                if (selectedCard) {
+                    selectedCard.classList.remove('hidden');
+                    selectedCard.classList.add('visible');
+                }
+
+                // Update grid layout for single tool view
+                const cipherGrid = document.getElementById('cipherGrid');
+                cipherGrid.style.gridTemplateColumns = '1fr';
+                cipherGrid.style.maxWidth = '800px';
+                cipherGrid.style.margin = '0 auto';
+
+                // Hide the "Select Tool" option once a tool is selected
+                hideSelectToolOption();
+
+                // Show success message
+                const toolName = document.getElementById('toolSelector').options[document.getElementById('toolSelector').selectedIndex].text;
+                showMessage(`Selected ${toolName} tool`, 'success');
+            } else {
+                // No tool selected - show message
+                showMessage('Please select a tool to begin', 'info');
+            }
+        }
+
+        function hideSelectToolOption() {
+            const toolSelector = document.getElementById('toolSelector');
+            const selectToolOption = toolSelector.querySelector('option[value=""]');
+            if (selectToolOption) {
+                selectToolOption.style.display = 'none';
+            }
+        }
+
         // Initialize page
         document.addEventListener('DOMContentLoaded', () => {
             // Add tooltips to result values
@@ -1449,9 +1615,60 @@
                 el.title = 'Click to copy';
             });
 
-            // Auto-focus first input
-            document.getElementById('hillMessage').focus();
+            // Initialize tool filtering - hide all tools by default
+            const cipherCards = document.querySelectorAll('.cipher-card');
+            cipherCards.forEach(card => {
+                card.classList.add('hidden');
+                card.classList.remove('visible');
+            });
+
+            // Add tooltip functionality
+            const toolSelector = document.getElementById('toolSelector');
+            if (toolSelector) {
+                toolSelector.addEventListener('mouseover', function(e) {
+                    const option = e.target;
+                    if (option.tagName === 'OPTION' && option.value) {
+                        showTooltip(option.title, e);
+                    }
+                });
+
+                toolSelector.addEventListener('mouseout', function() {
+                    hideTooltip();
+                });
+            }
+
+            // Show welcome message
+            showMessage('Welcome to the Mathematical Ciphers Tool! Please select a tool to begin.', 'info');
         });
+
+        // Tooltip functions
+        function showTooltip(text, event) {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'custom-tooltip';
+            tooltip.textContent = text;
+            tooltip.style.cssText = `
+                position: fixed;
+                background: rgba(0, 0, 0, 0.9);
+                color: white;
+                padding: 0.5rem 0.75rem;
+                border-radius: 6px;
+                font-size: 0.85rem;
+                white-space: nowrap;
+                z-index: 10000;
+                pointer-events: none;
+                left: ${event.pageX + 10}px;
+                top: ${event.pageY - 40}px;
+                max-width: 300px;
+                word-wrap: break-word;
+                white-space: normal;
+            `;
+            document.body.appendChild(tooltip);
+        }
+
+        function hideTooltip() {
+            const tooltips = document.querySelectorAll('.custom-tooltip');
+            tooltips.forEach(tooltip => tooltip.remove());
+        }
     </script>
 </body>
 </html>

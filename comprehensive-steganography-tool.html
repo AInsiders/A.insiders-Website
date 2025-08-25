@@ -68,12 +68,12 @@
         /* Page Hero Section with Neural Background */
         .page-hero {
             position: relative;
-            min-height: 60vh;
+            min-height: auto;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 6rem 2rem 4rem;
+            padding: 2rem 2rem;
             background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(17, 17, 17, 0.4) 100%);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -452,15 +452,95 @@
         /* New Layout Styles */
         .steganography-container {
             max-width: 1400px;
-            margin: 2rem auto;
+            margin: 1.5rem auto;
             padding: 0 1rem;
         }
+
+        /* Tool Selector Styles */
+        .tool-selector-container {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .tool-selector-header h3 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .tool-selector-header p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .tool-selector-wrapper {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .tool-selector {
+            min-width: 300px;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            font-family: var(--font-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .tool-selector:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+        }
+
+        .tool-selector option {
+            background: rgba(0, 0, 0, 0.9);
+            color: var(--text-primary);
+            padding: 0.5rem;
+        }
+
+        .tool-selector option[value=""] {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Method Card Visibility */
+        .method-card {
+            transition: all 0.3s ease;
+        }
+
+        .method-card.hidden {
+            display: none;
+        }
+
+        .method-card.visible {
+            display: block;
+        }
+
+
 
         .method-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 2rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
         .method-card {
@@ -734,8 +814,32 @@
             color: var(--accent-primary);
         }
 
+        /* Smooth scrolling for anchor links */
+        html {
+            scroll-behavior: smooth;
+        }
+
         /* Responsive adjustments for new layout */
         @media (max-width: 768px) {
+            .tool-selector-container {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .tool-selector-header h3 {
+                font-size: 1.25rem;
+            }
+
+            .tool-selector-wrapper {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .tool-selector {
+                min-width: 100%;
+                max-width: 300px;
+            }
+
             .method-grid {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
@@ -822,10 +926,29 @@
 
     <!-- Main Steganography Container -->
     <div class="steganography-container">
+        <!-- Tool Selector Dropdown -->
+        <div class="tool-selector-container">
+            <div class="tool-selector-header">
+                <h3><i class="fas fa-tools"></i> Select Steganography Tool</h3>
+                <p>Choose a specific tool to begin working with steganography</p>
+            </div>
+            <div class="tool-selector-wrapper">
+                <select id="toolSelector" class="tool-selector" onchange="filterTools()">
+                    <option value="">Select Tool</option>
+                    <option value="lsb">LSB Image Steganography</option>
+                    <option value="audio">Audio Steganography</option>
+                    <option value="text">Text Steganography</option>
+                    <option value="html">HTML/CSS Steganography</option>
+                    <option value="metadata">Metadata Steganography</option>
+                    <option value="unicode">Unicode Steganography</option>
+                </select>
+            </div>
+        </div>
+
         <!-- Steganography Grid -->
-        <div class="method-grid">
+        <div class="method-grid" id="methodGrid">
             <!-- LSB Image Steganography -->
-            <div class="method-card" data-method="lsb">
+            <div class="method-card" data-method="lsb" id="lsb">
                 <div class="method-header">
                     <div class="method-icon">
                         <i class="fas fa-image"></i>
@@ -883,7 +1006,7 @@
             </div>
 
             <!-- Audio Steganography -->
-            <div class="method-card" data-method="audio">
+            <div class="method-card" data-method="audio" id="audio">
                 <div class="method-header">
                     <div class="method-icon">
                         <i class="fas fa-music"></i>
@@ -941,7 +1064,7 @@
             </div>
 
             <!-- Text Steganography -->
-            <div class="method-card" data-method="text">
+            <div class="method-card" data-method="text" id="text">
                 <div class="method-header">
                     <div class="method-icon">
                         <i class="fas fa-font"></i>
@@ -994,7 +1117,7 @@
             </div>
 
             <!-- HTML/CSS Steganography -->
-            <div class="method-card" data-method="html">
+            <div class="method-card" data-method="html" id="html">
                 <div class="method-header">
                     <div class="method-icon">
                         <i class="fas fa-code"></i>
@@ -1047,7 +1170,7 @@
             </div>
 
             <!-- Metadata Steganography -->
-            <div class="method-card" data-method="metadata">
+            <div class="method-card" data-method="metadata" id="metadata">
                 <div class="method-header">
                     <div class="method-icon">
                         <i class="fas fa-tags"></i>
@@ -1105,7 +1228,7 @@
             </div>
 
             <!-- Unicode Steganography -->
-            <div class="method-card" data-method="unicode">
+            <div class="method-card" data-method="unicode" id="unicode">
                 <div class="method-header">
                     <div class="method-icon">
                         <i class="fas fa-language"></i>
@@ -1159,7 +1282,7 @@
         </div>
 
         <!-- Message Container -->
-        <div id="messageContainer" style="margin-top: 2rem;"></div>
+        <div id="messageContainer" style="margin-top: 1rem;"></div>
     </div>
 
     <script>
@@ -1172,6 +1295,51 @@
             metadata: 'encode',
             unicode: 'encode'
         };
+
+        // Tool filtering functions
+        function filterTools() {
+            const selectedTool = document.getElementById('toolSelector').value;
+            const methodCards = document.querySelectorAll('.method-card');
+            
+            // Hide all tools by default
+            methodCards.forEach(card => {
+                card.classList.add('hidden');
+                card.classList.remove('visible');
+            });
+
+            // Show only the selected tool
+            if (selectedTool && selectedTool !== '') {
+                const selectedCard = document.querySelector(`[data-method="${selectedTool}"]`);
+                if (selectedCard) {
+                    selectedCard.classList.remove('hidden');
+                    selectedCard.classList.add('visible');
+                }
+
+                // Update grid layout for single tool view
+                const methodGrid = document.getElementById('methodGrid');
+                methodGrid.style.gridTemplateColumns = '1fr';
+                methodGrid.style.maxWidth = '800px';
+                methodGrid.style.margin = '0 auto';
+
+                // Hide the "Select Tool" option once a tool is selected
+                hideSelectToolOption();
+
+                // Show success message
+                const toolName = document.getElementById('toolSelector').options[document.getElementById('toolSelector').selectedIndex].text;
+                showMessage(`Selected ${toolName} tool`, 'success');
+            } else {
+                // No tool selected - show message
+                showMessage('Please select a tool to begin', 'info');
+            }
+        }
+
+        function hideSelectToolOption() {
+            const toolSelector = document.getElementById('toolSelector');
+            const selectToolOption = toolSelector.querySelector('option[value=""]');
+            if (selectToolOption) {
+                selectToolOption.style.display = 'none';
+            }
+        }
 
         // Utility functions
         function showMessage(message, type = 'success') {
@@ -1692,8 +1860,15 @@
                 el.title = 'Click to copy';
             });
 
-            // Auto-focus first input
-            document.getElementById('lsbMessage').focus();
+            // Initialize tool filtering - hide all tools by default
+            const methodCards = document.querySelectorAll('.method-card');
+            methodCards.forEach(card => {
+                card.classList.add('hidden');
+                card.classList.remove('visible');
+            });
+
+            // Show welcome message
+            showMessage('Welcome to the Comprehensive Steganography Tool! Please select a tool to begin.', 'info');
         });
     </script>
 

@@ -59,7 +59,7 @@
     /* Page Hero Section */
     .page-hero {
       background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(10, 10, 10, 0.9));
-      padding: 4rem 0;
+      padding: 1.5rem 0;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -84,19 +84,22 @@
     }
     
     .hero-title {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
       background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      text-shadow: 0 0 20px rgba(0, 102, 255, 0.3);
     }
     
     .hero-subtitle {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       color: var(--text-secondary);
       max-width: 600px;
       margin: 0 auto;
+      line-height: 1.5;
     }
     
     /* Main Container */
@@ -407,7 +410,7 @@
     /* Responsive Design */
     @media (max-width: 768px) {
       .hero-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
       }
       
       .cipher-selector {
@@ -428,6 +431,90 @@
       max-width: 1400px;
       margin: 2rem auto;
       padding: 0 1rem;
+    }
+
+    /* Tool Selector Styles */
+    .tool-selector-container {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .tool-selector-header h3 {
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .tool-selector-header p {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+
+    .tool-selector-wrapper {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .tool-selector {
+      min-width: 300px;
+      padding: 0.75rem 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      color: var(--text-primary);
+      font-family: var(--font-primary);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .tool-selector:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+    }
+
+    .tool-selector option {
+      background: rgba(0, 0, 0, 0.9);
+      color: var(--text-primary);
+      padding: 0.5rem;
+    }
+
+    .tool-selector option[value=""] {
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+    }
+
+    .tool-selector option {
+      text-align: center;
+      padding: 0.75rem 0.5rem;
+    }
+
+    /* Cipher Card Visibility */
+    .cipher-card {
+      transition: all 0.3s ease;
+    }
+
+    .cipher-card.hidden {
+      display: none;
+    }
+
+    .cipher-card.visible {
+      display: block;
     }
 
     .cipher-grid {
@@ -739,6 +826,25 @@
 
     /* Responsive adjustments for new layout */
     @media (max-width: 768px) {
+      .tool-selector-container {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .tool-selector-header h3 {
+        font-size: 1.25rem;
+      }
+
+      .tool-selector-wrapper {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .tool-selector {
+        min-width: 100%;
+        max-width: 300px;
+      }
+
       .cipher-grid {
         grid-template-columns: 1fr;
         gap: 1.5rem;
@@ -818,8 +924,44 @@
 
       <!-- Main Puzzle Cipher Container -->
     <div class="puzzle-container">
+        <!-- Page Hero Section -->
+        <section class="page-hero">
+            <div class="hero-content">
+                <h1 class="hero-title">🧩 Puzzle Cipher Tool</h1>
+                <p class="hero-subtitle">Advanced puzzle-based cipher tools including Book Cipher, Grid Cipher, Tap Code, ADFGVX Cipher, Dancing Men Cipher, Sudoku Cipher, and Calendar Cipher</p>
+            </div>
+        </section>
+
+        <!-- Back to Tools Link -->
+        <div style="margin-bottom: 2rem;">
+            <a href="software.html" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-arrow-left"></i>
+                Back to Tools
+            </a>
+        </div>
+
+        <!-- Tool Selector Dropdown -->
+        <div class="tool-selector-container">
+            <div class="tool-selector-header">
+                <h3><i class="fas fa-tools"></i> Select Puzzle Cipher Tool</h3>
+                <p>Choose a specific tool to begin working with puzzle ciphers</p>
+            </div>
+            <div class="tool-selector-wrapper">
+                <select id="toolSelector" class="tool-selector" onchange="filterTools()">
+                    <option value="">Select Tool</option>
+                    <option value="book" title="Encode messages using page numbers, line numbers, and word positions from a reference book. Historical method used by spies.">Book Cipher</option>
+                    <option value="grid" title="Encode messages using grid coordinates and patterns for secure communication. Visual grid interface with customizable sizes.">Grid Cipher</option>
+                    <option value="tap" title="Classic tap code using a 5x5 grid to encode letters through tapping patterns. Used in prisons and POW camps.">Tap Code</option>
+                    <option value="adfgvx" title="World War I era cipher using a 6x6 grid with ADFGVX coordinates. Advanced transposition cipher with keyword-based encryption.">ADFGVX Cipher</option>
+                    <option value="dancing" title="Sherlock Holmes inspired cipher using stick figure representations. Each letter is represented by a unique stick figure pattern.">Dancing Men Cipher</option>
+                    <option value="sudoku" title="Encode messages using Sudoku grid patterns and number sequences. Mathematical approach using 9x9 grid permutations.">Sudoku Cipher</option>
+                    <option value="calendar" title="Encode messages using calendar dates and time-based patterns. Uses date arithmetic and calendar positions for encoding.">Calendar Cipher</option>
+                </select>
+            </div>
+        </div>
+
         <!-- Puzzle Cipher Grid -->
-        <div class="cipher-grid">
+        <div class="cipher-grid" id="cipherGrid">
             <!-- Book Cipher -->
             <div class="cipher-card" data-cipher="book">
                 <div class="cipher-header">
@@ -1257,6 +1399,51 @@
         calendar: 'encode'
     };
 
+    // Tool filtering functions
+    function filterTools() {
+        const selectedTool = document.getElementById('toolSelector').value;
+        const cipherCards = document.querySelectorAll('.cipher-card');
+        
+        // Hide all tools by default
+        cipherCards.forEach(card => {
+            card.classList.add('hidden');
+            card.classList.remove('visible');
+        });
+
+        // Show only the selected tool
+        if (selectedTool && selectedTool !== '') {
+            const selectedCard = document.querySelector(`[data-cipher="${selectedTool}"]`);
+            if (selectedCard) {
+                selectedCard.classList.remove('hidden');
+                selectedCard.classList.add('visible');
+            }
+
+            // Update grid layout for single tool view
+            const cipherGrid = document.getElementById('cipherGrid');
+            cipherGrid.style.gridTemplateColumns = '1fr';
+            cipherGrid.style.maxWidth = '800px';
+            cipherGrid.style.margin = '0 auto';
+
+            // Hide the "Select Tool" option once a tool is selected
+            hideSelectToolOption();
+
+            // Show success message
+            const toolName = document.getElementById('toolSelector').options[document.getElementById('toolSelector').selectedIndex].text;
+            showMessage(`Selected ${toolName} tool`, 'success');
+        } else {
+            // No tool selected - show message
+            showMessage('Please select a tool to begin', 'info');
+        }
+    }
+
+    function hideSelectToolOption() {
+        const toolSelector = document.getElementById('toolSelector');
+        const selectToolOption = toolSelector.querySelector('option[value=""]');
+        if (selectToolOption) {
+            selectToolOption.style.display = 'none';
+        }
+    }
+
     // Initialize the tool
     document.addEventListener('DOMContentLoaded', function() {
         // Initialize all grids
@@ -1264,7 +1451,61 @@
         
         // Set up event listeners
         setupEventListeners();
+
+        // Initialize tool filtering - hide all tools by default
+        const cipherCards = document.querySelectorAll('.cipher-card');
+        cipherCards.forEach(card => {
+            card.classList.add('hidden');
+            card.classList.remove('visible');
+        });
+
+        // Add tooltip functionality
+        const toolSelector = document.getElementById('toolSelector');
+        if (toolSelector) {
+            toolSelector.addEventListener('mouseover', function(e) {
+                const option = e.target;
+                if (option.tagName === 'OPTION' && option.value) {
+                    showTooltip(option.title, e);
+                }
+            });
+
+            toolSelector.addEventListener('mouseout', function() {
+                hideTooltip();
+            });
+        }
+
+        // Show welcome message
+        showMessage('Welcome to the Puzzle Cipher Tool! Please select a tool to begin.', 'info');
     });
+
+    // Tooltip functions
+    function showTooltip(text, event) {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'custom-tooltip';
+        tooltip.textContent = text;
+        tooltip.style.cssText = `
+            position: fixed;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            z-index: 10000;
+            pointer-events: none;
+            left: ${event.pageX + 10}px;
+            top: ${event.pageY - 40}px;
+            max-width: 300px;
+            word-wrap: break-word;
+            white-space: normal;
+        `;
+        document.body.appendChild(tooltip);
+    }
+
+    function hideTooltip() {
+        const tooltips = document.querySelectorAll('.custom-tooltip');
+        tooltips.forEach(tooltip => tooltip.remove());
+    }
 
     function setupEventListeners() {
         // Grid size change listener
