@@ -24,49 +24,34 @@
     <meta http-equiv="ETag" content="mathematical-ciphers-v1.0">
     <meta http-equiv="Last-Modified" content="2023-12-31T00:00:00Z">
     
-    <!-- Optimized Asset Caching System with Cloudflare Headers -->
-    <link rel="stylesheet" href="brain-styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Preload critical assets with Cloudflare caching -->
-    <link rel="preload" href="brain-script.js?v=1.0" as="script" crossorigin="anonymous">
-    <link rel="preload" href="shared-loader.js?v=1.0" as="script" crossorigin="anonymous">
-    <link rel="preload" href="mobile-nav.js?v=1.0" as="script" crossorigin="anonymous">
-    <link rel="preload" href="sphere-loader.js?v=1.0" as="script" crossorigin="anonymous">
-    <link rel="preload" href="ainsiders-logo.png?v=1.0" as="image" type="image/png">
-    <link rel="preload" href="logo.svg?v=1.0" as="image" type="image/svg+xml">
-    
-    <!-- Cache Manager and Asset Preloader with Cloudflare caching -->
-    <script src="browser-cache-manager.js"></script>
-    <script src="asset-preloader.js"></script>
-    
+      <!-- Optimized Asset Caching System with Cloudflare Headers -->
+  <link rel="stylesheet" href="brain-styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Preload critical assets with Cloudflare caching -->
+  <link rel="preload" href="brain-script.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="shared-loader.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="mobile-nav.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="sphere-loader.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="ainsiders-logo.png?v=1.0" as="image" type="image/png">
+  <link rel="preload" href="logo.svg?v=1.0" as="image" type="image/svg+xml">
+  
+  <!-- Cache Manager and Asset Preloader with Cloudflare caching -->
+  <script src="browser-cache-manager.js"></script>
+  <script src="asset-preloader.js"></script>
+  
     <!-- Optimized Background System -->
-    <script src="brain-script.js"></script>
+  <script src="brain-script.js"></script>
     
-    <!-- Font Awesome with CDN and Fallback -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    
+      <!-- Font Awesome with CDN and Fallback -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  
     <!-- Favicon Animation Script -->
-    <script src="favicon-animation.js"></script>
+  <script src="favicon-animation.js"></script>
     
     <style>
-        /* Mathematical Ciphers Specific Styles */
-        .cipher-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 20px;
-            box-shadow: var(--shadow-dark);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(0, 102, 255, 0.2);
-            position: relative;
-            z-index: 1;
-        }
-
         /* Neural Background Canvas - Full Page Coverage */
         #aiCanvas {
             position: fixed;
@@ -103,12 +88,12 @@
         .hero-title {
             font-size: 3.5rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #00ff88, #00ccff, #ff6b6b);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 1rem;
-            text-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+            text-shadow: 0 0 30px rgba(0, 102, 255, 0.3);
         }
 
         .hero-subtitle {
@@ -116,6 +101,21 @@
             color: var(--text-secondary);
             margin-bottom: 2rem;
             line-height: 1.6;
+        }
+
+        /* Mathematical Ciphers Specific Styles */
+        .cipher-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+            box-shadow: var(--shadow-dark);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            position: relative;
+            z-index: 1;
         }
 
         /* Cipher Grid Layout */
@@ -153,7 +153,7 @@
         .cipher-icon {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, #00ff88, #00ccff);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -195,8 +195,8 @@
 
         .cipher-input:focus {
             outline: none;
-            border-color: #00ccff;
-            box-shadow: 0 0 0 3px rgba(0, 204, 255, 0.1);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
         }
 
         .cipher-input::placeholder {
@@ -219,8 +219,8 @@
 
         .cipher-textarea:focus {
             outline: none;
-            border-color: #00ccff;
-            box-shadow: 0 0 0 3px rgba(0, 204, 255, 0.1);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
         }
 
         /* Results Display */
@@ -243,7 +243,7 @@
 
         .results-title i {
             margin-right: 0.5rem;
-            color: #00ff88;
+            color: var(--accent-primary);
         }
 
         .result-item {
@@ -266,8 +266,8 @@
         .result-value {
             font-family: 'Courier New', monospace;
             font-weight: 600;
-            color: #00ff88;
-            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-primary);
+            background: rgba(0, 102, 255, 0.1);
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
             cursor: pointer;
@@ -277,7 +277,7 @@
         }
 
         .result-value:hover {
-            background: rgba(0, 255, 136, 0.2);
+            background: rgba(0, 102, 255, 0.2);
         }
 
         /* Action Buttons */
@@ -303,13 +303,13 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #00ff88, #00ccff);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
             color: #000;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 102, 255, 0.3);
         }
 
         .btn-secondary {
@@ -366,14 +366,14 @@
         .key-display {
             margin: 1rem 0;
             padding: 1rem;
-            background: rgba(0, 255, 136, 0.1);
+            background: rgba(0, 102, 255, 0.1);
             border-radius: 8px;
-            border: 1px solid rgba(0, 255, 136, 0.3);
+            border: 1px solid rgba(0, 102, 255, 0.3);
         }
 
         .key-label {
             font-weight: 600;
-            color: #00ff88;
+            color: var(--accent-primary);
             margin-bottom: 0.5rem;
         }
 
@@ -396,9 +396,9 @@
 
         /* Success Messages */
         .success-message {
-            color: #00ff88;
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: var(--accent-primary);
+            background: rgba(0, 102, 255, 0.1);
+            border: 1px solid rgba(0, 102, 255, 0.3);
             padding: 0.75rem;
             border-radius: 8px;
             margin-top: 1rem;
@@ -435,9 +435,9 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(0, 255, 136, 0.3);
+            border: 3px solid rgba(0, 102, 255, 0.3);
             border-radius: 50%;
-            border-top-color: #00ff88;
+            border-top-color: var(--accent-primary);
             animation: spin 1s ease-in-out infinite;
         }
 
@@ -475,7 +475,7 @@
         }
 
         .mode-btn.active {
-            background: linear-gradient(135deg, #00ff88, #00ccff);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
             color: #000;
             border-color: transparent;
         }
@@ -485,13 +485,53 @@
         }
 
         .mode-btn.active:hover {
-            background: linear-gradient(135deg, #00ff88, #00ccff);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
         }
     </style>
 </head>
 <body>
     <!-- Neural Background Canvas -->
     <canvas id="aiCanvas"></canvas>
+
+    <div id="website-content" class="website-content">
+
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="index.html" class="nav-logo">
+          <img src="ainsiders-logo.png" alt="A.Insiders Logo" class="logo-image" width="40" height="40">
+          <span class="logo-text">A.I</span>
+          <span class="logo-accent">NSIDERS</span>
+        </a>
+        <ul class="nav-menu">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="software.html" class="nav-link">Software</a></li>
+          <li class="nav-dropdown">
+            <div class="nav-link-container">
+              <a href="about.html" class="nav-link">About</a>
+              <span class="dropdown-arrow">▼</span>
+            </div>
+            <ul class="dropdown-menu">
+              <li><a href="about.html" class="dropdown-link">About Company</a></li>
+              <li><a href="blake-zimmerman.html" class="dropdown-link">Blake Zimmerman</a></li>
+              <li><a href="babu-narayana.html" class="dropdown-link">Babu Narayana</a></li>
+            </ul>
+          </li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
+          <li class="auth-nav-item">
+            <a href="login.html" class="nav-link auth-link" id="authLink">
+              <i class="fas fa-user"></i>
+              <span id="authText">Login</span>
+            </a>
+          </li>
+        </ul>
+        <div class="nav-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </nav>
 
     <!-- Page Hero Section -->
     <section class="page-hero">
@@ -769,6 +809,59 @@
         <div id="messageContainer" style="margin-top: 2rem;"></div>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="software.html">Software</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>Connect With Us</h4>
+            <div class="social-links">
+              <a href="https://www.linkedin.com/in/blake-zimmerman-a59575342/" class="social-link" title="LinkedIn" target="_blank" rel="noopener">
+                <i class="fab fa-linkedin"></i>
+                <span>LinkedIn</span>
+              </a>
+              <a href="https://github.com/AInsiders" class="social-link" title="GitHub" target="_blank" rel="noopener">
+                <i class="fab fa-github"></i>
+                <span>GitHub</span>
+              </a>
+              <a href="https://www.youtube.com/@A.Insiders01" class="social-link" title="YouTube" target="_blank" rel="noopener">
+                <i class="fab fa-youtube"></i>
+                <span>YouTube</span>
+              </a>
+              <a href="https://discord.gg/Y4kCtaBZFM" class="social-link" title="Discord" target="_blank" rel="noopener">
+                <i class="fab fa-discord"></i>
+                <span>Discord</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2024 A.Insiders Network. All rights reserved.</p>
+          <div class="footer-links">
+            <a href="privacy-policy.html">Privacy Policy</a>
+            <a href="terms-of-service.html">Terms of Service</a>
+            <a href="cookie-policy.html">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    </div> <!-- End of website-content -->
+
+    <!-- Essential Scripts with Cloudflare caching -->
+    <script src="shared-loader.js"></script>
+    <script src="mobile-nav.js"></script>
+    <script src="sphere-loader.js"></script>
+
     <script>
         // Global variables for cipher modes
         let hillMode = 'encrypt';
@@ -822,14 +915,34 @@
         }
 
         function updateModeButtons(cipher, mode) {
-            const card = document.querySelector(`[onclick*="${cipher}Mode"]`).closest('.cipher-card');
-            const buttons = card.querySelectorAll('.mode-btn');
-            buttons.forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.textContent.toLowerCase().includes(mode)) {
-                    btn.classList.add('active');
-                }
-            });
+            // Find the card by looking for the specific textarea ID
+            let card;
+            if (cipher === 'hill') {
+                const textarea = document.getElementById('hillMessage');
+                card = textarea ? textarea.closest('.cipher-card') : null;
+            } else if (cipher === 'otp') {
+                const textarea = document.getElementById('otpMessage');
+                card = textarea ? textarea.closest('.cipher-card') : null;
+            } else if (cipher === 'xor') {
+                const textarea = document.getElementById('xorMessage');
+                card = textarea ? textarea.closest('.cipher-card') : null;
+            } else if (cipher === 'bitShift') {
+                const textarea = document.getElementById('bitShiftMessage');
+                card = textarea ? textarea.closest('.cipher-card') : null;
+            } else if (cipher === 'modular') {
+                const textarea = document.getElementById('modularMessage');
+                card = textarea ? textarea.closest('.cipher-card') : null;
+            }
+            
+            if (card) {
+                const buttons = card.querySelectorAll('.mode-btn');
+                buttons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.textContent.toLowerCase().includes(mode)) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
         }
 
         // Hill Cipher Implementation

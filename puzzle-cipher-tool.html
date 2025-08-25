@@ -1,1137 +1,2005 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Puzzle Cipher Tool - A.insiders</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            background: linear-gradient(45deg, #3498db, #e74c3c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
-        .main-content {
-            padding: 40px;
-        }
-
-        .cipher-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .cipher-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border: 2px solid #dee2e6;
-            border-radius: 15px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cipher-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: left 0.5s;
-        }
-
-        .cipher-card:hover::before {
-            left: 100%;
-        }
-
-        .cipher-card:hover {
-            border-color: #3498db;
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(52, 152, 219, 0.3);
-        }
-
-        .cipher-card.active {
-            border-color: #3498db;
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
-        }
-
-        .cipher-icon {
-            font-size: 2.5em;
-            margin-bottom: 15px;
-            display: block;
-        }
-
-        .cipher-title {
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #2c3e50;
-        }
-
-        .cipher-description {
-            font-size: 0.9em;
-            color: #6c757d;
-            line-height: 1.4;
-        }
-
-        .cipher-difficulty {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.7em;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .difficulty-easy {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .difficulty-medium {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .difficulty-hard {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .tabs {
-            display: flex;
-            margin-bottom: 30px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 5px;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 15px 20px;
-            text-align: center;
-            background: transparent;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1.1em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            color: #6c757d;
-        }
-
-        .tab.active {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-        }
-
-        .tab:hover:not(.active) {
-            background: rgba(52, 152, 219, 0.1);
-            color: #3498db;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 1.1em;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 1em;
-            transition: all 0.3s ease;
-            background: white;
-            font-family: 'Courier New', monospace;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-
-        .btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #27ae60, #229954);
-            color: white;
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background: #e9ecef;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 15px 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #3498db, #2980b9);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .status {
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
-            font-weight: 600;
-        }
-
-        .status.success {
-            background: rgba(39, 174, 96, 0.1);
-            color: #27ae60;
-            border: 1px solid rgba(39, 174, 96, 0.3);
-        }
-
-        .status.error {
-            background: rgba(231, 76, 60, 0.1);
-            color: #e74c3c;
-            border: 1px solid rgba(231, 76, 60, 0.3);
-        }
-
-        .status.info {
-            background: rgba(52, 152, 219, 0.1);
-            color: #3498db;
-            border: 1px solid rgba(52, 152, 219, 0.3);
-        }
-
-        .info-box {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-left: 4px solid #3498db;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-        }
-
-        .info-box h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        .info-box p {
-            color: #6c757d;
-            line-height: 1.6;
-        }
-
-        .cipher-info {
-            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-            border: 1px solid #ffc107;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .cipher-info h3 {
-            color: #856404;
-            margin-bottom: 10px;
-        }
-
-        .cipher-info ul {
-            color: #856404;
-            padding-left: 20px;
-        }
-
-        .cipher-info li {
-            margin-bottom: 5px;
-        }
-
-        .grid-display {
-            display: grid;
-            gap: 2px;
-            margin: 15px 0;
-            max-width: 400px;
-        }
-
-        .grid-cell {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .grid-cell:hover {
-            background: #e3f2fd;
-        }
-
-        .grid-cell.selected {
-            background: #3498db;
-            color: white;
-        }
-
-        .tap-code-display {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 5px;
-            margin: 15px 0;
-            max-width: 300px;
-        }
-
-        .tap-cell {
-            width: 50px;
-            height: 50px;
-            border: 2px solid #3498db;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .tap-cell:hover {
-            background: #e3f2fd;
-            transform: scale(1.05);
-        }
-
-        .tap-cell.active {
-            background: #3498db;
-            color: white;
-            transform: scale(1.1);
-        }
-
-        .dancing-men {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .dancing-man {
-            width: 60px;
-            height: 80px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2em;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .dancing-man:hover {
-            border-color: #3498db;
-            transform: scale(1.05);
-        }
-
-        .dancing-man.selected {
-            border-color: #3498db;
-            background: #e3f2fd;
-        }
-
-        .sudoku-grid {
-            display: grid;
-            grid-template-columns: repeat(9, 1fr);
-            gap: 1px;
-            margin: 15px 0;
-            max-width: 450px;
-            border: 2px solid #333;
-        }
-
-        .sudoku-cell {
-            width: 45px;
-            height: 45px;
-            border: 1px solid #ccc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .sudoku-cell:hover {
-            background: #e3f2fd;
-        }
-
-        .sudoku-cell.selected {
-            background: #3498db;
-            color: white;
-        }
-
-        .sudoku-cell.fixed {
-            background: #f8f9fa;
-            color: #6c757d;
-            cursor: not-allowed;
-        }
-
-        .calendar-display {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            margin: 15px 0;
-            max-width: 350px;
-        }
-
-        .calendar-day {
-            width: 45px;
-            height: 45px;
-            border: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .calendar-day:hover {
-            background: #e3f2fd;
-        }
-
-        .calendar-day.selected {
-            background: #3498db;
-            color: white;
-        }
-
-        .calendar-day.weekend {
-            background: #f8f9fa;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-                border-radius: 15px;
-            }
-
-            .main-content {
-                padding: 20px;
-            }
-
-            .header h1 {
-                font-size: 2em;
-            }
-
-            .cipher-selector {
-                grid-template-columns: 1fr;
-            }
-
-            .tabs {
-                flex-direction: column;
-            }
-
-            .tab {
-                margin-bottom: 5px;
-            }
-
-            .grid-display, .tap-code-display, .dancing-men, .sudoku-grid, .calendar-display {
-                max-width: 100%;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Puzzle Cipher Tool - A.Insiders</title>
+  
+  <!-- Favicon Setup -->
+  <link rel="icon" type="image/png" href="ainsiders-logo.png" id="main-favicon">
+  <link rel="apple-touch-icon" href="ainsiders-logo.png">
+  <meta name="description" content="Advanced puzzle-based cipher tools including Book Cipher, Grid Cipher, Tap Code, ADFGVX Cipher, Dancing Men Cipher, Sudoku Cipher, and Calendar Cipher with interactive interfaces.">
+  <meta name="keywords" content="puzzle cipher, book cipher, grid cipher, tap code, ADFGVX cipher, dancing men cipher, sudoku cipher, calendar cipher, encryption, cryptography">
+  
+  <!-- Security Headers -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+  
+  <!-- Enhanced Cache Control Headers for Cloudflare -->
+  <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable, stale-while-revalidate=86400">
+  <meta http-equiv="Expires" content="31536000">
+  <meta http-equiv="ETag" content="puzzle-cipher-v1.0">
+  <meta http-equiv="Last-Modified" content="2023-12-31T00:00:00Z">
+  
+  <!-- Optimized Asset Caching System with Cloudflare Headers -->
+  <link rel="stylesheet" href="brain-styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Preload critical assets with Cloudflare caching -->
+  <link rel="preload" href="brain-script.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="shared-loader.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="mobile-nav.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="sphere-loader.js?v=1.0" as="script" crossorigin="anonymous">
+  <link rel="preload" href="ainsiders-logo.png?v=1.0" as="image" type="image/png">
+  <link rel="preload" href="logo.svg?v=1.0" as="image" type="image/svg+xml">
+  
+  <!-- Cache Manager and Asset Preloader with Cloudflare caching -->
+  <script src="browser-cache-manager.js"></script>
+  <script src="asset-preloader.js"></script>
+  
+  <!-- Optimized Background System -->
+  <script src="brain-script.js"></script>
+  
+  <!-- Font Awesome with CDN and Fallback -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  
+  <!-- Favicon Animation Script -->
+  <script src="favicon-animation.js"></script>
+  
+  <!-- Crypto.js for encryption -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  
+  <!-- Puzzle Cipher Tool Specific Styles -->
+  <style>
+    /* Page Hero Section */
+    .page-hero {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(10, 10, 10, 0.9));
+      padding: 4rem 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(0, 102, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(77, 148, 255, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .hero-title {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Main Container */
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-dark);
+      overflow: hidden;
+    }
+    
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(10, 10, 10, 0.8));
+      backdrop-filter: blur(20px);
+      padding: 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+    
+    /* Main Content */
+    .main-content {
+      padding: 2rem;
+    }
+    
+    /* Cipher Selector */
+    .cipher-selector {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .cipher-card {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .cipher-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 102, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .cipher-card:hover::before {
+      left: 100%;
+    }
+    
+    .cipher-card:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-glow);
+    }
+    
+    .cipher-card.active {
+      border-color: var(--accent-primary);
+      background: rgba(0, 102, 255, 0.1);
+      box-shadow: var(--shadow-glow);
+    }
+    
+    .cipher-card h3 {
+      color: var(--text-primary);
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .cipher-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    
+    .cipher-icon {
+      font-size: 2rem;
+      color: var(--accent-primary);
+      margin-bottom: 1rem;
+    }
+    
+    /* Cipher Interface */
+    .cipher-interface {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .cipher-interface h3 {
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      color: var(--text-primary);
+      font-family: var(--font-primary);
+      transition: var(--transition-smooth);
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+    }
+    
+    .form-control::placeholder {
+      color: var(--text-muted);
+    }
+    
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    /* Buttons */
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-family: var(--font-primary);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
+      color: #000;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+    }
+    
+    .btn-secondary {
+      background: rgba(0, 102, 255, 0.1);
+      color: var(--text-primary);
+      border: 1px solid var(--accent-primary);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(0, 102, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .btn-danger {
+      background: linear-gradient(135deg, #dc3545, #c82333);
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(220, 53, 69, 0.3);
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    /* Grid and Interactive Elements */
+    .grid-container {
+      display: grid;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+    
+    .grid-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+      gap: 0.25rem;
+    }
+    
+    .grid-cell {
+      aspect-ratio: 1;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    
+    .grid-cell:hover {
+      background: rgba(0, 102, 255, 0.2);
+      border-color: var(--accent-primary);
+    }
+    
+    .grid-cell.selected {
+      background: var(--accent-primary);
+      color: #000;
+    }
+    
+    /* Results */
+    .results {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .results h4 {
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    
+    .result-text {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      color: var(--text-primary);
+      font-family: 'Courier New', monospace;
+      word-break: break-all;
+      min-height: 60px;
+      white-space: pre-wrap;
+    }
+    
+    /* Status Messages */
+    .status {
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      margin: 1rem 0;
+      text-align: center;
+    }
+    
+    .status.success {
+      background: rgba(40, 167, 69, 0.2);
+      border: 1px solid #28a745;
+      color: #28a745;
+    }
+    
+    .status.error {
+      background: rgba(220, 53, 69, 0.2);
+      border: 1px solid #dc3545;
+      color: #dc3545;
+    }
+    
+    .status.info {
+      background: rgba(0, 102, 255, 0.2);
+      border: 1px solid var(--accent-primary);
+      color: var(--accent-primary);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      
+      .cipher-selector {
+        grid-template-columns: 1fr;
+      }
+      
+      .btn-group {
+        flex-direction: column;
+      }
+      
+      .grid-row {
+        grid-template-columns: repeat(auto-fit, minmax(35px, 1fr));
+      }
+    }
+
+    /* New Layout Styles */
+    .puzzle-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .cipher-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .cipher-card {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cipher-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 102, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .cipher-card:hover::before {
+      left: 100%;
+    }
+
+    .cipher-card:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .cipher-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .cipher-icon {
+      font-size: 2rem;
+      color: var(--accent-primary);
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 102, 255, 0.1);
+      border-radius: 50%;
+      border: 2px solid var(--accent-primary);
+    }
+
+    .cipher-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .cipher-description {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .mode-toggle {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: var(--border-radius);
+      padding: 0.25rem;
+    }
+
+    .mode-btn {
+      flex: 1;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: calc(var(--border-radius) - 2px);
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--font-primary);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .mode-btn.active {
+      background: var(--accent-primary);
+      color: #000;
+    }
+
+    .mode-btn:hover:not(.active) {
+      background: rgba(0, 102, 255, 0.1);
+      color: var(--text-primary);
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .input-label {
+      display: block;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .cipher-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      color: var(--text-primary);
+      font-family: var(--font-primary);
+      font-size: 0.9rem;
+      resize: vertical;
+      transition: var(--transition-smooth);
+    }
+
+    .cipher-textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+    }
+
+    .cipher-textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    .cipher-input {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      color: var(--text-primary);
+      font-family: var(--font-primary);
+      font-size: 0.9rem;
+      transition: var(--transition-smooth);
+    }
+
+    .cipher-input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+    }
+
+    .cipher-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .action-buttons .btn {
+      flex: 1;
+      justify-content: center;
+    }
+
+    .results-container {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .results-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-primary);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .result-item {
+      margin-bottom: 1rem;
+    }
+
+    .result-label {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .result-value {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      color: var(--text-primary);
+      font-family: 'Courier New', monospace;
+      word-break: break-all;
+      white-space: pre-wrap;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    /* Enhanced Grid Styles */
+    .grid-container {
+      display: grid;
+      gap: 0.5rem;
+      margin: 1rem 0;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .grid-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .grid-container::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+    }
+
+    .grid-container::-webkit-scrollbar-thumb {
+      background: var(--accent-primary);
+      border-radius: 3px;
+    }
+
+    .grid-cell {
+      aspect-ratio: 1;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 0.8rem;
+      min-width: 40px;
+      min-height: 40px;
+    }
+
+    .grid-cell:hover {
+      background: rgba(0, 102, 255, 0.2);
+      border-color: var(--accent-primary);
+      transform: scale(1.05);
+    }
+
+    .grid-cell.selected {
+      background: var(--accent-primary);
+      color: #000;
+      box-shadow: 0 0 10px rgba(0, 102, 255, 0.5);
+    }
+
+    .grid-cell.header {
+      background: rgba(0, 102, 255, 0.1);
+      border-color: var(--accent-primary);
+      font-weight: 600;
+      cursor: default;
+    }
+
+    .grid-cell.header:hover {
+      transform: none;
+    }
+
+    /* Status Messages */
+    .status {
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      margin: 1rem 0;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .status.success {
+      background: rgba(40, 167, 69, 0.2);
+      border: 1px solid #28a745;
+      color: #28a745;
+    }
+
+    .status.error {
+      background: rgba(220, 53, 69, 0.2);
+      border: 1px solid #dc3545;
+      color: #dc3545;
+    }
+
+    .status.info {
+      background: rgba(0, 102, 255, 0.2);
+      border: 1px solid var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    /* Responsive adjustments for new layout */
+    @media (max-width: 768px) {
+      .cipher-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .cipher-card {
+        padding: 1.5rem;
+      }
+
+      .cipher-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+      }
+
+      .cipher-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .grid-cell {
+        min-width: 35px;
+        min-height: 35px;
+        font-size: 0.7rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🧠 Puzzle Cipher Tool</h1>
-            <p>Classic puzzle-based ciphers and code-style encryption methods</p>
-        </div>
+  <!-- Neural Background Canvas -->
+  <canvas id="aiCanvas"></canvas>
 
-        <div class="main-content">
-            <!-- Cipher Selector -->
-            <div class="cipher-selector">
-                <div class="cipher-card" data-cipher="book">
-                    <div class="cipher-icon">📚</div>
+  <div id="website-content" class="website-content">
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <img src="ainsiders-logo.png" alt="A.Insiders Logo" class="logo-image" width="40" height="40">
+        <span class="logo-text">A.I</span>
+        <span class="logo-accent">NSIDERS</span>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="software.html" class="nav-link">Software</a></li>
+        <li class="nav-dropdown">
+          <div class="nav-link-container">
+            <a href="about.html" class="nav-link">About</a>
+            <span class="dropdown-arrow">▼</span>
+          </div>
+          <ul class="dropdown-menu">
+            <li><a href="about.html" class="dropdown-link">About Company</a></li>
+            <li><a href="blake-zimmerman.html" class="dropdown-link">Blake Zimmerman</a></li>
+            <li><a href="babu-narayana.html" class="dropdown-link">Babu Narayana</a></li>
+          </ul>
+        </li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+        <li class="auth-nav-item">
+          <a href="login.html" class="nav-link auth-link" id="authLink">
+            <i class="fas fa-user"></i>
+            <span id="authText">Login</span>
+          </a>
+        </li>
+      </ul>
+      <div class="nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+      <!-- Main Puzzle Cipher Container -->
+    <div class="puzzle-container">
+        <!-- Puzzle Cipher Grid -->
+        <div class="cipher-grid">
+            <!-- Book Cipher -->
+            <div class="cipher-card" data-cipher="book">
+                <div class="cipher-header">
+                    <div class="cipher-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
                     <div class="cipher-title">Book Cipher</div>
-                    <div class="cipher-description">Encode messages using page, line, and word positions in a book</div>
-                    <div class="cipher-difficulty difficulty-medium">Medium</div>
                 </div>
                 
-                <div class="cipher-card" data-cipher="grid">
-                    <div class="cipher-icon">🔲</div>
+                <div class="cipher-description">
+                    Encode messages using page numbers, line numbers, and word positions from a reference book. Historical method used by spies and intelligence agencies.
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setPuzzleMode('book', 'encode')">Encode</button>
+                    <button class="mode-btn" onclick="setPuzzleMode('book', 'decode')">Decode</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Reference Text</label>
+                    <textarea id="bookText" class="cipher-textarea" placeholder="Enter the reference text (book content, document, etc.)"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Message to Encode/Decode</label>
+                    <textarea id="bookMessage" class="cipher-textarea" placeholder="Enter the message you want to encode or decode"></textarea>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="processBookCipher()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearBookCipher()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="bookResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="bookResultContent"></div>
+                </div>
+            </div>
+
+            <!-- Grid Cipher -->
+            <div class="cipher-card" data-cipher="grid">
+                <div class="cipher-header">
+                    <div class="cipher-icon">
+                        <i class="fas fa-th"></i>
+                    </div>
                     <div class="cipher-title">Grid Cipher</div>
-                    <div class="cipher-description">Hide messages in grid patterns and coordinates</div>
-                    <div class="cipher-difficulty difficulty-easy">Easy</div>
                 </div>
                 
-                <div class="cipher-card" data-cipher="tap">
-                    <div class="cipher-icon">👆</div>
+                <div class="cipher-description">
+                    Encode messages using grid coordinates and patterns for secure communication. Visual grid interface with customizable sizes.
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setPuzzleMode('grid', 'encode')">Encode</button>
+                    <button class="mode-btn" onclick="setPuzzleMode('grid', 'decode')">Decode</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Grid Size</label>
+                    <select id="gridSize" class="cipher-input">
+                        <option value="5">5x5 Grid</option>
+                        <option value="6">6x6 Grid</option>
+                        <option value="8">8x8 Grid</option>
+                        <option value="10">10x10 Grid</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Message</label>
+                    <textarea id="gridMessage" class="cipher-textarea" placeholder="Enter the message to encode/decode"></textarea>
+                </div>
+
+                <div id="gridDisplay" class="grid-container"></div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="processGridCipher()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearGridCipher()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="gridResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="gridResultContent"></div>
+                </div>
+            </div>
+
+            <!-- Tap Code -->
+            <div class="cipher-card" data-cipher="tap">
+                <div class="cipher-header">
+                    <div class="cipher-icon">
+                        <i class="fas fa-hand-paper"></i>
+                    </div>
                     <div class="cipher-title">Tap Code</div>
-                    <div class="cipher-description">Prison communication using tap patterns on surfaces</div>
-                    <div class="cipher-difficulty difficulty-easy">Easy</div>
                 </div>
                 
-                <div class="cipher-card" data-cipher="adfgvx">
-                    <div class="cipher-icon">⚔️</div>
+                <div class="cipher-description">
+                    Classic tap code using a 5x5 grid to encode letters through tapping patterns. Used in prisons and POW camps for communication.
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setPuzzleMode('tap', 'encode')">Encode</button>
+                    <button class="mode-btn" onclick="setPuzzleMode('tap', 'decode')">Decode</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Message</label>
+                    <textarea id="tapMessage" class="cipher-textarea" placeholder="Enter the message to encode/decode"></textarea>
+                </div>
+
+                <div id="tapGrid" class="grid-container">
+                    <!-- 5x5 grid will be generated here -->
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="processTapCode()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearTapCode()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="tapResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="tapResultContent"></div>
+                </div>
+            </div>
+
+            <!-- ADFGVX Cipher -->
+            <div class="cipher-card" data-cipher="adfgvx">
+                <div class="cipher-header">
+                    <div class="cipher-icon">
+                        <i class="fas fa-table"></i>
+                    </div>
                     <div class="cipher-title">ADFGVX Cipher</div>
-                    <div class="cipher-description">World War I German military cipher using 6 letters</div>
-                    <div class="cipher-difficulty difficulty-hard">Hard</div>
                 </div>
                 
-                <div class="cipher-card" data-cipher="dancing">
-                    <div class="cipher-icon">🕺</div>
-                    <div class="cipher-title">Dancing Men</div>
-                    <div class="cipher-description">Sherlock Holmes cipher using stick figure symbols</div>
-                    <div class="cipher-difficulty difficulty-medium">Medium</div>
+                <div class="cipher-description">
+                    World War I era cipher using a 6x6 grid with ADFGVX coordinates. Advanced transposition cipher with keyword-based encryption.
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setPuzzleMode('adfgvx', 'encode')">Encode</button>
+                    <button class="mode-btn" onclick="setPuzzleMode('adfgvx', 'decode')">Decode</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Keyword</label>
+                    <input type="text" id="adfgvxKey" class="cipher-input" placeholder="Enter keyword for transposition">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Message</label>
+                    <textarea id="adfgvxMessage" class="cipher-textarea" placeholder="Enter the message to encode/decode"></textarea>
+                </div>
+
+                <div id="adfgvxGrid" class="grid-container">
+                    <!-- 6x6 grid will be generated here -->
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="processADFGVX()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearADFGVX()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="adfgvxResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="adfgvxResultContent"></div>
+                </div>
+            </div>
+
+            <!-- Dancing Men Cipher -->
+            <div class="cipher-card" data-cipher="dancing">
+                <div class="cipher-header">
+                    <div class="cipher-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="cipher-title">Dancing Men Cipher</div>
                 </div>
                 
-                <div class="cipher-card" data-cipher="sudoku">
-                    <div class="cipher-icon">🧩</div>
+                <div class="cipher-description">
+                    Sherlock Holmes inspired cipher using stick figure representations. Each letter is represented by a unique stick figure pattern.
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setPuzzleMode('dancing', 'encode')">Encode</button>
+                    <button class="mode-btn" onclick="setPuzzleMode('dancing', 'decode')">Decode</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Message</label>
+                    <textarea id="dancingMessage" class="cipher-textarea" placeholder="Enter the message to encode/decode"></textarea>
+                </div>
+
+                <div id="dancingDisplay" class="grid-container">
+                    <!-- Dancing men will be displayed here -->
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="processDancingMen()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearDancingMen()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="dancingResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="dancingResultContent"></div>
+                </div>
+            </div>
+
+            <!-- Sudoku Cipher -->
+            <div class="cipher-card" data-cipher="sudoku">
+                <div class="cipher-header">
+                    <div class="cipher-icon">
+                        <i class="fas fa-th-large"></i>
+                    </div>
                     <div class="cipher-title">Sudoku Cipher</div>
-                    <div class="cipher-description">Hide messages in Sudoku puzzle patterns</div>
-                    <div class="cipher-difficulty difficulty-hard">Hard</div>
                 </div>
                 
-                <div class="cipher-card" data-cipher="calendar">
-                    <div class="cipher-icon">📅</div>
+                <div class="cipher-description">
+                    Encode messages using Sudoku grid patterns and number sequences. Mathematical approach using 9x9 grid permutations.
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setPuzzleMode('sudoku', 'encode')">Encode</button>
+                    <button class="mode-btn" onclick="setPuzzleMode('sudoku', 'decode')">Decode</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Seed Number</label>
+                    <input type="number" id="sudokuSeed" class="cipher-input" placeholder="Enter seed for Sudoku generation" min="1" max="999999" value="12345">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Message</label>
+                    <textarea id="sudokuMessage" class="cipher-textarea" placeholder="Enter the message to encode/decode"></textarea>
+                </div>
+
+                <div id="sudokuGrid" class="grid-container">
+                    <!-- 9x9 Sudoku grid will be generated here -->
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="processSudoku()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearSudoku()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="sudokuResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="sudokuResultContent"></div>
+                </div>
+            </div>
+
+            <!-- Calendar Cipher -->
+            <div class="cipher-card" data-cipher="calendar">
+                <div class="cipher-header">
+                    <div class="cipher-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
                     <div class="cipher-title">Calendar Cipher</div>
-                    <div class="cipher-description">Encode messages using calendar dates and patterns</div>
-                    <div class="cipher-difficulty difficulty-medium">Medium</div>
                 </div>
-            </div>
-
-            <!-- Cipher Info -->
-            <div class="cipher-info" id="cipherInfo" style="display: none;">
-                <h3 id="cipherInfoTitle">Cipher Information</h3>
-                <div id="cipherInfoContent"></div>
-            </div>
-
-            <!-- Tabs -->
-            <div class="tabs">
-                <button class="tab active" onclick="switchTab('encode')">🔒 Encode</button>
-                <button class="tab" onclick="switchTab('decode')">🔓 Decode</button>
-                <button class="tab" onclick="switchTab('info')">ℹ️ Information</button>
-            </div>
-
-            <!-- Encode Tab -->
-            <div id="encode" class="tab-content active">
-                <div class="info-box">
-                    <h3>📝 How to Encode a Message</h3>
-                    <p>1. Select a cipher method above<br>
-                    2. Enter your secret message<br>
-                    3. Configure cipher-specific settings<br>
-                    4. Click "Encode Message" to create the cipher</p>
+                
+                <div class="cipher-description">
+                    Encode messages using calendar dates and time-based patterns. Uses date arithmetic and calendar positions for encoding.
                 </div>
 
-                <div id="encodeContent">
-                    <!-- Content will be dynamically loaded based on cipher -->
-                </div>
-            </div>
-
-            <!-- Decode Tab -->
-            <div id="decode" class="tab-content">
-                <div class="info-box">
-                    <h3>🔍 How to Decode a Message</h3>
-                    <p>1. Select the same cipher method used for encoding<br>
-                    2. Enter the encoded message or cipher data<br>
-                    3. Configure the same settings used for encoding<br>
-                    4. Click "Decode Message" to reveal the original text</p>
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setPuzzleMode('calendar', 'encode')">Encode</button>
+                    <button class="mode-btn" onclick="setPuzzleMode('calendar', 'decode')">Decode</button>
                 </div>
 
-                <div id="decodeContent">
-                    <!-- Content will be dynamically loaded based on cipher -->
-                </div>
-            </div>
-
-            <!-- Info Tab -->
-            <div id="info" class="tab-content">
-                <div class="cipher-info">
-                    <h3>🧠 Puzzle Cipher Features</h3>
-                    <ul>
-                        <li><strong>Classic Methods:</strong> Historical and proven cipher techniques</li>
-                        <li><strong>Visual Elements:</strong> Interactive grids, patterns, and symbols</li>
-                        <li><strong>Multiple Difficulty Levels:</strong> From easy to advanced complexity</li>
-                        <li><strong>Educational Value:</strong> Learn about historical cryptography</li>
-                        <li><strong>Creative Encoding:</strong> Unique and memorable cipher methods</li>
-                    </ul>
+                <div class="input-group">
+                    <label class="input-label">Year</label>
+                    <input type="number" id="calendarYear" class="cipher-input" placeholder="Enter year" min="1900" max="2100" value="2024">
                 </div>
 
-                <div class="info-box">
-                    <h3>📚 Available Ciphers</h3>
-                    <ul>
-                        <li><strong>Book Cipher:</strong> Use book positions to encode messages</li>
-                        <li><strong>Grid Cipher:</strong> Hide data in coordinate systems</li>
-                        <li><strong>Tap Code:</strong> Prison communication method</li>
-                        <li><strong>ADFGVX:</strong> WWI German military cipher</li>
-                        <li><strong>Dancing Men:</strong> Sherlock Holmes stick figure cipher</li>
-                        <li><strong>Sudoku:</strong> Puzzle-based message hiding</li>
-                        <li><strong>Calendar:</strong> Date-based encoding system</li>
-                    </ul>
+                <div class="input-group">
+                    <label class="input-label">Message</label>
+                    <textarea id="calendarMessage" class="cipher-textarea" placeholder="Enter the message to encode/decode"></textarea>
                 </div>
 
-                <div class="info-box">
-                    <h3>⚠️ Important Notes</h3>
-                    <ul>
-                        <li>These are primarily educational and recreational ciphers</li>
-                        <li>Not suitable for high-security applications</li>
-                        <li>Some methods require shared knowledge between parties</li>
-                        <li>Test decoding before sharing encoded messages</li>
-                        <li>Keep cipher keys and settings secure</li>
-                    </ul>
+                <div id="calendarDisplay" class="grid-container">
+                    <!-- Calendar will be displayed here -->
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="processCalendar()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearCalendar()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="calendarResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="calendarResultContent"></div>
                 </div>
             </div>
         </div>
+
+        <!-- Message Container -->
+        <div id="messageContainer" style="margin-top: 2rem;"></div>
     </div>
 
-    <script>
-        let currentCipher = null;
-        let currentTab = 'encode';
-        let encodedData = null;
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="software.html">Software</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Connect With Us</h4>
+          <div class="social-links">
+            <a href="https://www.linkedin.com/in/blake-zimmerman-a59575342/" class="social-link" title="LinkedIn" target="_blank" rel="noopener">
+              <i class="fab fa-linkedin"></i>
+              <span>LinkedIn</span>
+            </a>
+            <a href="https://github.com/AInsiders" class="social-link" title="GitHub" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+              <span>GitHub</span>
+            </a>
+            <a href="https://www.youtube.com/@A.Insiders01" class="social-link" title="YouTube" target="_blank" rel="noopener">
+              <i class="fab fa-youtube"></i>
+              <span>YouTube</span>
+            </a>
+            <a href="https://discord.gg/Y4kCtaBZFM" class="social-link" title="Discord" target="_blank" rel="noopener">
+              <i class="fab fa-discord"></i>
+              <span>Discord</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 A.Insiders Network. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms-of-service.html">Terms of Service</a>
+          <a href="cookie-policy.html">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
-        // Cipher information
-        const cipherInfo = {
-            book: {
-                title: "Book Cipher",
-                description: "Encode messages using page, line, and word positions in a book",
-                features: [
-                    "Uses book page, line, and word numbers",
-                    "Requires same book for encoding/decoding",
-                    "High security with large books",
-                    "Historical method used by spies"
-                ],
-                encodeFields: `
-                    <div class="form-group">
-                        <label for="encodeMessage">Secret Message:</label>
-                        <textarea id="encodeMessage" class="form-control" rows="4" placeholder="Enter your secret message here..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="bookTitle">Book Title (for reference):</label>
-                        <input type="text" id="bookTitle" class="form-control" placeholder="e.g., War and Peace, Bible, etc.">
-                    </div>
-                    <div class="form-group">
-                        <label for="bookText">Book Text (first few pages):</label>
-                        <textarea id="bookText" class="form-control" rows="8" placeholder="Paste the book text you want to use for encoding..."></textarea>
-                    </div>
-                    <div class="progress-bar" id="encodeProgress" style="display: none;">
-                        <div class="progress-fill" id="encodeProgressFill"></div>
-                    </div>
-                    <div id="encodeStatus"></div>
-                    <button class="btn btn-primary" onclick="encodeMessage()">🔒 Encode Message</button>
-                    <button class="btn btn-danger" onclick="clearEncode()">🗑️ Clear</button>
-                    <div id="encodeDownload" style="display: none;">
-                        <h3>✅ Message Encoded Successfully!</h3>
-                        <div class="form-group">
-                            <label for="encodedResult">Book Cipher Coordinates:</label>
-                            <textarea id="encodedResult" class="form-control" rows="6" readonly></textarea>
-                        </div>
-                        <button class="btn btn-success" onclick="copyEncodedResult()">📋 Copy Coordinates</button>
-                    </div>
-                `,
-                decodeFields: `
-                    <div class="form-group">
-                        <label for="decodeCoordinates">Book Cipher Coordinates:</label>
-                        <textarea id="decodeCoordinates" class="form-control" rows="6" placeholder="Enter the coordinate pairs (page.line.word)..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="decodeBookText">Book Text:</label>
-                        <textarea id="decodeBookText" class="form-control" rows="8" placeholder="Paste the same book text used for encoding..."></textarea>
-                    </div>
-                    <div class="progress-bar" id="decodeProgress" style="display: none;">
-                        <div class="progress-fill" id="decodeProgressFill"></div>
-                    </div>
-                    <div id="decodeStatus"></div>
-                    <button class="btn btn-primary" onclick="decodeMessage()">🔓 Decode Message</button>
-                    <button class="btn btn-danger" onclick="clearDecode()">🗑️ Clear</button>
-                    <div id="decodeResult" style="display: none;">
-                        <h3>✅ Message Decoded Successfully!</h3>
-                        <div class="form-group">
-                            <label for="decodedMessage">Original Message:</label>
-                            <textarea id="decodedMessage" class="form-control" rows="4" readonly></textarea>
-                        </div>
-                        <button class="btn btn-success" onclick="copyDecodedMessage()">📋 Copy Message</button>
-                    </div>
-                `
-            },
-            grid: {
-                title: "Grid Cipher",
-                description: "Hide messages in grid patterns and coordinates",
-                features: [
-                    "Uses grid coordinates for encoding",
-                    "Visual grid interface",
-                    "Customizable grid sizes",
-                    "Pattern-based encoding"
-                ],
-                encodeFields: `
-                    <div class="form-group">
-                        <label for="encodeMessage">Secret Message:</label>
-                        <textarea id="encodeMessage" class="form-control" rows="4" placeholder="Enter your secret message here..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Grid Size:</label>
-                        <select id="gridSize" class="form-control">
-                            <option value="5x5">5x5 Grid</option>
-                            <option value="6x6">6x6 Grid</option>
-                            <option value="8x8">8x8 Grid</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Grid Pattern:</label>
-                        <div id="gridDisplay" class="grid-display"></div>
-                    </div>
-                    <div class="progress-bar" id="encodeProgress" style="display: none;">
-                        <div class="progress-fill" id="encodeProgressFill"></div>
-                    </div>
-                    <div id="encodeStatus"></div>
-                    <button class="btn btn-primary" onclick="encodeMessage()">🔒 Encode Message</button>
-                    <button class="btn btn-danger" onclick="clearEncode()">🗑️ Clear</button>
-                    <div id="encodeDownload" style="display: none;">
-                        <h3>✅ Message Encoded Successfully!</h3>
-                        <div class="form-group">
-                            <label for="encodedResult">Grid Coordinates:</label>
-                            <textarea id="encodedResult" class="form-control" rows="4" readonly></textarea>
-                        </div>
-                        <button class="btn btn-success" onclick="copyEncodedResult()">📋 Copy Coordinates</button>
-                    </div>
-                `,
-                decodeFields: `
-                    <div class="form-group">
-                        <label for="decodeCoordinates">Grid Coordinates:</label>
-                        <textarea id="decodeCoordinates" class="form-control" rows="4" placeholder="Enter the coordinate pairs..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Grid Size:</label>
-                        <select id="decodeGridSize" class="form-control">
-                            <option value="5x5">5x5 Grid</option>
-                            <option value="6x6">6x6 Grid</option>
-                            <option value="8x8">8x8 Grid</option>
-                        </select>
-                    </div>
-                    <div class="progress-bar" id="decodeProgress" style="display: none;">
-                        <div class="progress-fill" id="decodeProgressFill"></div>
-                    </div>
-                    <div id="decodeStatus"></div>
-                    <button class="btn btn-primary" onclick="decodeMessage()">🔓 Decode Message</button>
-                    <button class="btn btn-danger" onclick="clearDecode()">🗑️ Clear</button>
-                    <div id="decodeResult" style="display: none;">
-                        <h3>✅ Message Decoded Successfully!</h3>
-                        <div class="form-group">
-                            <label for="decodedMessage">Original Message:</label>
-                            <textarea id="decodedMessage" class="form-control" rows="4" readonly></textarea>
-                        </div>
-                        <button class="btn btn-success" onclick="copyDecodedMessage()">📋 Copy Message</button>
-                    </div>
-                `
-            },
-            tap: {
-                title: "Tap Code",
-                description: "Prison communication using tap patterns on surfaces",
-                features: [
-                    "Uses 5x5 grid of letters",
-                    "Tap patterns for communication",
-                    "Simple but effective method",
-                    "Used in prisons and POW camps"
-                ],
-                encodeFields: `
-                    <div class="form-group">
-                        <label for="encodeMessage">Secret Message:</label>
-                        <textarea id="encodeMessage" class="form-control" rows="4" placeholder="Enter your secret message here..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Tap Code Grid:</label>
-                        <div id="tapCodeDisplay" class="tap-code-display"></div>
-                    </div>
-                    <div class="progress-bar" id="encodeProgress" style="display: none;">
-                        <div class="progress-fill" id="encodeProgressFill"></div>
-                    </div>
-                    <div id="encodeStatus"></div>
-                    <button class="btn btn-primary" onclick="encodeMessage()">🔒 Encode Message</button>
-                    <button class="btn btn-danger" onclick="clearEncode()">🗑️ Clear</button>
-                    <div id="encodeDownload" style="display: none;">
-                        <h3>✅ Message Encoded Successfully!</h3>
-                        <div class="form-group">
-                            <label for="encodedResult">Tap Pattern:</label>
-                            <textarea id="encodedResult" class="form-control" rows="4" readonly></textarea>
-                        </div>
-                        <button class="btn btn-success" onclick="copyEncodedResult()">📋 Copy Pattern</button>
-                    </div>
-                `,
-                decodeFields: `
-                    <div class="form-group">
-                        <label for="decodePattern">Tap Pattern:</label>
-                        <textarea id="decodePattern" class="form-control" rows="4" placeholder="Enter the tap pattern (e.g., 2.3 1.1 3.4)..."></textarea>
-                    </div>
-                    <div class="progress-bar" id="decodeProgress" style="display: none;">
-                        <div class="progress-fill" id="decodeProgressFill"></div>
-                    </div>
-                    <div id="decodeStatus"></div>
-                    <button class="btn btn-primary" onclick="decodeMessage()">🔓 Decode Message</button>
-                    <button class="btn btn-danger" onclick="clearDecode()">🗑️ Clear</button>
-                    <div id="decodeResult" style="display: none;">
-                        <h3>✅ Message Decoded Successfully!</h3>
-                        <div class="form-group">
-                            <label for="decodedMessage">Original Message:</label>
-                            <textarea id="decodedMessage" class="form-control" rows="4" readonly></textarea>
-                        </div>
-                        <button class="btn btn-success" onclick="copyDecodedMessage()">📋 Copy Message</button>
-                    </div>
-                `
-            }
+  </div>
+
+  <!-- Mobile Navigation Script -->
+  <script src="mobile-nav.js"></script>
+  
+  <!-- Shared Loader Script -->
+  <script src="shared-loader.js"></script>
+  
+  <!-- Sphere Loader Script -->
+  <script src="sphere-loader.js"></script>
+  
+  <!-- Tawk.to Widget Script -->
+  <script src="add-chat-widget.js"></script>
+  
+  <!-- Performance Optimizer -->
+  <script src="performance-optimizer.js"></script>
+  
+  <!-- Security Enhancement -->
+  <script src="security-enhancement.js"></script>
+
+  <!-- Puzzle Cipher Tool Script -->
+  <script>
+    // Global variables
+    let currentModes = {
+        book: 'encode',
+        grid: 'encode',
+        tap: 'encode',
+        adfgvx: 'encode',
+        dancing: 'encode',
+        sudoku: 'encode',
+        calendar: 'encode'
+    };
+
+    // Initialize the tool
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize all grids
+        initializeGrids();
+        
+        // Set up event listeners
+        setupEventListeners();
+    });
+
+    function setupEventListeners() {
+        // Grid size change listener
+        document.getElementById('gridSize')?.addEventListener('change', function() {
+            createGridDisplay();
+        });
+
+        // Sudoku seed change listener
+        document.getElementById('sudokuSeed')?.addEventListener('change', function() {
+            createSudokuGrid();
+        });
+
+        // Calendar year change listener
+        document.getElementById('calendarYear')?.addEventListener('change', function() {
+            createCalendarDisplay();
+        });
+    }
+
+    function initializeGrids() {
+        createTapCodeGrid();
+        createADFGVXGrid();
+        createSudokuGrid();
+        createCalendarDisplay();
+    }
+
+    // Mode toggle functions
+    function setPuzzleMode(cipher, mode) {
+        currentModes[cipher] = mode;
+        
+        // Update button states
+        const card = document.querySelector(`[data-cipher="${cipher}"]`);
+        const buttons = card.querySelectorAll('.mode-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Update placeholders based on mode
+        updatePlaceholders(cipher, mode);
+    }
+
+    function updatePlaceholders(cipher, mode) {
+        const messageInputs = {
+            book: 'bookMessage',
+            grid: 'gridMessage',
+            tap: 'tapMessage',
+            adfgvx: 'adfgvxMessage',
+            dancing: 'dancingMessage',
+            sudoku: 'sudokuMessage',
+            calendar: 'calendarMessage'
         };
 
-        // Initialize the tool
-        document.addEventListener('DOMContentLoaded', function() {
-            // Cipher selection
-            document.querySelectorAll('.cipher-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const cipher = this.dataset.cipher;
-                    selectCipher(cipher);
-                });
-            });
+        const input = document.getElementById(messageInputs[cipher]);
+        if (input) {
+            if (mode === 'encode') {
+                input.placeholder = 'Enter the message you want to encode...';
+            } else {
+                input.placeholder = 'Enter the encoded message to decode...';
+            }
+        }
+    }
 
-            // Default to Book Cipher
-            selectCipher('book');
+    // Grid creation functions
+    function createGridDisplay() {
+        const gridDisplay = document.getElementById('gridDisplay');
+        if (!gridDisplay) return;
+
+        const size = parseInt(document.getElementById('gridSize').value);
+        gridDisplay.innerHTML = '';
+        gridDisplay.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.textContent = `${i+1},${j+1}`;
+                cell.dataset.row = i;
+                cell.dataset.col = j;
+                cell.addEventListener('click', () => toggleGridCell(cell));
+                gridDisplay.appendChild(cell);
+            }
+        }
+    }
+
+    function createTapCodeGrid() {
+        const tapGrid = document.getElementById('tapGrid');
+        if (!tapGrid) return;
+
+        tapGrid.innerHTML = '';
+        tapGrid.style.gridTemplateColumns = 'repeat(5, 1fr)';
+
+        const letters = [
+            ['A', 'B', 'C', 'D', 'E'],
+            ['F', 'G', 'H', 'I', 'J'],
+            ['K', 'L', 'M', 'N', 'O'],
+            ['P', 'Q', 'R', 'S', 'T'],
+            ['U', 'V', 'W', 'X', 'Y']
+        ];
+
+        letters.forEach((row, i) => {
+            row.forEach((letter, j) => {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.textContent = letter;
+                cell.dataset.row = i + 1;
+                cell.dataset.col = j + 1;
+                cell.title = `Row ${i+1}, Column ${j+1}`;
+                tapGrid.appendChild(cell);
+            });
         });
+    }
 
-        function selectCipher(cipher) {
-            // Update active cipher card
-            document.querySelectorAll('.cipher-card').forEach(card => {
-                card.classList.remove('active');
-            });
-            document.querySelector(`[data-cipher="${cipher}"]`).classList.add('active');
+    function createADFGVXGrid() {
+        const adfgvxGrid = document.getElementById('adfgvxGrid');
+        if (!adfgvxGrid) return;
 
-            currentCipher = cipher;
+        adfgvxGrid.innerHTML = '';
+        adfgvxGrid.style.gridTemplateColumns = 'repeat(7, 1fr)';
+
+        // Header row
+        const headerRow = document.createElement('div');
+        headerRow.className = 'grid-row';
+        headerRow.innerHTML = '<div class="grid-cell header">-</div>';
+        for (let i = 0; i < 6; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'grid-cell header';
+            cell.textContent = ['A', 'D', 'F', 'G', 'V', 'X'][i];
+            headerRow.appendChild(cell);
+        }
+        adfgvxGrid.appendChild(headerRow);
+
+        // Data rows
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let letterIndex = 0;
+
+        for (let i = 0; i < 6; i++) {
+            const row = document.createElement('div');
+            row.className = 'grid-row';
             
-            // Show cipher info
-            const info = cipherInfo[cipher];
-            if (info) {
-                document.getElementById('cipherInfoTitle').textContent = info.title;
-                document.getElementById('cipherInfoContent').innerHTML = `
-                    <p><strong>Description:</strong> ${info.description}</p>
-                    <p><strong>Features:</strong></p>
-                    <ul>
-                        ${info.features.map(feature => `<li>${feature}</li>`).join('')}
-                    </ul>
-                `;
-                document.getElementById('cipherInfo').style.display = 'block';
+            // Row header
+            const rowHeader = document.createElement('div');
+            rowHeader.className = 'grid-cell header';
+            rowHeader.textContent = ['A', 'D', 'F', 'G', 'V', 'X'][i];
+            row.appendChild(rowHeader);
+
+            // Data cells
+            for (let j = 0; j < 6; j++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.textContent = letters[letterIndex++];
+                row.appendChild(cell);
             }
+            adfgvxGrid.appendChild(row);
+        }
+    }
 
-            // Update encode/decode content
-            updateContent();
+    function createSudokuGrid() {
+        const sudokuGrid = document.getElementById('sudokuGrid');
+        if (!sudokuGrid) return;
+
+        sudokuGrid.innerHTML = '';
+        sudokuGrid.style.gridTemplateColumns = 'repeat(9, 1fr)';
+
+        // Generate Sudoku based on seed
+        const seed = parseInt(document.getElementById('sudokuSeed').value) || 12345;
+        const sudoku = generateSudoku(seed);
+
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.textContent = sudoku[i][j];
+                cell.dataset.row = i;
+                cell.dataset.col = j;
+                sudokuGrid.appendChild(cell);
+            }
+        }
+    }
+
+    function createCalendarDisplay() {
+        const calendarDisplay = document.getElementById('calendarDisplay');
+        if (!calendarDisplay) return;
+
+        const year = parseInt(document.getElementById('calendarYear').value) || 2024;
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        calendarDisplay.innerHTML = '';
+        calendarDisplay.style.gridTemplateColumns = 'repeat(12, 1fr)';
+
+        months.forEach((month, index) => {
+            const cell = document.createElement('div');
+            cell.className = 'grid-cell';
+            cell.textContent = month;
+            cell.title = `${month} ${year}`;
+            cell.dataset.month = index + 1;
+            calendarDisplay.appendChild(cell);
+        });
+    }
+
+    function toggleGridCell(cell) {
+        cell.classList.toggle('selected');
+    }
+
+    // Sudoku generation
+    function generateSudoku(seed) {
+        // Simple Sudoku generator based on seed
+        const sudoku = Array(9).fill().map(() => Array(9).fill(0));
+        
+        // Fill first row with 1-9
+        for (let i = 0; i < 9; i++) {
+            sudoku[0][i] = i + 1;
         }
 
-        function updateContent() {
-            if (!currentCipher || !cipherInfo[currentCipher]) return;
-
-            const info = cipherInfo[currentCipher];
-            
-            // Update encode content
-            document.getElementById('encodeContent').innerHTML = info.encodeFields;
-            
-            // Update decode content
-            document.getElementById('decodeContent').innerHTML = info.decodeFields;
-
-            // Initialize cipher-specific UI elements
-            initializeCipherUI();
-        }
-
-        function initializeCipherUI() {
-            if (currentCipher === 'grid') {
-                createGrid();
-            } else if (currentCipher === 'tap') {
-                createTapCodeGrid();
+        // Simple algorithm to fill rest (not a complete Sudoku solver)
+        for (let i = 1; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                sudoku[i][j] = ((i + j + seed) % 9) + 1;
             }
         }
 
-        function createGrid() {
-            const gridDisplay = document.getElementById('gridDisplay');
-            if (!gridDisplay) return;
+        return sudoku;
+    }
 
-            const size = document.getElementById('gridSize')?.value || '5x5';
-            const [rows, cols] = size.split('x').map(Number);
+    // Processing functions
+    function processBookCipher() {
+        const mode = currentModes.book;
+        const bookText = document.getElementById('bookText').value;
+        const message = document.getElementById('bookMessage').value;
+
+        if (!bookText || !message) {
+            showMessage('Please fill in all required fields.', 'error');
+            return;
+        }
+
+        showMessage('Processing Book Cipher...', 'info');
+        
+        setTimeout(() => {
+            let result;
+            if (mode === 'encode') {
+                result = encodeBookCipher(message, bookText);
+            } else {
+                result = decodeBookCipher(message, bookText);
+            }
             
-            gridDisplay.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-            gridDisplay.innerHTML = '';
+            displayResults('book', result, mode);
+        }, 1000);
+    }
 
-            for (let i = 0; i < rows; i++) {
-                for (let j = 0; j < cols; j++) {
-                    const cell = document.createElement('div');
-                    cell.className = 'grid-cell';
-                    cell.textContent = `${i+1},${j+1}`;
-                    cell.dataset.row = i;
-                    cell.dataset.col = j;
-                    cell.addEventListener('click', () => toggleGridCell(cell));
-                    gridDisplay.appendChild(cell);
+    function processGridCipher() {
+        const mode = currentModes.grid;
+        const message = document.getElementById('gridMessage').value;
+        const size = parseInt(document.getElementById('gridSize').value);
+
+        if (!message) {
+            showMessage('Please enter a message.', 'error');
+            return;
+        }
+
+        showMessage('Processing Grid Cipher...', 'info');
+        
+        setTimeout(() => {
+            let result;
+            if (mode === 'encode') {
+                result = encodeGridCipher(message, size);
+            } else {
+                result = decodeGridCipher(message, size);
+            }
+            
+            displayResults('grid', result, mode);
+        }, 1000);
+    }
+
+    function processTapCode() {
+        const mode = currentModes.tap;
+        const message = document.getElementById('tapMessage').value;
+
+        if (!message) {
+            showMessage('Please enter a message.', 'error');
+            return;
+        }
+
+        showMessage('Processing Tap Code...', 'info');
+        
+        setTimeout(() => {
+            let result;
+            if (mode === 'encode') {
+                result = encodeTapCode(message);
+            } else {
+                result = decodeTapCode(message);
+            }
+            
+            displayResults('tap', result, mode);
+        }, 1000);
+    }
+
+    function processADFGVX() {
+        const mode = currentModes.adfgvx;
+        const key = document.getElementById('adfgvxKey').value;
+        const message = document.getElementById('adfgvxMessage').value;
+
+        if (!key || !message) {
+            showMessage('Please fill in all required fields.', 'error');
+            return;
+        }
+
+        showMessage('Processing ADFGVX Cipher...', 'info');
+        
+        setTimeout(() => {
+            let result;
+            if (mode === 'encode') {
+                result = encodeADFGVX(message, key);
+            } else {
+                result = decodeADFGVX(message, key);
+            }
+            
+            displayResults('adfgvx', result, mode);
+        }, 1000);
+    }
+
+    function processDancingMen() {
+        const mode = currentModes.dancing;
+        const message = document.getElementById('dancingMessage').value;
+
+        if (!message) {
+            showMessage('Please enter a message.', 'error');
+            return;
+        }
+
+        showMessage('Processing Dancing Men Cipher...', 'info');
+        
+        setTimeout(() => {
+            let result;
+            if (mode === 'encode') {
+                result = encodeDancingMen(message);
+            } else {
+                result = decodeDancingMen(message);
+            }
+            
+            displayResults('dancing', result, mode);
+        }, 1000);
+    }
+
+    function processSudoku() {
+        const mode = currentModes.sudoku;
+        const message = document.getElementById('sudokuMessage').value;
+        const seed = parseInt(document.getElementById('sudokuSeed').value);
+
+        if (!message) {
+            showMessage('Please enter a message.', 'error');
+            return;
+        }
+
+        showMessage('Processing Sudoku Cipher...', 'info');
+        
+        setTimeout(() => {
+            let result;
+            if (mode === 'encode') {
+                result = encodeSudoku(message, seed);
+            } else {
+                result = decodeSudoku(message, seed);
+            }
+            
+            displayResults('sudoku', result, mode);
+        }, 1000);
+    }
+
+    function processCalendar() {
+        const mode = currentModes.calendar;
+        const message = document.getElementById('calendarMessage').value;
+        const year = parseInt(document.getElementById('calendarYear').value);
+
+        if (!message) {
+            showMessage('Please enter a message.', 'error');
+            return;
+        }
+
+        showMessage('Processing Calendar Cipher...', 'info');
+        
+        setTimeout(() => {
+            let result;
+            if (mode === 'encode') {
+                result = encodeCalendar(message, year);
+            } else {
+                result = decodeCalendar(message, year);
+            }
+            
+            displayResults('calendar', result, mode);
+        }, 1000);
+    }
+
+    // Cipher implementation functions
+    function encodeBookCipher(message, bookText) {
+        const words = bookText.split(/\s+/);
+        const encoded = [];
+        
+        for (let char of message.toUpperCase()) {
+            if (char === ' ') {
+                encoded.push('SPACE');
+                continue;
+            }
+            
+            // Find word containing this character
+            for (let i = 0; i < words.length; i++) {
+                if (words[i].toUpperCase().includes(char)) {
+                    encoded.push(`${Math.floor(i/100)+1}.${(i%100)+1}.${words[i].toUpperCase().indexOf(char)+1}`);
+                    break;
                 }
             }
         }
+        
+        return encoded.join(' ');
+    }
 
-        function createTapCodeGrid() {
-            const tapDisplay = document.getElementById('tapCodeDisplay');
-            if (!tapDisplay) return;
-
-            tapDisplay.innerHTML = '';
-            const letters = [
-                ['A', 'B', 'C', 'D', 'E'],
-                ['F', 'G', 'H', 'I', 'J'],
-                ['K', 'L', 'M', 'N', 'O'],
-                ['P', 'Q', 'R', 'S', 'T'],
-                ['U', 'V', 'W', 'X', 'Y']
-            ];
-
-            letters.forEach((row, i) => {
-                row.forEach((letter, j) => {
-                    const cell = document.createElement('div');
-                    cell.className = 'tap-cell';
-                    cell.textContent = letter;
-                    cell.dataset.row = i + 1;
-                    cell.dataset.col = j + 1;
-                    cell.addEventListener('click', () => selectTapCell(cell));
-                    tapDisplay.appendChild(cell);
-                });
-            });
-        }
-
-        function toggleGridCell(cell) {
-            cell.classList.toggle('selected');
-        }
-
-        function selectTapCell(cell) {
-            document.querySelectorAll('.tap-cell').forEach(c => c.classList.remove('active'));
-            cell.classList.add('active');
-        }
-
-        function switchTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-
-            // Remove active class from all tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-
-            // Show selected tab content
-            document.getElementById(tabName).classList.add('active');
-
-            // Add active class to selected tab
-            event.target.classList.add('active');
-
-            currentTab = tabName;
-        }
-
-        function showStatus(elementId, message, type) {
-            const statusDiv = document.getElementById(elementId);
-            if (statusDiv) {
-                statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+    function decodeBookCipher(coordinates, bookText) {
+        const words = bookText.split(/\s+/);
+        const coords = coordinates.split(' ');
+        let decoded = '';
+        
+        for (let coord of coords) {
+            if (coord === 'SPACE') {
+                decoded += ' ';
+                continue;
             }
-        }
-
-        function updateProgress(progressId, fillId, percentage) {
-            const progressBar = document.getElementById(progressId);
-            const progressFill = document.getElementById(fillId);
             
-            if (progressBar && progressFill) {
-                progressBar.style.display = 'block';
-                progressFill.style.width = percentage + '%';
+            const [page, line, word] = coord.split('.').map(Number);
+            const wordIndex = (page - 1) * 100 + (line - 1);
+            const charIndex = word - 1;
+            
+            if (words[wordIndex] && words[wordIndex][charIndex]) {
+                decoded += words[wordIndex][charIndex];
             }
         }
+        
+        return decoded;
+    }
 
-        function hideProgress(progressId) {
-            const progressBar = document.getElementById(progressId);
-            if (progressBar) {
-                progressBar.style.display = 'none';
+    function encodeGridCipher(message, size) {
+        const coords = [];
+        const chars = message.toUpperCase().replace(/[^A-Z]/g, '').split('');
+        
+        for (let char of chars) {
+            const charCode = char.charCodeAt(0) - 65;
+            const row = Math.floor(charCode / size) + 1;
+            const col = (charCode % size) + 1;
+            coords.push(`${row},${col}`);
+        }
+        
+        return coords.join(' ');
+    }
+
+    function decodeGridCipher(coordinates, size) {
+        const coords = coordinates.split(' ');
+        let decoded = '';
+        
+        for (let coord of coords) {
+            const [row, col] = coord.split(',').map(Number);
+            const charCode = (row - 1) * size + (col - 1) + 65;
+            decoded += String.fromCharCode(charCode);
+        }
+        
+        return decoded;
+    }
+
+    function encodeTapCode(message) {
+        const tapCode = {
+            'A': '1.1', 'B': '1.2', 'C': '1.3', 'D': '1.4', 'E': '1.5',
+            'F': '2.1', 'G': '2.2', 'H': '2.3', 'I': '2.4', 'J': '2.5',
+            'K': '3.1', 'L': '3.2', 'M': '3.3', 'N': '3.4', 'O': '3.5',
+            'P': '4.1', 'Q': '4.2', 'R': '4.3', 'S': '4.4', 'T': '4.5',
+            'U': '5.1', 'V': '5.2', 'W': '5.3', 'X': '5.4', 'Y': '5.5'
+        };
+        
+        return message.toUpperCase().split('').map(char => 
+            tapCode[char] || char
+        ).join(' ');
+    }
+
+    function decodeTapCode(tapPattern) {
+        const tapCode = {
+            '1.1': 'A', '1.2': 'B', '1.3': 'C', '1.4': 'D', '1.5': 'E',
+            '2.1': 'F', '2.2': 'G', '2.3': 'H', '2.4': 'I', '2.5': 'J',
+            '3.1': 'K', '3.2': 'L', '3.3': 'M', '3.4': 'N', '3.5': 'O',
+            '4.1': 'P', '4.2': 'Q', '4.3': 'R', '4.4': 'S', '4.5': 'T',
+            '5.1': 'U', '5.2': 'V', '5.3': 'W', '5.4': 'X', '5.5': 'Y'
+        };
+        
+        return tapPattern.split(' ').map(tap => 
+            tapCode[tap] || tap
+        ).join('');
+    }
+
+    function encodeADFGVX(message, key) {
+        // Simplified ADFGVX implementation
+        const grid = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let encoded = '';
+        
+        for (let char of message.toUpperCase()) {
+            const index = grid.indexOf(char);
+            if (index !== -1) {
+                const row = Math.floor(index / 6);
+                const col = index % 6;
+                const coords = ['A', 'D', 'F', 'G', 'V', 'X'];
+                encoded += coords[row] + coords[col] + ' ';
             }
         }
+        
+        return encoded.trim();
+    }
 
-        // Placeholder functions for encoding/decoding
-        function encodeMessage() {
-            if (!currentCipher) {
-                showStatus('encodeStatus', '❌ Please select a cipher method', 'error');
-                return;
+    function decodeADFGVX(encoded, key) {
+        // Simplified ADFGVX decoding
+        const grid = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const coords = ['A', 'D', 'F', 'G', 'V', 'X'];
+        let decoded = '';
+        
+        const pairs = encoded.match(/.{2}/g) || [];
+        for (let pair of pairs) {
+            const row = coords.indexOf(pair[0]);
+            const col = coords.indexOf(pair[1]);
+            if (row !== -1 && col !== -1) {
+                const index = row * 6 + col;
+                decoded += grid[index] || '';
             }
+        }
+        
+        return decoded;
+    }
 
-            showStatus('encodeStatus', '🔄 Processing...', 'info');
-            updateProgress('encodeProgress', 'encodeProgressFill', 10);
+    function encodeDancingMen(message) {
+        const dancingMen = {
+            'A': '👤', 'B': '👥', 'C': '👤‍♂️', 'D': '👥‍♀️', 'E': '👤‍♀️',
+            'F': '👥‍♂️', 'G': '👤‍♂️‍♀️', 'H': '👥‍♀️‍♂️', 'I': '👤‍♂️‍♀️‍♂️', 'J': '👥‍♀️‍♂️‍♀️',
+            'K': '👤‍♂️‍♀️‍♂️‍♀️', 'L': '👥‍♀️‍♂️‍♀️‍♂️', 'M': '👤‍♂️‍♀️‍♂️‍♀️‍♂️', 'N': '👥‍♀️‍♂️‍♀️‍♂️‍♀️', 'O': '👤‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️',
+            'P': '👥‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️', 'Q': '👤‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️', 'R': '👥‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️', 'S': '👤‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️', 'T': '👥‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️',
+            'U': '👤‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️', 'V': '👥‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️', 'W': '👤‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️', 'X': '👥‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️', 'Y': '👤‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️',
+            'Z': '👥‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️'
+        };
+        
+        return message.toUpperCase().split('').map(char => 
+            dancingMen[char] || char
+        ).join('');
+    }
 
-            // Simulate processing
-            setTimeout(() => {
-                updateProgress('encodeProgress', 'encodeProgressFill', 100);
-                hideProgress('encodeProgress');
-                showStatus('encodeStatus', '✅ Message encoded successfully!', 'success');
-                document.getElementById('encodeDownload').style.display = 'block';
-                
-                // Generate sample encoded result
-                const encodedResult = document.getElementById('encodedResult');
-                if (encodedResult) {
-                    if (currentCipher === 'book') {
-                        encodedResult.value = '1.5.3 2.12.7 1.8.2 3.4.1 2.15.9';
-                    } else if (currentCipher === 'grid') {
-                        encodedResult.value = '1,1 2,3 1,5 3,2 2,4';
-                    } else if (currentCipher === 'tap') {
-                        encodedResult.value = '1.1 2.3 1.5 3.2 2.4';
+    function decodeDancingMen(encoded) {
+        const dancingMen = {
+            '👤': 'A', '👥': 'B', '👤‍♂️': 'C', '👥‍♀️': 'D', '👤‍♀️': 'E',
+            '👥‍♂️': 'F', '👤‍♂️‍♀️': 'G', '👥‍♀️‍♂️': 'H', '👤‍♂️‍♀️‍♂️': 'I', '👥‍♀️‍♂️‍♀️': 'J',
+            '👤‍♂️‍♀️‍♂️‍♀️': 'K', '👥‍♀️‍♂️‍♀️‍♂️': 'L', '👤‍♂️‍♀️‍♂️‍♀️‍♂️': 'M', '👥‍♀️‍♂️‍♀️‍♂️‍♀️': 'N', '👤‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️': 'O',
+            '👥‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️': 'P', '👤‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️': 'Q', '👥‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️': 'R', '👤‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️': 'S', '👥‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️': 'T',
+            '👤‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️': 'U', '👥‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️': 'V', '👤‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️': 'W', '👥‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️': 'X', '👤‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️': 'Y',
+            '👥‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️‍♂️‍♀️': 'Z'
+        };
+        
+        return encoded.split('').map(char => 
+            dancingMen[char] || char
+        ).join('');
+    }
+
+    function encodeSudoku(message, seed) {
+        const sudoku = generateSudoku(seed);
+        const coords = [];
+        
+        for (let char of message.toUpperCase()) {
+            if (char === ' ') {
+                coords.push('SPACE');
+                continue;
+            }
+            
+            // Find position in Sudoku grid
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    if (sudoku[i][j] === char.charCodeAt(0) - 64) {
+                        coords.push(`${i+1},${j+1}`);
+                        break;
                     }
                 }
-            }, 2000);
-        }
-
-        function decodeMessage() {
-            if (!currentCipher) {
-                showStatus('decodeStatus', '❌ Please select a cipher method', 'error');
-                return;
             }
+        }
+        
+        return coords.join(' ');
+    }
 
-            showStatus('decodeStatus', '🔄 Processing...', 'info');
-            updateProgress('decodeProgress', 'decodeProgressFill', 10);
+    function decodeSudoku(coordinates, seed) {
+        const sudoku = generateSudoku(seed);
+        const coords = coordinates.split(' ');
+        let decoded = '';
+        
+        for (let coord of coords) {
+            if (coord === 'SPACE') {
+                decoded += ' ';
+                continue;
+            }
+            
+            const [row, col] = coord.split(',').map(Number);
+            const value = sudoku[row-1][col-1];
+            decoded += String.fromCharCode(value + 64);
+        }
+        
+        return decoded;
+    }
 
-            // Simulate processing
+    function encodeCalendar(message, year) {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const coords = [];
+        
+        for (let char of message.toUpperCase()) {
+            if (char === ' ') {
+                coords.push('SPACE');
+                continue;
+            }
+            
+            const charCode = char.charCodeAt(0) - 64;
+            const month = months[charCode % 12];
+            const day = (charCode % 28) + 1;
+            coords.push(`${month} ${day}, ${year}`);
+        }
+        
+        return coords.join(' | ');
+    }
+
+    function decodeCalendar(dates, year) {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const dateList = dates.split(' | ');
+        let decoded = '';
+        
+        for (let date of dateList) {
+            if (date === 'SPACE') {
+                decoded += ' ';
+                continue;
+            }
+            
+            const parts = date.split(' ');
+            const month = parts[0];
+            const day = parseInt(parts[1].replace(',', ''));
+            const monthIndex = months.indexOf(month);
+            const charCode = monthIndex + day + 64;
+            decoded += String.fromCharCode(charCode);
+        }
+        
+        return decoded;
+    }
+
+    // Display functions
+    function displayResults(cipher, result, mode) {
+        const resultsContainer = document.getElementById(`${cipher}Results`);
+        const resultContent = document.getElementById(`${cipher}ResultContent`);
+        
+        if (resultsContainer && resultContent) {
+            const modeText = mode === 'encode' ? 'Encoded' : 'Decoded';
+            resultContent.innerHTML = `
+                <div class="result-item">
+                    <div class="result-label">${modeText} Result:</div>
+                    <div class="result-value">${result}</div>
+                </div>
+                <div class="action-buttons" style="margin-top: 1rem;">
+                    <button class="btn btn-secondary" onclick="copyResult('${cipher}')">
+                        <i class="fas fa-copy"></i>
+                        Copy Result
+                    </button>
+                </div>
+            `;
+            resultsContainer.style.display = 'block';
+        }
+        
+        showMessage(`${cipher.charAt(0).toUpperCase() + cipher.slice(1)} ${modeText} Successfully!`, 'success');
+    }
+
+    function copyResult(cipher) {
+        const resultContent = document.getElementById(`${cipher}ResultContent`);
+        const resultValue = resultContent.querySelector('.result-value');
+        
+        if (resultValue) {
+            navigator.clipboard.writeText(resultValue.textContent).then(() => {
+                showMessage('Result copied to clipboard!', 'success');
+            }).catch(() => {
+                showMessage('Failed to copy result.', 'error');
+            });
+        }
+    }
+
+    // Clear functions
+    function clearBookCipher() {
+        document.getElementById('bookText').value = '';
+        document.getElementById('bookMessage').value = '';
+        document.getElementById('bookResults').style.display = 'none';
+    }
+
+    function clearGridCipher() {
+        document.getElementById('gridMessage').value = '';
+        document.getElementById('gridResults').style.display = 'none';
+        createGridDisplay();
+    }
+
+    function clearTapCode() {
+        document.getElementById('tapMessage').value = '';
+        document.getElementById('tapResults').style.display = 'none';
+    }
+
+    function clearADFGVX() {
+        document.getElementById('adfgvxKey').value = '';
+        document.getElementById('adfgvxMessage').value = '';
+        document.getElementById('adfgvxResults').style.display = 'none';
+    }
+
+    function clearDancingMen() {
+        document.getElementById('dancingMessage').value = '';
+        document.getElementById('dancingResults').style.display = 'none';
+    }
+
+    function clearSudoku() {
+        document.getElementById('sudokuMessage').value = '';
+        document.getElementById('sudokuResults').style.display = 'none';
+        createSudokuGrid();
+    }
+
+    function clearCalendar() {
+        document.getElementById('calendarMessage').value = '';
+        document.getElementById('calendarResults').style.display = 'none';
+    }
+
+    // Utility functions
+    function showMessage(message, type) {
+        const messageContainer = document.getElementById('messageContainer');
+        if (messageContainer) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `status ${type}`;
+            messageDiv.textContent = message;
+            messageContainer.appendChild(messageDiv);
+            
             setTimeout(() => {
-                updateProgress('decodeProgress', 'decodeProgressFill', 100);
-                hideProgress('decodeProgress');
-                showStatus('decodeStatus', '✅ Message decoded successfully!', 'success');
-                document.getElementById('decodeResult').style.display = 'block';
-                document.getElementById('decodedMessage').value = 'This is a sample decoded message. In the full implementation, this would contain the actual message extracted using the selected cipher method.';
-            }, 2000);
+                messageDiv.remove();
+            }, 5000);
         }
-
-        function clearEncode() {
-            // Clear encode form
-            const encodeContent = document.getElementById('encodeContent');
-            if (encodeContent) {
-                encodeContent.innerHTML = cipherInfo[currentCipher]?.encodeFields || '';
-            }
-            document.getElementById('encodeDownload').style.display = 'none';
-            hideProgress('encodeProgress');
-            initializeCipherUI();
-        }
-
-        function clearDecode() {
-            // Clear decode form
-            const decodeContent = document.getElementById('decodeContent');
-            if (decodeContent) {
-                decodeContent.innerHTML = cipherInfo[currentCipher]?.decodeFields || '';
-            }
-            document.getElementById('decodeResult').style.display = 'none';
-            hideProgress('decodeProgress');
-        }
-
-        function copyEncodedResult() {
-            const encodedResult = document.getElementById('encodedResult');
-            if (encodedResult) {
-                encodedResult.select();
-                document.execCommand('copy');
-                alert('Encoded result copied to clipboard!');
-            }
-        }
-
-        function copyDecodedMessage() {
-            const decodedMessage = document.getElementById('decodedMessage');
-            if (decodedMessage) {
-                decodedMessage.select();
-                document.execCommand('copy');
-                alert('Decoded message copied to clipboard!');
-            }
-        }
-
-        // Event listeners for dynamic elements
-        document.addEventListener('change', function(e) {
-            if (e.target.id === 'gridSize') {
-                createGrid();
-            }
-        });
-    </script>
+    }
+  </script>
 </body>
 </html>

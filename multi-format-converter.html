@@ -96,6 +96,7 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             overflow: hidden;
+            width: 100%;
         }
 
         .page-hero::before {
@@ -114,6 +115,11 @@
             z-index: 2;
             max-width: 800px;
             margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .page-title {
@@ -125,6 +131,8 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-shadow: 0 0 30px rgba(0, 102, 255, 0.3);
+            text-align: center;
+            width: 100%;
         }
 
         .page-title i {
@@ -139,6 +147,9 @@
             line-height: 1.6;
             margin-bottom: 2rem;
             opacity: 0.9;
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
         }
 
         /* Responsive design for hero section */
@@ -146,24 +157,48 @@
             .page-hero {
                 min-height: 50vh;
                 padding: 4rem 1rem 3rem;
+                width: 100%;
+            }
+
+            .hero-content {
+                width: 100%;
+                padding: 0 1rem;
             }
 
             .page-title {
                 font-size: 2.5rem;
+                text-align: center;
+                width: 100%;
             }
 
             .page-subtitle {
                 font-size: 1.1rem;
+                text-align: center;
+                width: 100%;
             }
         }
 
         @media (max-width: 480px) {
+            .page-hero {
+                width: 100%;
+                padding: 3rem 0.5rem 2rem;
+            }
+
+            .hero-content {
+                width: 100%;
+                padding: 0 0.5rem;
+            }
+
             .page-title {
                 font-size: 2rem;
+                text-align: center;
+                width: 100%;
             }
 
             .page-subtitle {
                 font-size: 1rem;
+                text-align: center;
+                width: 100%;
             }
         }
 

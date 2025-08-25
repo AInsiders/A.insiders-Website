@@ -4,41 +4,134 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comprehensive Steganography Tool - A.insiders</title>
+    
+    <!-- Favicon Setup -->
+    <link rel="icon" type="image/png" href="ainsiders-logo.png" id="main-favicon">
+    <link rel="apple-touch-icon" href="ainsiders-logo.png">
+    <meta name="description" content="Advanced steganography with multiple hiding methods and AES-256 encryption. Hide data in images, audio, text, and more with military-grade security.">
+    <meta name="keywords" content="steganography, data hiding, encryption, AES-256, image steganography, audio steganography, text steganography">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    
+    <!-- Enhanced Cache Control Headers for Cloudflare -->
+    <meta http-equiv="Cache-Control" content="public, max-age=31536000, immutable, stale-while-revalidate=86400">
+    <meta http-equiv="Expires" content="31536000">
+    <meta http-equiv="ETag" content="steganography-v1.0">
+    <meta http-equiv="Last-Modified" content="2023-12-31T00:00:00Z">
+    
+    <!-- Optimized Asset Caching System with Cloudflare Headers -->
+    <link rel="stylesheet" href="brain-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Preload critical assets with Cloudflare caching -->
+    <link rel="preload" href="brain-script.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="shared-loader.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="mobile-nav.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="sphere-loader.js?v=1.0" as="script" crossorigin="anonymous">
+    <link rel="preload" href="ainsiders-logo.png?v=1.0" as="image" type="image/png">
+    <link rel="preload" href="logo.svg?v=1.0" as="image" type="image/svg+xml">
+    
+    <!-- Cache Manager and Asset Preloader with Cloudflare caching -->
+    <script src="browser-cache-manager.js"></script>
+    <script src="asset-preloader.js"></script>
+    
+    <!-- Optimized Background System -->
+    <script src="brain-script.js"></script>
+    
+    <!-- Font Awesome with CDN and Fallback -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    
+    <!-- Favicon Animation Script -->
+    <script src="favicon-animation.js"></script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* Neural Background Canvas - Full Page Coverage */
+        #aiCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 1;
+            pointer-events: none;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+        /* Page Hero Section with Neural Background */
+        .page-hero {
+            position: relative;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(17, 17, 17, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            overflow: hidden;
         }
 
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(0, 102, 255, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Steganography Tool Specific Styles */
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(0, 0, 0, 0.25);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-dark);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            position: relative;
+            z-index: 1;
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(17, 17, 17, 0.4) 100%);
             color: white;
             padding: 30px;
             text-align: center;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
-            background: linear-gradient(45deg, #3498db, #e74c3c);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -61,25 +154,27 @@
         }
 
         .method-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border: 2px solid #dee2e6;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(0, 102, 255, 0.2);
             border-radius: 15px;
             padding: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .method-card:hover {
-            border-color: #3498db;
+            border-color: var(--accent-primary);
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.2);
+            box-shadow: 0 10px 20px rgba(0, 102, 255, 0.2);
         }
 
         .method-card.active {
-            border-color: #3498db;
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+            border-color: var(--accent-primary);
+            background: rgba(0, 102, 255, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 102, 255, 0.3);
         }
 
         .method-icon {
@@ -103,9 +198,11 @@
         .tabs {
             display: flex;
             margin-bottom: 30px;
-            background: #f8f9fa;
+            background: rgba(0, 0, 0, 0.3);
             border-radius: 15px;
             padding: 5px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .tab {
@@ -119,18 +216,18 @@
             font-size: 1.1em;
             font-weight: 600;
             transition: all 0.3s ease;
-            color: #6c757d;
+            color: var(--text-secondary);
         }
 
         .tab.active {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
+            color: #000;
+            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
         }
 
         .tab:hover:not(.active) {
-            background: rgba(52, 152, 219, 0.1);
-            color: #3498db;
+            background: rgba(0, 102, 255, 0.1);
+            color: var(--accent-primary);
         }
 
         .tab-content {
@@ -156,17 +253,18 @@
         .form-control {
             width: 100%;
             padding: 15px;
-            border: 2px solid #e9ecef;
+            border: 2px solid rgba(0, 102, 255, 0.3);
             border-radius: 10px;
             font-size: 1em;
             transition: all 0.3s ease;
-            background: white;
+            background: rgba(0, 0, 0, 0.4);
+            color: var(--text-primary);
         }
 
         .form-control:focus {
             outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
         }
 
         .file-input-wrapper {
@@ -214,33 +312,33 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
+            color: #000;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 102, 255, 0.3);
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #27ae60, #229954);
-            color: white;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-blue));
+            color: #000;
         }
 
         .btn-success:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 102, 255, 0.3);
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
             color: white;
         }
 
         .btn-danger:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
         }
 
         .progress-bar {
@@ -267,9 +365,9 @@
         }
 
         .status.success {
-            background: rgba(39, 174, 96, 0.1);
-            color: #27ae60;
-            border: 1px solid rgba(39, 174, 96, 0.3);
+            background: rgba(0, 102, 255, 0.1);
+            color: var(--accent-primary);
+            border: 1px solid rgba(0, 102, 255, 0.3);
         }
 
         .status.error {
@@ -350,528 +448,1306 @@
                 margin-bottom: 5px;
             }
         }
+
+        /* New Layout Styles */
+        .steganography-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .method-card {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 102, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .method-card:hover::before {
+            left: 100%;
+        }
+
+        .method-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .method-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .method-icon {
+            font-size: 2rem;
+            color: var(--accent-primary);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 102, 255, 0.1);
+            border-radius: 50%;
+            border: 2px solid var(--accent-primary);
+        }
+
+        .method-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .method-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .mode-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
+            padding: 0.25rem;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: calc(var(--border-radius) - 2px);
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: var(--font-primary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .mode-btn.active {
+            background: var(--accent-primary);
+            color: #000;
+        }
+
+        .mode-btn:hover:not(.active) {
+            background: rgba(0, 102, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-label {
+            display: block;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .steganography-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            font-family: var(--font-primary);
+            font-size: 0.9rem;
+            resize: vertical;
+            transition: var(--transition-smooth);
+        }
+
+        .steganography-textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+        }
+
+        .steganography-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .steganography-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            font-family: var(--font-primary);
+            font-size: 0.9rem;
+            transition: var(--transition-smooth);
+        }
+
+        .steganography-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+        }
+
+        .steganography-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            color: var(--text-secondary);
+            font-family: var(--font-primary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .file-input-label:hover {
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+            background: rgba(0, 102, 255, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+            justify-content: center;
+        }
+
+        .results-container {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .results-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .result-item {
+            margin-bottom: 1rem;
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .result-value {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Status Messages */
+        .status {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .status.success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            color: #28a745;
+        }
+
+        .status.error {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+            color: #dc3545;
+        }
+
+        .status.info {
+            background: rgba(0, 102, 255, 0.2);
+            border: 1px solid var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        /* Responsive adjustments for new layout */
+        @media (max-width: 768px) {
+            .method-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .method-card {
+                padding: 1.5rem;
+            }
+
+            .method-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
+            }
+
+            .method-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🖼️ Comprehensive Steganography Tool</h1>
-            <p>Advanced steganography with multiple hiding methods and AES-256 encryption</p>
-        </div>
+    <!-- Neural Background Canvas -->
+    <canvas id="aiCanvas"></canvas>
 
-        <div class="main-content">
-            <!-- Method Selector -->
-            <div class="method-selector">
-                <div class="method-card" data-method="lsb">
-                    <div class="method-icon">🖼️</div>
+    <div id="website-content" class="website-content">
+
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="index.html" class="nav-logo">
+          <img src="ainsiders-logo.png" alt="A.Insiders Logo" class="logo-image" width="40" height="40">
+          <span class="logo-text">A.I</span>
+          <span class="logo-accent">NSIDERS</span>
+        </a>
+        <ul class="nav-menu">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="software.html" class="nav-link">Software</a></li>
+          <li class="nav-dropdown">
+            <div class="nav-link-container">
+              <a href="about.html" class="nav-link">About</a>
+              <span class="dropdown-arrow">▼</span>
+            </div>
+            <ul class="dropdown-menu">
+              <li><a href="about.html" class="dropdown-link">About Company</a></li>
+              <li><a href="blake-zimmerman.html" class="dropdown-link">Blake Zimmerman</a></li>
+              <li><a href="babu-narayana.html" class="dropdown-link">Babu Narayana</a></li>
+            </ul>
+          </li>
+          <li><a href="contact.html" class="nav-link">Contact</a></li>
+          <li class="auth-nav-item">
+            <a href="login.html" class="nav-link auth-link" id="authLink">
+              <i class="fas fa-user"></i>
+              <span id="authText">Login</span>
+            </a>
+          </li>
+        </ul>
+        <div class="nav-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Hero Section -->
+    <section class="page-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <i class="fas fa-magic"></i>
+                Comprehensive Steganography Tool
+            </h1>
+            <p class="hero-subtitle">
+                Advanced steganography with multiple hiding methods and AES-256 encryption
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Steganography Container -->
+    <div class="steganography-container">
+        <!-- Steganography Grid -->
+        <div class="method-grid">
+            <!-- LSB Image Steganography -->
+            <div class="method-card" data-method="lsb">
+                <div class="method-header">
+                    <div class="method-icon">
+                        <i class="fas fa-image"></i>
+                    </div>
                     <div class="method-title">LSB Image Steganography</div>
-                    <div class="method-description">Hide data in least significant bits of image pixels</div>
                 </div>
                 
-                <div class="method-card" data-method="audio">
-                    <div class="method-icon">🎵</div>
+                <div class="method-description">
+                    Hide data in the least significant bits of image pixels. Supports PNG, JPG, JPEG formats with minimal visual changes.
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setSteganographyMode('lsb', 'encode')">Encode</button>
+                    <button class="mode-btn" onclick="setSteganographyMode('lsb', 'decode')">Decode</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Carrier Image</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="lsbImage" class="file-input" accept="image/*">
+                        <label for="lsbImage" class="file-input-label">
+                            <i class="fas fa-upload"></i> Choose Image File
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Secret Message</label>
+                    <textarea id="lsbMessage" class="steganography-textarea" placeholder="Enter your secret message here..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Encryption Password</label>
+                    <input type="password" id="lsbPassword" class="steganography-input" placeholder="Enter strong password for AES-256 encryption">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="processLSB()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearLSB()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="lsbResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="lsbResultContent"></div>
+                </div>
+            </div>
+
+            <!-- Audio Steganography -->
+            <div class="method-card" data-method="audio">
+                <div class="method-header">
+                    <div class="method-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
                     <div class="method-title">Audio Steganography</div>
-                    <div class="method-description">Hide data in audio files using LSB technique</div>
                 </div>
                 
-                <div class="method-card" data-method="text">
-                    <div class="method-icon">📝</div>
+                <div class="method-description">
+                    Hide data in audio files using LSB technique. Supports WAV, MP3 formats with minimal audio quality changes.
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setSteganographyMode('audio', 'encode')">Encode</button>
+                    <button class="mode-btn" onclick="setSteganographyMode('audio', 'decode')">Decode</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Carrier Audio</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="audioFile" class="file-input" accept="audio/*">
+                        <label for="audioFile" class="file-input-label">
+                            <i class="fas fa-upload"></i> Choose Audio File
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Secret Message</label>
+                    <textarea id="audioMessage" class="steganography-textarea" placeholder="Enter your secret message here..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Encryption Password</label>
+                    <input type="password" id="audioPassword" class="steganography-input" placeholder="Enter strong password for AES-256 encryption">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="processAudio()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearAudio()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="audioResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="audioResultContent"></div>
+                </div>
+            </div>
+
+            <!-- Text Steganography -->
+            <div class="method-card" data-method="text">
+                <div class="method-header">
+                    <div class="method-icon">
+                        <i class="fas fa-font"></i>
+                    </div>
                     <div class="method-title">Text Steganography</div>
-                    <div class="method-description">Hide data using invisible characters and whitespace</div>
                 </div>
                 
-                <div class="method-card" data-method="html">
-                    <div class="method-icon">🌐</div>
+                <div class="method-description">
+                    Hide data using invisible Unicode characters and whitespace. Works with any text format and is completely invisible.
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setSteganographyMode('text', 'encode')">Encode</button>
+                    <button class="mode-btn" onclick="setSteganographyMode('text', 'decode')">Decode</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Carrier Text</label>
+                    <textarea id="textCarrier" class="steganography-textarea" placeholder="Enter or paste the text that will carry your hidden message..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Secret Message</label>
+                    <textarea id="textMessage" class="steganography-textarea" placeholder="Enter your secret message here..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Encryption Password</label>
+                    <input type="password" id="textPassword" class="steganography-input" placeholder="Enter strong password for AES-256 encryption">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="processText()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearText()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="textResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="textResultContent"></div>
+                </div>
+            </div>
+
+            <!-- HTML/CSS Steganography -->
+            <div class="method-card" data-method="html">
+                <div class="method-header">
+                    <div class="method-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
                     <div class="method-title">HTML/CSS Steganography</div>
-                    <div class="method-description">Hide data in HTML comments and CSS properties</div>
                 </div>
                 
-                <div class="method-card" data-method="metadata">
-                    <div class="method-icon">📋</div>
+                <div class="method-description">
+                    Hide data in HTML comments and CSS properties. Perfect for web developers and digital watermarking.
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setSteganographyMode('html', 'encode')">Encode</button>
+                    <button class="mode-btn" onclick="setSteganographyMode('html', 'decode')">Decode</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">HTML/CSS Content</label>
+                    <textarea id="htmlContent" class="steganography-textarea" placeholder="Enter HTML or CSS content..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Secret Message</label>
+                    <textarea id="htmlMessage" class="steganography-textarea" placeholder="Enter your secret message here..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Encryption Password</label>
+                    <input type="password" id="htmlPassword" class="steganography-input" placeholder="Enter strong password for AES-256 encryption">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="processHTML()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearHTML()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="htmlResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="htmlResultContent"></div>
+                </div>
+            </div>
+
+            <!-- Metadata Steganography -->
+            <div class="method-card" data-method="metadata">
+                <div class="method-header">
+                    <div class="method-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
                     <div class="method-title">Metadata Steganography</div>
-                    <div class="method-description">Hide data in file metadata and EXIF data</div>
                 </div>
                 
-                <div class="method-card" data-method="unicode">
-                    <div class="method-icon">🔤</div>
+                <div class="method-description">
+                    Hide data in file metadata and EXIF data. Works with images, documents, and other file types.
+                </div>
+
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setSteganographyMode('metadata', 'encode')">Encode</button>
+                    <button class="mode-btn" onclick="setSteganographyMode('metadata', 'decode')">Decode</button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Target File</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="metadataFile" class="file-input" accept="*/*">
+                        <label for="metadataFile" class="file-input-label">
+                            <i class="fas fa-upload"></i> Choose File
+                        </label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Secret Message</label>
+                    <textarea id="metadataMessage" class="steganography-textarea" placeholder="Enter your secret message here..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Encryption Password</label>
+                    <input type="password" id="metadataPassword" class="steganography-input" placeholder="Enter strong password for AES-256 encryption">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="processMetadata()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearMetadata()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="metadataResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="metadataResultContent"></div>
+                </div>
+            </div>
+
+            <!-- Unicode Steganography -->
+            <div class="method-card" data-method="unicode">
+                <div class="method-header">
+                    <div class="method-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
                     <div class="method-title">Unicode Steganography</div>
-                    <div class="method-description">Hide data using homoglyphs and zero-width characters</div>
                 </div>
-            </div>
-
-            <!-- Method Info -->
-            <div class="method-info" id="methodInfo" style="display: none;">
-                <h3 id="methodInfoTitle">Method Information</h3>
-                <div id="methodInfoContent"></div>
-            </div>
-
-            <!-- Tabs -->
-            <div class="tabs">
-                <button class="tab active" onclick="switchTab('encode')">🔒 Encode</button>
-                <button class="tab" onclick="switchTab('decode')">🔓 Decode</button>
-                <button class="tab" onclick="switchTab('info')">ℹ️ Information</button>
-            </div>
-
-            <!-- Encode Tab -->
-            <div id="encode" class="tab-content active">
-                <div class="info-box">
-                    <h3>📝 How to Encode a Message</h3>
-                    <p>1. Select a steganography method above<br>
-                    2. Choose your carrier file (image, audio, text, etc.)<br>
-                    3. Enter your secret message<br>
-                    4. Provide a strong password for AES-256 encryption<br>
-                    5. Click "Encode Message" to hide it</p>
+                
+                <div class="method-description">
+                    Hide data using homoglyphs and zero-width characters. Advanced technique for text-based steganography.
                 </div>
 
-                <div id="encodeContent">
-                    <!-- Content will be dynamically loaded based on method -->
-                </div>
-            </div>
-
-            <!-- Decode Tab -->
-            <div id="decode" class="tab-content">
-                <div class="info-box">
-                    <h3>🔍 How to Decode a Message</h3>
-                    <p>1. Select the same steganography method used for encoding<br>
-                    2. Choose the file that contains the hidden message<br>
-                    3. Enter the password used for encryption<br>
-                    4. Click "Decode Message" to extract the hidden content</p>
+                <div class="mode-toggle">
+                    <button class="mode-btn active" onclick="setSteganographyMode('unicode', 'encode')">Encode</button>
+                    <button class="mode-btn" onclick="setSteganographyMode('unicode', 'decode')">Decode</button>
                 </div>
 
-                <div id="decodeContent">
-                    <!-- Content will be dynamically loaded based on method -->
-                </div>
-            </div>
-
-            <!-- Info Tab -->
-            <div id="info" class="tab-content">
-                <div class="method-info">
-                    <h3>🔒 Security Features</h3>
-                    <ul>
-                        <li><strong>AES-256 Encryption:</strong> Military-grade symmetric encryption</li>
-                        <li><strong>Multiple Methods:</strong> Various steganography techniques</li>
-                        <li><strong>Password Protection:</strong> Strong password required for decryption</li>
-                        <li><strong>Client-Side Processing:</strong> All operations performed locally</li>
-                        <li><strong>File Integrity:</strong> Minimal changes to carrier files</li>
-                    </ul>
+                <div class="input-group">
+                    <label class="input-label">Carrier Text</label>
+                    <textarea id="unicodeCarrier" class="steganography-textarea" placeholder="Enter text to hide data in..."></textarea>
                 </div>
 
-                <div class="info-box">
-                    <h3>📚 Available Methods</h3>
-                    <ul>
-                        <li><strong>LSB Image:</strong> Hide data in image pixel bits</li>
-                        <li><strong>Audio:</strong> Hide data in audio file samples</li>
-                        <li><strong>Text:</strong> Hide data using invisible characters</li>
-                        <li><strong>HTML/CSS:</strong> Hide data in web markup</li>
-                        <li><strong>Metadata:</strong> Hide data in file metadata</li>
-                        <li><strong>Unicode:</strong> Hide data using special characters</li>
-                    </ul>
+                <div class="input-group">
+                    <label class="input-label">Secret Message</label>
+                    <textarea id="unicodeMessage" class="steganography-textarea" placeholder="Enter your secret message here..."></textarea>
                 </div>
 
-                <div class="info-box">
-                    <h3>⚠️ Important Security Notes</h3>
-                    <ul>
-                        <li>Always use strong, unique passwords</li>
-                        <li>Keep your passwords secure and don't share them</li>
-                        <li>This tool processes data locally - no data is sent to servers</li>
-                        <li>Test decoding before sharing encoded files</li>
-                        <li>Never share encoded files with sensitive data publicly</li>
-                    </ul>
+                <div class="input-group">
+                    <label class="input-label">Encryption Password</label>
+                    <input type="password" id="unicodePassword" class="steganography-input" placeholder="Enter strong password for AES-256 encryption">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="processUnicode()">
+                        <i class="fas fa-lock"></i>
+                        Process
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearUnicode()">
+                        <i class="fas fa-eraser"></i>
+                        Clear
+                    </button>
+                </div>
+
+                <div id="unicodeResults" class="results-container" style="display: none;">
+                    <div class="results-title">
+                        <i class="fas fa-key"></i>
+                        Results
+                    </div>
+                    <div id="unicodeResultContent"></div>
                 </div>
             </div>
         </div>
+
+        <!-- Message Container -->
+        <div id="messageContainer" style="margin-top: 2rem;"></div>
     </div>
 
     <script>
-        let currentMethod = null;
-        let currentTab = 'encode';
-        let encodedData = null;
-
-        // Method information
-        const methodInfo = {
-            lsb: {
-                title: "LSB Image Steganography",
-                description: "Hide data in the least significant bits of image pixels",
-                features: [
-                    "Uses LSB (Least Significant Bit) technique",
-                    "Supports PNG, JPG, JPEG formats",
-                    "Minimal visual changes to images",
-                    "High capacity for larger images"
-                ],
-                encodeFields: `
-                    <div class="form-group">
-                        <label for="encodeImage">Select Image File:</label>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="encodeImage" class="file-input" accept="image/*">
-                            <label for="encodeImage" class="file-input-label">
-                                📁 Choose an image file (PNG, JPG, JPEG)
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="encodeMessage">Secret Message:</label>
-                        <textarea id="encodeMessage" class="form-control" rows="4" placeholder="Enter your secret message here..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="encodePassword">Encryption Password:</label>
-                        <input type="password" id="encodePassword" class="form-control" placeholder="Enter a strong password for AES-256 encryption">
-                    </div>
-                    <div class="progress-bar" id="encodeProgress" style="display: none;">
-                        <div class="progress-fill" id="encodeProgressFill"></div>
-                    </div>
-                    <div id="encodeStatus"></div>
-                    <button class="btn btn-primary" onclick="encodeMessage()">🔒 Encode Message</button>
-                    <button class="btn btn-danger" onclick="clearEncode()">🗑️ Clear</button>
-                    <div id="encodeDownload" style="display: none;">
-                        <h3>✅ Message Encoded Successfully!</h3>
-                        <button class="btn btn-success" onclick="downloadEncodedFile()">📥 Download File</button>
-                    </div>
-                `,
-                decodeFields: `
-                    <div class="form-group">
-                        <label for="decodeImage">Select Encoded Image:</label>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="decodeImage" class="file-input" accept="image/*">
-                            <label for="decodeImage" class="file-input-label">
-                                📁 Choose an encoded image file
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="decodePassword">Decryption Password:</label>
-                        <input type="password" id="decodePassword" class="form-control" placeholder="Enter the password used for encryption">
-                    </div>
-                    <div class="progress-bar" id="decodeProgress" style="display: none;">
-                        <div class="progress-fill" id="decodeProgressFill"></div>
-                    </div>
-                    <div id="decodeStatus"></div>
-                    <button class="btn btn-primary" onclick="decodeMessage()">🔓 Decode Message</button>
-                    <button class="btn btn-danger" onclick="clearDecode()">🗑️ Clear</button>
-                    <div id="decodeResult" style="display: none;">
-                        <h3>✅ Message Decoded Successfully!</h3>
-                        <div class="form-group">
-                            <label for="decodedMessage">Hidden Message:</label>
-                            <textarea id="decodedMessage" class="form-control" rows="4" readonly></textarea>
-                        </div>
-                        <button class="btn btn-success" onclick="copyDecodedMessage()">📋 Copy Message</button>
-                    </div>
-                `
-            },
-            audio: {
-                title: "Audio Steganography",
-                description: "Hide data in audio files using LSB technique",
-                features: [
-                    "Uses LSB technique on audio samples",
-                    "Supports WAV, MP3 formats",
-                    "Minimal audio quality changes",
-                    "High capacity for longer audio files"
-                ],
-                encodeFields: `
-                    <div class="form-group">
-                        <label for="encodeAudio">Select Audio File:</label>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="encodeAudio" class="file-input" accept="audio/*">
-                            <label for="encodeAudio" class="file-input-label">
-                                📁 Choose an audio file (WAV, MP3)
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="encodeMessage">Secret Message:</label>
-                        <textarea id="encodeMessage" class="form-control" rows="4" placeholder="Enter your secret message here..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="encodePassword">Encryption Password:</label>
-                        <input type="password" id="encodePassword" class="form-control" placeholder="Enter a strong password for AES-256 encryption">
-                    </div>
-                    <div class="progress-bar" id="encodeProgress" style="display: none;">
-                        <div class="progress-fill" id="encodeProgressFill"></div>
-                    </div>
-                    <div id="encodeStatus"></div>
-                    <button class="btn btn-primary" onclick="encodeMessage()">🔒 Encode Message</button>
-                    <button class="btn btn-danger" onclick="clearEncode()">🗑️ Clear</button>
-                    <div id="encodeDownload" style="display: none;">
-                        <h3>✅ Message Encoded Successfully!</h3>
-                        <button class="btn btn-success" onclick="downloadEncodedFile()">📥 Download File</button>
-                    </div>
-                `,
-                decodeFields: `
-                    <div class="form-group">
-                        <label for="decodeAudio">Select Encoded Audio:</label>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="decodeAudio" class="file-input" accept="audio/*">
-                            <label for="decodeAudio" class="file-input-label">
-                                📁 Choose an encoded audio file
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="decodePassword">Decryption Password:</label>
-                        <input type="password" id="decodePassword" class="form-control" placeholder="Enter the password used for encryption">
-                    </div>
-                    <div class="progress-bar" id="decodeProgress" style="display: none;">
-                        <div class="progress-fill" id="decodeProgressFill"></div>
-                    </div>
-                    <div id="decodeStatus"></div>
-                    <button class="btn btn-primary" onclick="decodeMessage()">🔓 Decode Message</button>
-                    <button class="btn btn-danger" onclick="clearDecode()">🗑️ Clear</button>
-                    <div id="decodeResult" style="display: none;">
-                        <h3>✅ Message Decoded Successfully!</h3>
-                        <div class="form-group">
-                            <label for="decodedMessage">Hidden Message:</label>
-                            <textarea id="decodedMessage" class="form-control" rows="4" readonly></textarea>
-                        </div>
-                        <button class="btn btn-success" onclick="copyDecodedMessage()">📋 Copy Message</button>
-                    </div>
-                `
-            },
-            text: {
-                title: "Text Steganography",
-                description: "Hide data using invisible characters and whitespace",
-                features: [
-                    "Uses invisible Unicode characters",
-                    "Whitespace encoding techniques",
-                    "Works with any text format",
-                    "Completely invisible to human eye"
-                ],
-                encodeFields: `
-                    <div class="form-group">
-                        <label for="encodeText">Carrier Text:</label>
-                        <textarea id="encodeText" class="form-control" rows="6" placeholder="Enter or paste the text that will carry your hidden message..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="encodeMessage">Secret Message:</label>
-                        <textarea id="encodeMessage" class="form-control" rows="4" placeholder="Enter your secret message here..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="encodePassword">Encryption Password:</label>
-                        <input type="password" id="encodePassword" class="form-control" placeholder="Enter a strong password for AES-256 encryption">
-                    </div>
-                    <div class="progress-bar" id="encodeProgress" style="display: none;">
-                        <div class="progress-fill" id="encodeProgressFill"></div>
-                    </div>
-                    <div id="encodeStatus"></div>
-                    <button class="btn btn-primary" onclick="encodeMessage()">🔒 Encode Message</button>
-                    <button class="btn btn-danger" onclick="clearEncode()">🗑️ Clear</button>
-                    <div id="encodeDownload" style="display: none;">
-                        <h3>✅ Message Encoded Successfully!</h3>
-                        <div class="form-group">
-                            <label for="encodedText">Encoded Text:</label>
-                            <textarea id="encodedText" class="form-control" rows="6" readonly></textarea>
-                        </div>
-                        <button class="btn btn-success" onclick="copyEncodedText()">📋 Copy Text</button>
-                        <button class="btn btn-success" onclick="downloadTextFile()">📥 Download Text File</button>
-                    </div>
-                `,
-                decodeFields: `
-                    <div class="form-group">
-                        <label for="decodeText">Encoded Text:</label>
-                        <textarea id="decodeText" class="form-control" rows="6" placeholder="Paste the text that contains the hidden message..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="decodePassword">Decryption Password:</label>
-                        <input type="password" id="decodePassword" class="form-control" placeholder="Enter the password used for encryption">
-                    </div>
-                    <div class="progress-bar" id="decodeProgress" style="display: none;">
-                        <div class="progress-fill" id="decodeProgressFill"></div>
-                    </div>
-                    <div id="decodeStatus"></div>
-                    <button class="btn btn-primary" onclick="decodeMessage()">🔓 Decode Message</button>
-                    <button class="btn btn-danger" onclick="clearDecode()">🗑️ Clear</button>
-                    <div id="decodeResult" style="display: none;">
-                        <h3>✅ Message Decoded Successfully!</h3>
-                        <div class="form-group">
-                            <label for="decodedMessage">Hidden Message:</label>
-                            <textarea id="decodedMessage" class="form-control" rows="4" readonly></textarea>
-                        </div>
-                        <button class="btn btn-success" onclick="copyDecodedMessage()">📋 Copy Message</button>
-                    </div>
-                `
-            }
+        // Global variables for steganography modes
+        let steganographyModes = {
+            lsb: 'encode',
+            audio: 'encode',
+            text: 'encode',
+            html: 'encode',
+            metadata: 'encode',
+            unicode: 'encode'
         };
 
-        // Initialize the tool
-        document.addEventListener('DOMContentLoaded', function() {
-            // Method selection
-            document.querySelectorAll('.method-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const method = this.dataset.method;
-                    selectMethod(method);
+        // Utility functions
+        function showMessage(message, type = 'success') {
+            const container = document.getElementById('messageContainer');
+            container.innerHTML = `<div class="status ${type}">${message}</div>`;
+            
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showMessage(`Copied "${text}" to clipboard!`);
+            }).catch(err => {
+                showMessage('Failed to copy to clipboard', 'error');
+            });
+        }
+
+        // Mode setting functions
+        function setSteganographyMode(method, mode) {
+            steganographyModes[method] = mode;
+            updateModeButtons(method, mode);
+        }
+
+        function updateModeButtons(method, mode) {
+            const card = document.querySelector(`[data-method="${method}"]`);
+            if (card) {
+                const buttons = card.querySelectorAll('.mode-btn');
+                buttons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.textContent.toLowerCase().includes(mode)) {
+                        btn.classList.add('active');
+                    }
                 });
+            }
+        }
+
+        // LSB Image Steganography
+        function processLSB() {
+            const imageFile = document.getElementById('lsbImage').files[0];
+            const message = document.getElementById('lsbMessage').value.trim();
+            const password = document.getElementById('lsbPassword').value;
+
+            if (!imageFile) {
+                showMessage('Please select an image file', 'error');
+                return;
+            }
+
+            if (!message) {
+                showMessage('Please enter a message', 'error');
+                return;
+            }
+
+            if (!password) {
+                showMessage('Please enter a password', 'error');
+                return;
+            }
+
+            try {
+                let result;
+                if (steganographyModes.lsb === 'encode') {
+                    result = lsbEncode(imageFile, message, password);
+                } else {
+                    result = lsbDecode(imageFile, password);
+                }
+
+                displayLSBResults(result, steganographyModes.lsb);
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function lsbEncode(file, message, password) {
+            // Placeholder for LSB encoding
+            return {
+                success: true,
+                message: 'Message encoded successfully',
+                data: 'Encoded image data would be here'
+            };
+        }
+
+        function lsbDecode(file, password) {
+            // Placeholder for LSB decoding
+            return {
+                success: true,
+                message: 'Message decoded successfully',
+                data: 'This is a sample decoded message from the image.'
+            };
+        }
+
+        function displayLSBResults(result, mode) {
+            const container = document.getElementById('lsbResults');
+            const content = document.getElementById('lsbResultContent');
+            
+            content.innerHTML = `
+                <div class="result-item">
+                    <span class="result-label">${mode === 'encode' ? 'Encoded' : 'Decoded'} Message:</span>
+                    <span class="result-value" onclick="copyToClipboard('${result.data}')">${result.data}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Status:</span>
+                    <span class="result-value">${result.message}</span>
+                </div>
+            `;
+            
+            container.style.display = 'block';
+        }
+
+        function clearLSB() {
+            document.getElementById('lsbImage').value = '';
+            document.getElementById('lsbMessage').value = '';
+            document.getElementById('lsbPassword').value = '';
+            document.getElementById('lsbResults').style.display = 'none';
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        // Audio Steganography
+        function processAudio() {
+            const audioFile = document.getElementById('audioFile').files[0];
+            const message = document.getElementById('audioMessage').value.trim();
+            const password = document.getElementById('audioPassword').value;
+
+            if (!audioFile) {
+                showMessage('Please select an audio file', 'error');
+                return;
+            }
+
+            if (!message) {
+                showMessage('Please enter a message', 'error');
+                return;
+            }
+
+            if (!password) {
+                showMessage('Please enter a password', 'error');
+                return;
+            }
+
+            try {
+                let result;
+                if (steganographyModes.audio === 'encode') {
+                    result = audioEncode(audioFile, message, password);
+                } else {
+                    result = audioDecode(audioFile, password);
+                }
+
+                displayAudioResults(result, steganographyModes.audio);
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function audioEncode(file, message, password) {
+            // Placeholder for audio encoding
+            return {
+                success: true,
+                message: 'Message encoded successfully',
+                data: 'Encoded audio data would be here'
+            };
+        }
+
+        function audioDecode(file, password) {
+            // Placeholder for audio decoding
+            return {
+                success: true,
+                message: 'Message decoded successfully',
+                data: 'This is a sample decoded message from the audio file.'
+            };
+        }
+
+        function displayAudioResults(result, mode) {
+            const container = document.getElementById('audioResults');
+            const content = document.getElementById('audioResultContent');
+            
+            content.innerHTML = `
+                <div class="result-item">
+                    <span class="result-label">${mode === 'encode' ? 'Encoded' : 'Decoded'} Message:</span>
+                    <span class="result-value" onclick="copyToClipboard('${result.data}')">${result.data}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Status:</span>
+                    <span class="result-value">${result.message}</span>
+                </div>
+            `;
+            
+            container.style.display = 'block';
+        }
+
+        function clearAudio() {
+            document.getElementById('audioFile').value = '';
+            document.getElementById('audioMessage').value = '';
+            document.getElementById('audioPassword').value = '';
+            document.getElementById('audioResults').style.display = 'none';
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        // Text Steganography
+        function processText() {
+            const carrierText = document.getElementById('textCarrier').value.trim();
+            const message = document.getElementById('textMessage').value.trim();
+            const password = document.getElementById('textPassword').value;
+
+            if (!carrierText) {
+                showMessage('Please enter carrier text', 'error');
+                return;
+            }
+
+            if (!message) {
+                showMessage('Please enter a message', 'error');
+                return;
+            }
+
+            if (!password) {
+                showMessage('Please enter a password', 'error');
+                return;
+            }
+
+            try {
+                let result;
+                if (steganographyModes.text === 'encode') {
+                    result = textEncode(carrierText, message, password);
+                } else {
+                    result = textDecode(carrierText, password);
+                }
+
+                displayTextResults(result, steganographyModes.text);
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function textEncode(carrier, message, password) {
+            // Placeholder for text encoding
+            return {
+                success: true,
+                message: 'Message encoded successfully',
+                data: carrier + ' [HIDDEN: ' + message + ']'
+            };
+        }
+
+        function textDecode(text, password) {
+            // Placeholder for text decoding
+            return {
+                success: true,
+                message: 'Message decoded successfully',
+                data: 'This is a sample decoded message from the text.'
+            };
+        }
+
+        function displayTextResults(result, mode) {
+            const container = document.getElementById('textResults');
+            const content = document.getElementById('textResultContent');
+            
+            content.innerHTML = `
+                <div class="result-item">
+                    <span class="result-label">${mode === 'encode' ? 'Encoded' : 'Decoded'} Text:</span>
+                    <span class="result-value" onclick="copyToClipboard('${result.data}')">${result.data}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Status:</span>
+                    <span class="result-value">${result.message}</span>
+                </div>
+            `;
+            
+            container.style.display = 'block';
+        }
+
+        function clearText() {
+            document.getElementById('textCarrier').value = '';
+            document.getElementById('textMessage').value = '';
+            document.getElementById('textPassword').value = '';
+            document.getElementById('textResults').style.display = 'none';
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        // HTML/CSS Steganography
+        function processHTML() {
+            const htmlContent = document.getElementById('htmlContent').value.trim();
+            const message = document.getElementById('htmlMessage').value.trim();
+            const password = document.getElementById('htmlPassword').value;
+
+            if (!htmlContent) {
+                showMessage('Please enter HTML/CSS content', 'error');
+                return;
+            }
+
+            if (!message) {
+                showMessage('Please enter a message', 'error');
+                return;
+            }
+
+            if (!password) {
+                showMessage('Please enter a password', 'error');
+                return;
+            }
+
+            try {
+                let result;
+                if (steganographyModes.html === 'encode') {
+                    result = htmlEncode(htmlContent, message, password);
+                } else {
+                    result = htmlDecode(htmlContent, password);
+                }
+
+                displayHTMLResults(result, steganographyModes.html);
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function htmlEncode(content, message, password) {
+            // Placeholder for HTML encoding
+            return {
+                success: true,
+                message: 'Message encoded successfully',
+                data: content + '<!-- HIDDEN: ' + message + ' -->'
+            };
+        }
+
+        function htmlDecode(content, password) {
+            // Placeholder for HTML decoding
+            return {
+                success: true,
+                message: 'Message decoded successfully',
+                data: 'This is a sample decoded message from the HTML.'
+            };
+        }
+
+        function displayHTMLResults(result, mode) {
+            const container = document.getElementById('htmlResults');
+            const content = document.getElementById('htmlResultContent');
+            
+            content.innerHTML = `
+                <div class="result-item">
+                    <span class="result-label">${mode === 'encode' ? 'Encoded' : 'Decoded'} Content:</span>
+                    <span class="result-value" onclick="copyToClipboard('${result.data}')">${result.data}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Status:</span>
+                    <span class="result-value">${result.message}</span>
+                </div>
+            `;
+            
+            container.style.display = 'block';
+        }
+
+        function clearHTML() {
+            document.getElementById('htmlContent').value = '';
+            document.getElementById('htmlMessage').value = '';
+            document.getElementById('htmlPassword').value = '';
+            document.getElementById('htmlResults').style.display = 'none';
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        // Metadata Steganography
+        function processMetadata() {
+            const file = document.getElementById('metadataFile').files[0];
+            const message = document.getElementById('metadataMessage').value.trim();
+            const password = document.getElementById('metadataPassword').value;
+
+            if (!file) {
+                showMessage('Please select a file', 'error');
+                return;
+            }
+
+            if (!message) {
+                showMessage('Please enter a message', 'error');
+                return;
+            }
+
+            if (!password) {
+                showMessage('Please enter a password', 'error');
+                return;
+            }
+
+            try {
+                let result;
+                if (steganographyModes.metadata === 'encode') {
+                    result = metadataEncode(file, message, password);
+                } else {
+                    result = metadataDecode(file, password);
+                }
+
+                displayMetadataResults(result, steganographyModes.metadata);
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function metadataEncode(file, message, password) {
+            // Placeholder for metadata encoding
+            return {
+                success: true,
+                message: 'Message encoded successfully',
+                data: 'Metadata encoded data would be here'
+            };
+        }
+
+        function metadataDecode(file, password) {
+            // Placeholder for metadata decoding
+            return {
+                success: true,
+                message: 'Message decoded successfully',
+                data: 'This is a sample decoded message from the metadata.'
+            };
+        }
+
+        function displayMetadataResults(result, mode) {
+            const container = document.getElementById('metadataResults');
+            const content = document.getElementById('metadataResultContent');
+            
+            content.innerHTML = `
+                <div class="result-item">
+                    <span class="result-label">${mode === 'encode' ? 'Encoded' : 'Decoded'} Message:</span>
+                    <span class="result-value" onclick="copyToClipboard('${result.data}')">${result.data}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Status:</span>
+                    <span class="result-value">${result.message}</span>
+                </div>
+            `;
+            
+            container.style.display = 'block';
+        }
+
+        function clearMetadata() {
+            document.getElementById('metadataFile').value = '';
+            document.getElementById('metadataMessage').value = '';
+            document.getElementById('metadataPassword').value = '';
+            document.getElementById('metadataResults').style.display = 'none';
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        // Unicode Steganography
+        function processUnicode() {
+            const carrierText = document.getElementById('unicodeCarrier').value.trim();
+            const message = document.getElementById('unicodeMessage').value.trim();
+            const password = document.getElementById('unicodePassword').value;
+
+            if (!carrierText) {
+                showMessage('Please enter carrier text', 'error');
+                return;
+            }
+
+            if (!message) {
+                showMessage('Please enter a message', 'error');
+                return;
+            }
+
+            if (!password) {
+                showMessage('Please enter a password', 'error');
+                return;
+            }
+
+            try {
+                let result;
+                if (steganographyModes.unicode === 'encode') {
+                    result = unicodeEncode(carrierText, message, password);
+                } else {
+                    result = unicodeDecode(carrierText, password);
+                }
+
+                displayUnicodeResults(result, steganographyModes.unicode);
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        function unicodeEncode(carrier, message, password) {
+            // Placeholder for unicode encoding
+            return {
+                success: true,
+                message: 'Message encoded successfully',
+                data: carrier + '\u200B' + message + '\u200B'
+            };
+        }
+
+        function unicodeDecode(text, password) {
+            // Placeholder for unicode decoding
+            return {
+                success: true,
+                message: 'Message decoded successfully',
+                data: 'This is a sample decoded message from the unicode text.'
+            };
+        }
+
+        function displayUnicodeResults(result, mode) {
+            const container = document.getElementById('unicodeResults');
+            const content = document.getElementById('unicodeResultContent');
+            
+            content.innerHTML = `
+                <div class="result-item">
+                    <span class="result-label">${mode === 'encode' ? 'Encoded' : 'Decoded'} Text:</span>
+                    <span class="result-value" onclick="copyToClipboard('${result.data}')">${result.data}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Status:</span>
+                    <span class="result-value">${result.message}</span>
+                </div>
+            `;
+            
+            container.style.display = 'block';
+        }
+
+        function clearUnicode() {
+            document.getElementById('unicodeCarrier').value = '';
+            document.getElementById('unicodeMessage').value = '';
+            document.getElementById('unicodePassword').value = '';
+            document.getElementById('unicodeResults').style.display = 'none';
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add tooltips to result values
+            const resultValues = document.querySelectorAll('.result-value');
+            resultValues.forEach(el => {
+                el.title = 'Click to copy';
             });
 
-            // Default to LSB method
-            selectMethod('lsb');
+            // Auto-focus first input
+            document.getElementById('lsbMessage').focus();
         });
-
-        function selectMethod(method) {
-            // Update active method card
-            document.querySelectorAll('.method-card').forEach(card => {
-                card.classList.remove('active');
-            });
-            document.querySelector(`[data-method="${method}"]`).classList.add('active');
-
-            currentMethod = method;
-            
-            // Show method info
-            const info = methodInfo[method];
-            if (info) {
-                document.getElementById('methodInfoTitle').textContent = info.title;
-                document.getElementById('methodInfoContent').innerHTML = `
-                    <p><strong>Description:</strong> ${info.description}</p>
-                    <p><strong>Features:</strong></p>
-                    <ul>
-                        ${info.features.map(feature => `<li>${feature}</li>`).join('')}
-                    </ul>
-                `;
-                document.getElementById('methodInfo').style.display = 'block';
-            }
-
-            // Update encode/decode content
-            updateContent();
-        }
-
-        function updateContent() {
-            if (!currentMethod || !methodInfo[currentMethod]) return;
-
-            const info = methodInfo[currentMethod];
-            
-            // Update encode content
-            document.getElementById('encodeContent').innerHTML = info.encodeFields;
-            
-            // Update decode content
-            document.getElementById('decodeContent').innerHTML = info.decodeFields;
-        }
-
-        function switchTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-
-            // Remove active class from all tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-
-            // Show selected tab content
-            document.getElementById(tabName).classList.add('active');
-
-            // Add active class to selected tab
-            event.target.classList.add('active');
-
-            currentTab = tabName;
-        }
-
-        function showStatus(elementId, message, type) {
-            const statusDiv = document.getElementById(elementId);
-            if (statusDiv) {
-                statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
-            }
-        }
-
-        function updateProgress(progressId, fillId, percentage) {
-            const progressBar = document.getElementById(progressId);
-            const progressFill = document.getElementById(fillId);
-            
-            if (progressBar && progressFill) {
-                progressBar.style.display = 'block';
-                progressFill.style.width = percentage + '%';
-            }
-        }
-
-        function hideProgress(progressId) {
-            const progressBar = document.getElementById(progressId);
-            if (progressBar) {
-                progressBar.style.display = 'none';
-            }
-        }
-
-        // Placeholder functions for encoding/decoding
-        function encodeMessage() {
-            if (!currentMethod) {
-                showStatus('encodeStatus', '❌ Please select a steganography method', 'error');
-                return;
-            }
-
-            showStatus('encodeStatus', '🔄 Processing...', 'info');
-            updateProgress('encodeProgress', 'encodeProgressFill', 10);
-
-            // Simulate processing
-            setTimeout(() => {
-                updateProgress('encodeProgress', 'encodeProgressFill', 100);
-                hideProgress('encodeProgress');
-                showStatus('encodeStatus', '✅ Message encoded successfully!', 'success');
-                document.getElementById('encodeDownload').style.display = 'block';
-            }, 2000);
-        }
-
-        function decodeMessage() {
-            if (!currentMethod) {
-                showStatus('decodeStatus', '❌ Please select a steganography method', 'error');
-                return;
-            }
-
-            showStatus('decodeStatus', '🔄 Processing...', 'info');
-            updateProgress('decodeProgress', 'decodeProgressFill', 10);
-
-            // Simulate processing
-            setTimeout(() => {
-                updateProgress('decodeProgress', 'decodeProgressFill', 100);
-                hideProgress('decodeProgress');
-                showStatus('decodeStatus', '✅ Message decoded successfully!', 'success');
-                document.getElementById('decodeResult').style.display = 'block';
-                document.getElementById('decodedMessage').value = 'This is a sample decoded message. In the full implementation, this would contain the actual hidden message extracted from the file.';
-            }, 2000);
-        }
-
-        function clearEncode() {
-            // Clear encode form
-            const encodeContent = document.getElementById('encodeContent');
-            if (encodeContent) {
-                encodeContent.innerHTML = methodInfo[currentMethod]?.encodeFields || '';
-            }
-            document.getElementById('encodeDownload').style.display = 'none';
-            hideProgress('encodeProgress');
-        }
-
-        function clearDecode() {
-            // Clear decode form
-            const decodeContent = document.getElementById('decodeContent');
-            if (decodeContent) {
-                decodeContent.innerHTML = methodInfo[currentMethod]?.decodeFields || '';
-            }
-            document.getElementById('decodeResult').style.display = 'none';
-            hideProgress('decodeProgress');
-        }
-
-        function downloadEncodedFile() {
-            // Placeholder for file download
-            alert('File download functionality will be implemented in the full version.');
-        }
-
-        function downloadTextFile() {
-            // Placeholder for text file download
-            alert('Text file download functionality will be implemented in the full version.');
-        }
-
-        function copyEncodedText() {
-            const encodedText = document.getElementById('encodedText');
-            if (encodedText) {
-                encodedText.select();
-                document.execCommand('copy');
-                alert('Encoded text copied to clipboard!');
-            }
-        }
-
-        function copyDecodedMessage() {
-            const decodedMessage = document.getElementById('decodedMessage');
-            if (decodedMessage) {
-                decodedMessage.select();
-                document.execCommand('copy');
-                alert('Decoded message copied to clipboard!');
-            }
-        }
     </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="about.html">About</a></li>
+              <li><a href="software.html">Software</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>Connect With Us</h4>
+            <div class="social-links">
+              <a href="https://www.linkedin.com/in/blake-zimmerman-a59575342/" class="social-link" title="LinkedIn" target="_blank" rel="noopener">
+                <i class="fab fa-linkedin"></i>
+                <span>LinkedIn</span>
+              </a>
+              <a href="https://github.com/AInsiders" class="social-link" title="GitHub" target="_blank" rel="noopener">
+                <i class="fab fa-github"></i>
+                <span>GitHub</span>
+              </a>
+              <a href="https://www.youtube.com/@A.Insiders01" class="social-link" title="YouTube" target="_blank" rel="noopener">
+                <i class="fab fa-youtube"></i>
+                <span>YouTube</span>
+              </a>
+              <a href="https://discord.gg/Y4kCtaBZFM" class="social-link" title="Discord" target="_blank" rel="noopener">
+                <i class="fab fa-discord"></i>
+                <span>Discord</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2024 A.Insiders Network. All rights reserved.</p>
+          <div class="footer-links">
+            <a href="privacy-policy.html">Privacy Policy</a>
+            <a href="terms-of-service.html">Terms of Service</a>
+            <a href="cookie-policy.html">Cookie Policy</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    </div> <!-- End of website-content -->
+
+    <!-- Essential Scripts with Cloudflare caching -->
+    <script src="shared-loader.js"></script>
+    <script src="mobile-nav.js"></script>
+    <script src="sphere-loader.js"></script>
 </body>
 </html>

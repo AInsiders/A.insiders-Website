@@ -642,6 +642,136 @@
         font-size: 2rem;
       }
     }
+
+    /* Info Popup Styles */
+    .info-popup {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0, 102, 255, 0.3);
+      border-radius: 8px;
+      padding: 1.5rem;
+      max-width: 350px;
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+      color: white;
+    }
+
+    .info-popup.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .info-popup::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 20px;
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid rgba(0, 0, 0, 0.95);
+    }
+
+    .info-popup h4 {
+      color: #0066ff;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    .info-popup p {
+      color: #cccccc;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+
+    .info-popup .popup-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .info-popup .popup-feature {
+      background: rgba(0, 102, 255, 0.1);
+      color: #0066ff;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .info-popup .popup-note {
+      background: rgba(255, 193, 7, 0.1);
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      border-radius: var(--border-radius-sm);
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      color: #ffc107;
+    }
+
+    .info-popup .popup-warning {
+      background: rgba(220, 53, 69, 0.1);
+      border: 1px solid rgba(220, 53, 69, 0.3);
+      border-radius: var(--border-radius-sm);
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      color: #dc3545;
+    }
+
+    .info-popup .popup-success {
+      background: rgba(40, 167, 69, 0.1);
+      border: 1px solid rgba(40, 167, 69, 0.3);
+      border-radius: var(--border-radius-sm);
+      padding: 0.5rem;
+      font-size: 0.8rem;
+      color: #28a745;
+    }
+
+    /* Learn More Button Container */
+    .learn-more-container {
+      position: relative;
+      display: inline-block;
+      z-index: 10;
+    }
+    
+    /* Ensure popups can appear above other elements */
+    .software-card {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .software-card:hover {
+      z-index: 5;
+    }
+
+    /* Mobile adjustments for popups */
+    @media (max-width: 768px) {
+      .info-popup {
+        max-width: 280px;
+        left: 50% !important;
+        transform: translateX(-50%) translateY(10px) !important;
+      }
+      
+      .info-popup.show {
+        transform: translateX(-50%) translateY(0) !important;
+      }
+      
+      .info-popup::before {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
   </style>
   
   <!-- Tawk.to Widget Styles -->
@@ -727,7 +857,7 @@
         
                  <div class="software-stats">
            <div class="stat-item">
-             <div class="stat-number">13</div>
+             <div class="stat-number">17</div>
              <div class="stat-label">Tools</div>
            </div>
            <div class="stat-item">
@@ -735,7 +865,7 @@
              <div class="stat-label">Apps</div>
            </div>
            <div class="stat-item">
-             <div class="stat-number">16</div>
+             <div class="stat-number">20</div>
              <div class="stat-label">Total</div>
            </div>
          </div>
@@ -767,6 +897,10 @@
             <i class="fas fa-th-large"></i>
             All Tools
           </button>
+          <button class="category-filter" data-category="encryption">
+            <i class="fas fa-lock"></i>
+            Encryption Tools
+          </button>
           <button class="category-filter" data-category="security">
             <i class="fas fa-shield-alt"></i>
             Security
@@ -785,7 +919,240 @@
           </button>
         </div>
         
-                <!-- Password Tools Category -->
+                <!-- Encryption Tools Category -->
+        <div class="tool-category" data-category="encryption">
+          <div class="category-banner">
+            <div class="category-icon">
+              <i class="fas fa-lock"></i>
+            </div>
+            <div class="category-info">
+              <h3>Encryption Tools</h3>
+              <p>Advanced encryption and cipher tools for secure communication and data protection</p>
+            </div>
+          </div>
+          
+          <div class="software-grid">
+            <!-- Encoding Methods Tool -->
+            <div class="software-card" data-category="encryption">
+              <div class="software-image">
+                <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=200&fit=crop" alt="Encoding Methods">
+                <div class="software-badge">Live</div>
+              </div>
+              <div class="software-content">
+                <div class="software-meta">
+                  <div class="software-version">
+                    <i class="fas fa-code-branch"></i>
+                    <span>v1.0.0</span>
+                  </div>
+                  <div class="software-status">
+                    <div class="status-indicator"></div>
+                    <span>Production</span>
+                  </div>
+                </div>
+                <h3>Encoding Methods</h3>
+                <p>Professional encoding and obfuscation tools for data transformation. Support for Base64, Base32, Base58, Base85, Hexadecimal, Binary, ASCII, Unicode, and URL encoding.</p>
+                <div class="software-features">
+                  <span class="software-feature">Base64 Encoding</span>
+                  <span class="software-feature">Base32/Base58/Base85</span>
+                  <span class="software-feature">Hexadecimal & Binary</span>
+                  <span class="software-feature">ASCII & Unicode</span>
+                  <span class="software-feature">URL Encoding</span>
+                </div>
+                <div class="software-actions">
+                  <a href="encoding-methods.html" class="btn btn-primary">
+                    <i class="fas fa-code"></i> Open Tool
+                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="encoding-methods">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="encoding-methods-popup">
+                      <h4>Encoding Methods Tool</h4>
+                      <p>Professional-grade encoding and obfuscation utility supporting 9 different encoding formats. Perfect for developers, security professionals, and data analysts.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">Base64/32/58/85</span>
+                        <span class="popup-feature">Hex & Binary</span>
+                        <span class="popup-feature">ASCII & Unicode</span>
+                        <span class="popup-feature">URL Encoding</span>
+                      </div>
+                      <div class="popup-note">
+                        <strong>Note:</strong> All encoding is performed client-side for maximum security and privacy.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Test Popup Button -->
+            <div style="text-align: center; margin: 20px 0; padding: 20px; background: rgba(255, 0, 0, 0.1); border: 2px solid red;">
+              <button onclick="testPopup()" style="padding: 10px 20px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                TEST POPUP - Click Me!
+              </button>
+            </div>
+
+            <!-- Mathematical Ciphers Tool -->
+            <div class="software-card" data-category="encryption">
+              <div class="software-image">
+                <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=200&fit=crop" alt="Mathematical Ciphers Tool">
+                <div class="software-badge">Live</div>
+              </div>
+              <div class="software-content">
+                <div class="software-meta">
+                  <div class="software-version">
+                    <i class="fas fa-code-branch"></i>
+                    <span>v1.0.0</span>
+                  </div>
+                  <div class="software-status">
+                    <div class="status-indicator"></div>
+                    <span>Production</span>
+                  </div>
+                </div>
+                <h3>Mathematical Ciphers</h3>
+                <p>Advanced mathematical encryption tools including Hill Cipher, One-Time Pad, XOR Cipher, Bit Shifting, and Modular Arithmetic ciphers with real-time encryption/decryption.</p>
+                <div class="software-features">
+                  <span class="software-feature">5 Cipher Methods</span>
+                  <span class="software-feature">Matrix Encryption</span>
+                  <span class="software-feature">Bit Operations</span>
+                  <span class="software-feature">Modular Arithmetic</span>
+                </div>
+                <div class="software-actions">
+                  <a href="mathematical-ciphers.html" class="btn btn-primary">
+                    <i class="fas fa-shield-alt"></i> Encrypt/Decrypt
+                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="mathematical-ciphers">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="mathematical-ciphers-popup">
+                      <h4>Mathematical Ciphers</h4>
+                      <p>Advanced mathematical encryption algorithms including Hill Cipher matrix operations, One-Time Pad perfect secrecy, XOR bit manipulation, and modular arithmetic ciphers.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">Hill Cipher</span>
+                        <span class="popup-feature">One-Time Pad</span>
+                        <span class="popup-feature">XOR Cipher</span>
+                        <span class="popup-feature">Bit Shifting</span>
+                        <span class="popup-feature">Modular Arithmetic</span>
+                      </div>
+                      <div class="popup-warning">
+                        <strong>Security Note:</strong> These are educational tools. For production use, implement proper key management and use established cryptographic libraries.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comprehensive Steganography Tool -->
+            <div class="software-card" data-category="encryption">
+              <div class="software-image">
+                <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=200&fit=crop" alt="Comprehensive Steganography Tool">
+                <div class="software-badge">Live</div>
+              </div>
+              <div class="software-content">
+                <div class="software-meta">
+                  <div class="software-version">
+                    <i class="fas fa-code-branch"></i>
+                    <span>v1.0.0</span>
+                  </div>
+                  <div class="software-status">
+                    <div class="status-indicator"></div>
+                    <span>Production</span>
+                  </div>
+                </div>
+                <h3>Comprehensive Steganography Tool</h3>
+                <p>Advanced steganography tool with multiple hiding methods including LSB image, audio, text, HTML/CSS, metadata, and Unicode steganography with AES-256 encryption.</p>
+                <div class="software-features">
+                  <span class="software-feature">Multiple Methods</span>
+                  <span class="software-feature">AES-256 Encryption</span>
+                  <span class="software-feature">Audio & Text Support</span>
+                  <span class="software-feature">Unicode Steganography</span>
+                </div>
+                <div class="software-actions">
+                  <a href="comprehensive-steganography-tool.html" class="btn btn-primary">
+                    <i class="fas fa-magic"></i> Advanced Hiding
+                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="steganography">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="steganography-popup">
+                      <h4>Comprehensive Steganography</h4>
+                      <p>Advanced data hiding tool with 6 different steganography methods. Hide information in images, audio, text, HTML/CSS, metadata, and Unicode characters with AES-256 encryption.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">LSB Image Hiding</span>
+                        <span class="popup-feature">Audio Steganography</span>
+                        <span class="popup-feature">Text & HTML Hiding</span>
+                        <span class="popup-feature">Metadata Embedding</span>
+                        <span class="popup-feature">Unicode Steganography</span>
+                        <span class="popup-feature">AES-256 Encryption</span>
+                      </div>
+                      <div class="popup-note">
+                        <strong>Use Case:</strong> Perfect for secure communication, digital watermarking, and educational purposes.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Puzzle Cipher Tool -->
+            <div class="software-card" data-category="encryption">
+              <div class="software-image">
+                <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=200&fit=crop" alt="Puzzle Cipher Tool">
+                <div class="software-badge">Live</div>
+              </div>
+              <div class="software-content">
+                <div class="software-meta">
+                  <div class="software-version">
+                    <i class="fas fa-code-branch"></i>
+                    <span>v1.0.0</span>
+                  </div>
+                  <div class="software-status">
+                    <div class="status-indicator"></div>
+                    <span>Production</span>
+                  </div>
+                </div>
+                <h3>Puzzle Cipher Tool</h3>
+                <p>Classic puzzle-based ciphers including Book Cipher, Grid Cipher, Tap Code, ADFGVX Cipher, Dancing Men Cipher, Sudoku Cipher, and Calendar Cipher with interactive interfaces.</p>
+                <div class="software-features">
+                  <span class="software-feature">7 Cipher Methods</span>
+                  <span class="software-feature">Interactive Grids</span>
+                  <span class="software-feature">Historical Ciphers</span>
+                  <span class="software-feature">Visual Interfaces</span>
+                </div>
+                <div class="software-actions">
+                  <a href="puzzle-cipher-tool.html" class="btn btn-primary">
+                    <i class="fas fa-puzzle-piece"></i> Solve Puzzles
+                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="puzzle-cipher">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="puzzle-cipher-popup">
+                      <h4>Puzzle Cipher Tool</h4>
+                      <p>Interactive puzzle-based encryption tools featuring 7 classic cipher methods. Includes historical ciphers like Book Cipher, Grid Cipher, Tap Code, and modern adaptations.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">Book Cipher</span>
+                        <span class="popup-feature">Grid Cipher</span>
+                        <span class="popup-feature">Tap Code</span>
+                        <span class="popup-feature">ADFGVX Cipher</span>
+                        <span class="popup-feature">Dancing Men</span>
+                        <span class="popup-feature">Sudoku Cipher</span>
+                        <span class="popup-feature">Calendar Cipher</span>
+                      </div>
+                      <div class="popup-note">
+                        <strong>Educational:</strong> Great for learning cryptography history and puzzle-solving techniques.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Password Tools Category -->
         <div class="tool-category" data-category="security">
           <div class="category-banner">
             <div class="category-icon">
@@ -827,9 +1194,25 @@
                   <a href="password-checker.html" class="btn btn-primary">
                     <i class="fas fa-shield-alt"></i> Check Password
                   </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="password-checker">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="password-checker-popup">
+                      <h4>Password Strength Checker</h4>
+                      <p>Advanced password security analyzer with quantum computer simulation. Tests passwords against various attack scenarios including brute force, dictionary attacks, and quantum computing threats.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">Quantum Simulation</span>
+                        <span class="popup-feature">Multiple Attack Types</span>
+                        <span class="popup-feature">Entropy Analysis</span>
+                        <span class="popup-feature">Time Projection</span>
+                        <span class="popup-feature">Strength Scoring</span>
+                      </div>
+                      <div class="popup-success">
+                        <strong>Security:</strong> All password analysis is performed locally - no data is sent to servers.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -863,9 +1246,25 @@
                   <a href="password-generator.html" class="btn btn-primary">
                     <i class="fas fa-key"></i> Generate Password
                   </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="password-generator">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="password-generator-popup">
+                      <h4>Password Generator</h4>
+                      <p>Secure random password generator with customizable options. Create strong, unique passwords with various character sets including uppercase, lowercase, numbers, and special characters.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">Customizable Length</span>
+                        <span class="popup-feature">Multiple Character Sets</span>
+                        <span class="popup-feature">Cryptographically Secure</span>
+                        <span class="popup-feature">Strength Indicators</span>
+                        <span class="popup-feature">Copy to Clipboard</span>
+                      </div>
+                      <div class="popup-success">
+                        <strong>Security:</strong> Uses cryptographically secure random number generation for maximum security.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -899,122 +1298,32 @@
                   <a href="pwned.html" class="btn btn-primary">
                     <i class="fas fa-search-shield"></i> Check Password
                   </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="password-breach">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="password-breach-popup">
+                      <h4>Password Breach Checker</h4>
+                      <p>Check if your password has been compromised in data breaches using the Have I Been Pwned API. Implements k-anonymity for privacy protection - only partial hashes are sent to the server.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">K-anonymity Protection</span>
+                        <span class="popup-feature">Local SHA-1 Hashing</span>
+                        <span class="popup-feature">Real-time Database</span>
+                        <span class="popup-feature">Safety Recommendations</span>
+                        <span class="popup-feature">Privacy-First Design</span>
+                      </div>
+                      <div class="popup-success">
+                        <strong>Privacy:</strong> Your password is never sent to our servers - only a partial hash is transmitted.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
 
 
-            <!-- Comprehensive Steganography Tool -->
-            <div class="software-card" data-category="security">
-              <div class="software-image">
-                <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=200&fit=crop" alt="Comprehensive Steganography Tool">
-                <div class="software-badge">Live</div>
-              </div>
-              <div class="software-content">
-                <div class="software-meta">
-                  <div class="software-version">
-                    <i class="fas fa-code-branch"></i>
-                    <span>v1.0.0</span>
-                  </div>
-                  <div class="software-status">
-                    <div class="status-indicator"></div>
-                    <span>Production</span>
-                  </div>
-                </div>
-                <h3>Comprehensive Steganography Tool</h3>
-                <p>Advanced steganography tool with multiple hiding methods including LSB image, audio, text, HTML/CSS, metadata, and Unicode steganography with AES-256 encryption.</p>
-                <div class="software-features">
-                  <span class="software-feature">Multiple Methods</span>
-                  <span class="software-feature">AES-256 Encryption</span>
-                  <span class="software-feature">Audio & Text Support</span>
-                  <span class="software-feature">Unicode Steganography</span>
-                </div>
-                <div class="software-actions">
-                  <a href="comprehensive-steganography-tool.html" class="btn btn-primary">
-                    <i class="fas fa-magic"></i> Advanced Hiding
-                  </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
-                </div>
-              </div>
-            </div>
 
-            <!-- Puzzle Cipher Tool -->
-            <div class="software-card" data-category="security">
-              <div class="software-image">
-                <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=200&fit=crop" alt="Puzzle Cipher Tool">
-                <div class="software-badge">Live</div>
-              </div>
-              <div class="software-content">
-                <div class="software-meta">
-                  <div class="software-version">
-                    <i class="fas fa-code-branch"></i>
-                    <span>v1.0.0</span>
-                  </div>
-                  <div class="software-status">
-                    <div class="status-indicator"></div>
-                    <span>Production</span>
-                  </div>
-                </div>
-                <h3>Puzzle Cipher Tool</h3>
-                <p>Classic puzzle-based ciphers including Book Cipher, Grid Cipher, Tap Code, ADFGVX Cipher, Dancing Men Cipher, Sudoku Cipher, and Calendar Cipher with interactive interfaces.</p>
-                <div class="software-features">
-                  <span class="software-feature">7 Cipher Methods</span>
-                  <span class="software-feature">Interactive Grids</span>
-                  <span class="software-feature">Historical Ciphers</span>
-                  <span class="software-feature">Visual Interfaces</span>
-                </div>
-                <div class="software-actions">
-                  <a href="puzzle-cipher-tool.html" class="btn btn-primary">
-                    <i class="fas fa-puzzle-piece"></i> Solve Puzzles
-                  </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <!-- Mathematical Ciphers Tool -->
-            <div class="software-card" data-category="security">
-              <div class="software-image">
-                <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=200&fit=crop" alt="Mathematical Ciphers Tool">
-                <div class="software-badge">Live</div>
-              </div>
-              <div class="software-content">
-                <div class="software-meta">
-                  <div class="software-version">
-                    <i class="fas fa-code-branch"></i>
-                    <span>v1.0.0</span>
-                  </div>
-                  <div class="software-status">
-                    <div class="status-indicator"></div>
-                    <span>Production</span>
-                  </div>
-                </div>
-                <h3>Mathematical Ciphers</h3>
-                <p>Advanced mathematical encryption tools including Hill Cipher, One-Time Pad, XOR Cipher, Bit Shifting, and Modular Arithmetic ciphers with real-time encryption/decryption.</p>
-                <div class="software-features">
-                  <span class="software-feature">5 Cipher Methods</span>
-                  <span class="software-feature">Matrix Encryption</span>
-                  <span class="software-feature">Bit Operations</span>
-                  <span class="software-feature">Modular Arithmetic</span>
-                </div>
-                <div class="software-actions">
-                  <a href="mathematical-ciphers.html" class="btn btn-primary">
-                    <i class="fas fa-shield-alt"></i> Encrypt/Decrypt
-                  </a>
-                  <a href="MATHEMATICAL_CIPHERS_README.md" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
-                </div>
-              </div>
-            </div>
 
 
           </div>
@@ -1062,9 +1371,25 @@
                   <a href="ai-text-detection.html" class="btn btn-primary">
                     <i class="fas fa-robot"></i> Analyze Text
                   </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="ai-text-detection">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="ai-text-detection-popup">
+                      <h4>AI Text Detection</h4>
+                      <p>Advanced AI-powered tool to detect AI-generated text using pattern analysis and linguistic markers. Analyzes writing patterns, sentence structure, and vocabulary usage to identify AI-generated content.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">BERT Analysis</span>
+                        <span class="popup-feature">Pattern Recognition</span>
+                        <span class="popup-feature">Confidence Scoring</span>
+                        <span class="popup-feature">Detailed Reports</span>
+                        <span class="popup-feature">Linguistic Analysis</span>
+                      </div>
+                      <div class="popup-note">
+                        <strong>Accuracy:</strong> Detection accuracy varies based on text length and AI model sophistication.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1098,9 +1423,25 @@
                   <a href="identity-generator.html" class="btn btn-primary">
                     <i class="fas fa-user-secret"></i> Generate Identity
                   </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="identity-generator">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="identity-generator-popup">
+                      <h4>Identity Generator</h4>
+                      <p>Educational tool for generating fictional identity data for testing and learning purposes. Creates completely random, non-real information including names, addresses, phone numbers, and more.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">Random Generation</span>
+                        <span class="popup-feature">Educational Only</span>
+                        <span class="popup-feature">Fictional Data</span>
+                        <span class="popup-feature">Testing Tool</span>
+                        <span class="popup-feature">Multiple Formats</span>
+                      </div>
+                      <div class="popup-warning">
+                        <strong>Important:</strong> This tool generates fictional data for educational purposes only. Do not use for any real-world applications or identity fraud.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1151,9 +1492,26 @@
                   <a href="discord-embed-builder.html" class="btn btn-primary">
                     <i class="fab fa-discord"></i> Open Tool
                   </a>
-                  <a href="discord-embed-builder.html" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="discord-embed">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="discord-embed-popup">
+                      <h4>Discord Embed Builder</h4>
+                      <p>Advanced drag-and-drop Discord embed builder with snap-to-grid functionality and live preview. Create professional Discord embeds visually without coding knowledge.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">Drag & Drop</span>
+                        <span class="popup-feature">Live Preview</span>
+                        <span class="popup-feature">JSON Export</span>
+                        <span class="popup-feature">Snap-to-Grid</span>
+                        <span class="popup-feature">Visual Editor</span>
+                        <span class="popup-feature">No Coding Required</span>
+                      </div>
+                      <div class="popup-note">
+                        <strong>Perfect for:</strong> Discord server owners, moderators, and content creators who want professional-looking embeds.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1187,9 +1545,25 @@
                   <a href="luhn-card-generator.html" class="btn btn-primary">
                     <i class="fas fa-credit-card"></i> Generate Cards
                   </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="luhn-card">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="luhn-card-popup">
+                      <h4>Luhn Card Generator</h4>
+                      <p>Generate synthetic, test-only card numbers that pass Luhn checksum validation for development and education purposes. Perfect for software testing and learning about card validation algorithms.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">Luhn Algorithm</span>
+                        <span class="popup-feature">Test-only Cards</span>
+                        <span class="popup-feature">Educational Tool</span>
+                        <span class="popup-feature">Development & QA</span>
+                        <span class="popup-feature">Multiple Card Types</span>
+                      </div>
+                      <div class="popup-warning">
+                        <strong>Important:</strong> These are synthetic test cards only. Not valid for real transactions or financial use.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1223,9 +1597,25 @@
                   <a href="bin-checker.html" class="btn btn-primary">
                     <i class="fas fa-credit-card"></i> Check BIN
                   </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="bin-checker">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="bin-checker-popup">
+                      <h4>BIN Checker</h4>
+                      <p>Validate and check BIN (Bank Identification Number) information. Get detailed information about card issuer, type, country, and more for development and testing purposes.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">Card Validation</span>
+                        <span class="popup-feature">Issuer Information</span>
+                        <span class="popup-feature">Country Detection</span>
+                        <span class="popup-feature">Development Tool</span>
+                        <span class="popup-feature">Real-time Database</span>
+                      </div>
+                      <div class="popup-note">
+                        <strong>Use Case:</strong> Perfect for e-commerce developers, payment processors, and financial software testing.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1259,49 +1649,30 @@
                   <a href="binary-converter.html" class="btn btn-primary">
                     <i class="fas fa-calculator"></i> Convert Numbers
                   </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="binary-converter">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="binary-converter-popup">
+                      <h4>Binary Converter</h4>
+                      <p>Advanced number system converter supporting binary, decimal, hexadecimal, and octal conversions with real-time visualization and binary bit display. Perfect for programmers and computer science students.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">Multi-Base Conversion</span>
+                        <span class="popup-feature">Real-time Results</span>
+                        <span class="popup-feature">Binary Visualization</span>
+                        <span class="popup-feature">Copy to Clipboard</span>
+                        <span class="popup-feature">Bit-by-Bit Display</span>
+                      </div>
+                      <div class="popup-note">
+                        <strong>Perfect for:</strong> Programming, computer science education, and understanding number systems.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- Encoding Methods Tool -->
-            <div class="software-card" data-category="development">
-              <div class="software-image">
-                <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=200&fit=crop" alt="Encoding Methods">
-                <div class="software-badge">Live</div>
-              </div>
-              <div class="software-content">
-                <div class="software-meta">
-                  <div class="software-version">
-                    <i class="fas fa-code-branch"></i>
-                    <span>v1.0.0</span>
-                  </div>
-                  <div class="software-status">
-                    <div class="status-indicator"></div>
-                    <span>Production</span>
-                  </div>
-                </div>
-                <h3>Encoding Methods</h3>
-                <p>Professional encoding and obfuscation tools for data transformation. Support for Base64, Base32, Base58, Base85, Hexadecimal, Binary, ASCII, Unicode, and URL encoding.</p>
-                <div class="software-features">
-                  <span class="software-feature">Base64 Encoding</span>
-                  <span class="software-feature">Base32/Base58/Base85</span>
-                  <span class="software-feature">Hexadecimal & Binary</span>
-                  <span class="software-feature">ASCII & Unicode</span>
-                  <span class="software-feature">URL Encoding</span>
-                </div>
-                <div class="software-actions">
-                  <a href="encoding-methods.html" class="btn btn-primary">
-                    <i class="fas fa-code"></i> Open Tool
-                  </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
-                </div>
-              </div>
-            </div>
+
 
             <!-- API Tester -->
             <div class="software-card" data-category="development">
@@ -1332,9 +1703,26 @@
                   <a href="api-tester.html" class="btn btn-primary">
                     <i class="fas fa-code"></i> Test API
                   </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="api-tester">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="api-tester-popup">
+                      <h4>API Tester</h4>
+                      <p>Comprehensive API testing and debugging tool for REST APIs. Test endpoints, analyze responses, validate API behavior, and generate detailed reports for development and quality assurance.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">REST API Testing</span>
+                        <span class="popup-feature">Response Analysis</span>
+                        <span class="popup-feature">Endpoint Validation</span>
+                        <span class="popup-feature">Detailed Reporting</span>
+                        <span class="popup-feature">Multiple HTTP Methods</span>
+                        <span class="popup-feature">Headers & Authentication</span>
+                      </div>
+                      <div class="popup-note">
+                        <strong>Perfect for:</strong> Developers, QA testers, and API integration specialists.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1368,9 +1756,26 @@
                   <a href="multi-format-converter.html" class="btn btn-primary">
                     <i class="fas fa-exchange-alt"></i> Convert Files
                   </a>
-                  <a href="MULTI_FORMAT_CONVERTER_README.md" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="multi-format-converter">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="multi-format-converter-popup">
+                      <h4>Multi-Format Converter</h4>
+                      <p>Advanced file conversion tool supporting images, documents, audio, and video formats. Convert between multiple formats with customizable options and batch processing capabilities.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">Multi-Format Support</span>
+                        <span class="popup-feature">Batch Processing</span>
+                        <span class="popup-feature">Customizable Options</span>
+                        <span class="popup-feature">Browser-Based</span>
+                        <span class="popup-feature">No Upload Required</span>
+                        <span class="popup-feature">Privacy-First</span>
+                      </div>
+                      <div class="popup-success">
+                        <strong>Privacy:</strong> All conversions happen in your browser - files never leave your device.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1423,9 +1828,26 @@
                   <a href="word-character-counter.html" class="btn btn-primary">
                     <i class="fas fa-font"></i> Analyze Text
                   </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="word-counter">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="word-counter-popup">
+                      <h4>Word & Character Counter</h4>
+                      <p>Advanced text analysis tool with detailed statistics and writing insights. Count words, characters, sentences, paragraphs and get comprehensive writing analytics to improve your content.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">Real-time Analysis</span>
+                        <span class="popup-feature">Reading Time</span>
+                        <span class="popup-feature">Writing Insights</span>
+                        <span class="popup-feature">Vocabulary Analysis</span>
+                        <span class="popup-feature">Character Breakdown</span>
+                        <span class="popup-feature">SEO Optimization</span>
+                      </div>
+                      <div class="popup-note">
+                        <strong>Perfect for:</strong> Writers, content creators, students, and anyone who needs detailed text analysis.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1461,9 +1883,26 @@
                   <a href="entropy-calculator.html" class="btn btn-primary">
                     <i class="fas fa-calculator"></i> Calculate Entropy
                   </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="entropy-calculator">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="entropy-calculator-popup">
+                      <h4>Entropy Calculator</h4>
+                      <p>Calculate entropy values for data analysis and information theory applications. Measure randomness, complexity, and information content in various data types and sequences.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">Entropy Calculation</span>
+                        <span class="popup-feature">Data Analysis</span>
+                        <span class="popup-feature">Information Theory</span>
+                        <span class="popup-feature">Randomness Measurement</span>
+                        <span class="popup-feature">Statistical Analysis</span>
+                        <span class="popup-feature">Multiple Data Types</span>
+                      </div>
+                      <div class="popup-note">
+                        <strong>Use Cases:</strong> Cryptography, data compression, statistical analysis, and information theory research.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1497,9 +1936,26 @@
                   <a href="url-redirect-checker.html" class="btn btn-primary">
                     <i class="fas fa-link"></i> Check URL
                   </a>
-                  <a href="#" class="btn btn-secondary">
-                    <i class="fas fa-info-circle"></i> Learn More
-                  </a>
+                  <div class="learn-more-container">
+                    <a href="#" class="btn btn-secondary" data-tooltip="url-redirect">
+                      <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                    <div class="info-popup" id="url-redirect-popup">
+                      <h4>URL Redirect Checker</h4>
+                      <p>Analyze URL redirect chains, check domain security status, and perform WHOIS lookups. Track redirects and identify potential security issues in URLs for safe browsing.</p>
+                      <div class="popup-features">
+                        <span class="popup-feature">Redirect Chain Analysis</span>
+                        <span class="popup-feature">Domain Security Check</span>
+                        <span class="popup-feature">WHOIS Lookup</span>
+                        <span class="popup-feature">Security Status</span>
+                        <span class="popup-feature">SSL Certificate Info</span>
+                        <span class="popup-feature">Malware Detection</span>
+                      </div>
+                      <div class="popup-success">
+                        <strong>Security:</strong> Helps identify phishing attempts, malicious redirects, and suspicious domains.
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2010,6 +2466,225 @@
          console.log('Orientation changed, canvas adjusted');
        }, 300);
      });
+   </script>
+
+   <!-- Info Popup Functionality -->
+   <script>
+     document.addEventListener('DOMContentLoaded', function() {
+       console.log('Info popup functionality initializing...');
+       
+       // Info popup functionality
+       const learnMoreButtons = document.querySelectorAll('[data-tooltip]');
+       console.log('Found learn more buttons:', learnMoreButtons.length);
+       
+       learnMoreButtons.forEach((button, index) => {
+         const tooltipId = button.getAttribute('data-tooltip');
+         const popup = document.getElementById(tooltipId + '-popup');
+         
+         console.log(`Button ${index}: tooltipId="${tooltipId}", popup found:`, !!popup);
+         
+         if (popup) {
+           let timeoutId;
+           let isPopupVisible = false;
+           
+           // Function to position and show popup
+           function showPopup() {
+             console.log('Showing popup for:', tooltipId);
+             clearTimeout(timeoutId);
+             
+             // Position the popup
+             const rect = button.getBoundingClientRect();
+             
+             // Check if popup would go off screen
+             const popupWidth = 350;
+             const popupHeight = 200;
+             const screenWidth = window.innerWidth;
+             const screenHeight = window.innerHeight;
+             
+             let left = rect.left;
+             let top = rect.bottom + 10;
+             
+             // Adjust horizontal position if popup would go off screen
+             if (left + popupWidth > screenWidth) {
+               left = screenWidth - popupWidth - 20;
+             }
+             
+             // Adjust vertical position if popup would go off screen
+             if (top + popupHeight > screenHeight) {
+               top = rect.top - popupHeight - 10;
+             }
+             
+             // Ensure popup doesn't go off the left edge
+             if (left < 20) {
+               left = 20;
+             }
+             
+             // Ensure popup doesn't go off the top edge
+             if (top < 20) {
+               top = 20;
+             }
+             
+             popup.style.left = left + 'px';
+             popup.style.top = top + 'px';
+             
+             // Show popup
+             popup.classList.add('show');
+             isPopupVisible = true;
+             console.log('Popup should now be visible');
+           }
+           
+           // Function to hide popup
+           function hidePopup() {
+             timeoutId = setTimeout(() => {
+               popup.classList.remove('show');
+               isPopupVisible = false;
+               console.log('Hiding popup for:', tooltipId);
+             }, 100);
+           }
+           
+           // Show popup on mouse enter (for hover)
+           button.addEventListener('mouseenter', function(e) {
+             console.log('Mouse enter on button:', tooltipId);
+             if (!isPopupVisible) {
+               showPopup();
+             }
+           });
+           
+           // Hide popup on mouse leave (for hover)
+           button.addEventListener('mouseleave', function(e) {
+             console.log('Mouse leave on button:', tooltipId);
+             hidePopup();
+           });
+           
+           // Toggle popup on click
+           button.addEventListener('click', function(e) {
+             console.log('Click on button:', tooltipId);
+             e.preventDefault();
+             e.stopPropagation();
+             
+             if (isPopupVisible) {
+               popup.classList.remove('show');
+               isPopupVisible = false;
+             } else {
+               showPopup();
+             }
+           });
+           
+           // Keep popup open when hovering over it
+           popup.addEventListener('mouseenter', function() {
+             clearTimeout(timeoutId);
+           });
+           
+           // Hide popup when leaving it
+           popup.addEventListener('mouseleave', function() {
+             hidePopup();
+           });
+           
+           // Close popup when clicking on it (to prevent it from staying open)
+           popup.addEventListener('click', function(e) {
+             e.stopPropagation();
+           });
+         } else {
+           console.error('Popup not found for tooltipId:', tooltipId);
+         }
+       });
+       
+       // Close all popups when clicking outside
+       document.addEventListener('click', function(e) {
+         if (!e.target.closest('.learn-more-container')) {
+           const allPopups = document.querySelectorAll('.info-popup');
+           allPopups.forEach(popup => {
+             popup.classList.remove('show');
+           });
+           
+           // Reset all button states
+           learnMoreButtons.forEach(button => {
+             const tooltipId = button.getAttribute('data-tooltip');
+             const popup = document.getElementById(tooltipId + '-popup');
+             if (popup) {
+               popup.isPopupVisible = false;
+             }
+           });
+         }
+       });
+       
+       // Close popups on escape key
+       document.addEventListener('keydown', function(e) {
+         if (e.key === 'Escape') {
+           const allPopups = document.querySelectorAll('.info-popup');
+           allPopups.forEach(popup => {
+             popup.classList.remove('show');
+           });
+           
+           // Reset all button states
+           learnMoreButtons.forEach(button => {
+             const tooltipId = button.getAttribute('data-tooltip');
+             const popup = document.getElementById(tooltipId + '-popup');
+             if (popup) {
+               popup.isPopupVisible = false;
+             }
+           });
+         }
+       });
+       
+       console.log('Info popup functionality initialized');
+       
+       // Test popup functionality
+       setTimeout(() => {
+         const testButton = document.querySelector('[data-tooltip="encoding-methods"]');
+         const testPopup = document.getElementById('encoding-methods-popup');
+         if (testButton && testPopup) {
+           console.log('Test: Found test button and popup');
+           console.log('Test: Button rect:', testButton.getBoundingClientRect());
+           console.log('Test: Popup styles:', window.getComputedStyle(testPopup));
+           
+           // Force show the popup for testing
+           console.log('Test: Forcing popup to show...');
+           testPopup.style.position = 'fixed';
+           testPopup.style.top = '100px';
+           testPopup.style.left = '100px';
+           testPopup.style.zIndex = '99999';
+           testPopup.style.opacity = '1';
+           testPopup.style.visibility = 'visible';
+           testPopup.style.transform = 'none';
+           testPopup.style.pointerEvents = 'auto';
+           testPopup.classList.add('show');
+           
+           console.log('Test: Popup should now be visible at top-left of screen');
+         } else {
+           console.error('Test: Could not find test elements');
+         }
+       }, 1000);
+     });
+     
+     // Test popup function
+     function testPopup() {
+       console.log('Test popup function called');
+       const testPopup = document.getElementById('encoding-methods-popup');
+       if (testPopup) {
+         console.log('Found test popup, showing it...');
+         testPopup.style.position = 'fixed';
+         testPopup.style.top = '200px';
+         testPopup.style.left = '200px';
+         testPopup.style.zIndex = '99999';
+         testPopup.style.opacity = '1';
+         testPopup.style.visibility = 'visible';
+         testPopup.style.transform = 'none';
+         testPopup.style.pointerEvents = 'auto';
+         testPopup.style.background = 'red';
+         testPopup.style.border = '3px solid yellow';
+         testPopup.classList.add('show');
+         
+         // Hide after 5 seconds
+         setTimeout(() => {
+           testPopup.style.visibility = 'hidden';
+           testPopup.style.opacity = '0';
+         }, 5000);
+       } else {
+         console.error('Test popup not found!');
+         alert('Test popup not found! Check console for details.');
+       }
+     }
    </script>
 
    <!-- Service Worker Registration -->
